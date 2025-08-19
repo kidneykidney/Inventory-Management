@@ -5,21 +5,21 @@ const { pool } = require('../../config/database');
 jest.mock('../../config/database', () => ({
   pool: {
     getConnection: jest.fn(),
-    execute: jest.fn()
+    execute: jest.fn(),
   },
-  monitoredQuery: jest.fn()
+  monitoredQuery: jest.fn(),
 }));
 
 // Mock logger
 jest.mock('../../utils/logger', () => ({
   info: jest.fn(),
   error: jest.fn(),
-  warn: jest.fn()
+  warn: jest.fn(),
 }));
 
 // Mock uuid
 jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'test-uuid-123')
+  v4: jest.fn(() => 'test-uuid-123'),
 }));
 
 describe('LendingProduct Model', () => {
@@ -27,15 +27,15 @@ describe('LendingProduct Model', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockConnection = {
       execute: jest.fn(),
       beginTransaction: jest.fn(),
       commit: jest.fn(),
       rollback: jest.fn(),
-      release: jest.fn()
+      release: jest.fn(),
     };
-    
+
     pool.getConnection.mockResolvedValue(mockConnection);
   });
 
@@ -43,7 +43,7 @@ describe('LendingProduct Model', () => {
     it('should create a product with default values', () => {
       const productData = {
         name: 'Test Laptop',
-        categoryId: 1
+        categoryId: 1,
       };
 
       const product = new LendingProduct(productData);
@@ -69,7 +69,7 @@ describe('LendingProduct Model', () => {
         max_lending_period: 14,
         requires_approval: true,
         condition_status: 'excellent',
-        image_urls: ['/image1.jpg', '/image2.jpg']
+        image_urls: ['/image1.jpg', '/image2.jpg'],
       };
 
       const product = new LendingProduct(productData);
@@ -94,7 +94,7 @@ describe('LendingProduct Model', () => {
         serialNumber: 'SN123',
         location: 'Office A',
         conditionStatus: 'good',
-        maxLendingPeriod: 30
+        maxLendingPeriod: 30,
       });
 
       const validation = product.validate();
@@ -120,24 +120,34 @@ describe('LendingProduct Model', () => {
         serialNumber: 'a'.repeat(101), // Too long
         brand: 'a'.repeat(101), // Too long
         model: 'a'.repeat(101), // Too long
-        location: 'a'.repeat(101) // Too long
+        location: 'a'.repeat(101), // Too long
       });
 
       const validation = product.validate();
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors).toContain('Product name must be less than 200 characters');
-      expect(validation.errors).toContain('Serial number must be less than 100 characters');
-      expect(validation.errors).toContain('Brand must be less than 100 characters');
-      expect(validation.errors).toContain('Model must be less than 100 characters');
-      expect(validation.errors).toContain('Location must be less than 100 characters');
+      expect(validation.errors).toContain(
+        'Product name must be less than 200 characters'
+      );
+      expect(validation.errors).toContain(
+        'Serial number must be less than 100 characters'
+      );
+      expect(validation.errors).toContain(
+        'Brand must be less than 100 characters'
+      );
+      expect(validation.errors).toContain(
+        'Model must be less than 100 characters'
+      );
+      expect(validation.errors).toContain(
+        'Location must be less than 100 characters'
+      );
     });
 
     it('should fail validation for invalid condition status', () => {
       const product = new LendingProduct({
         name: 'Test Product',
         categoryId: 1,
-        conditionStatus: 'invalid_status'
+        conditionStatus: 'invalid_status',
       });
 
       const validation = product.validate();
@@ -150,23 +160,27 @@ describe('LendingProduct Model', () => {
       const product1 = new LendingProduct({
         name: 'Test Product',
         categoryId: 1,
-        maxLendingPeriod: 0 // Too low
+        maxLendingPeriod: 0, // Too low
       });
 
       const validation1 = product1.validate();
 
       expect(validation1.isValid).toBe(false);
-      expect(validation1.errors).toContain('Max lending period must be between 1 and 365 days');
+      expect(validation1.errors).toContain(
+        'Max lending period must be between 1 and 365 days'
+      );
 
       const product2 = new LendingProduct({
         name: 'Test Product',
         categoryId: 1,
-        maxLendingPeriod: 400 // Too high
+        maxLendingPeriod: 400, // Too high
       });
       const validation2 = product2.validate();
 
       expect(validation2.isValid).toBe(false);
-      expect(validation2.errors).toContain('Max lending period must be between 1 and 365 days');
+      expect(validation2.errors).toContain(
+        'Max lending period must be between 1 and 365 days'
+      );
     });
   });
 
@@ -176,7 +190,7 @@ describe('LendingProduct Model', () => {
         name: 'Test Laptop',
         categoryId: 1,
         brand: 'TestBrand',
-        model: 'TestModel'
+        model: 'TestModel',
       });
 
       // Mock database responses
@@ -197,7 +211,7 @@ describe('LendingProduct Model', () => {
       const product = new LendingProduct({
         id: 'existing-id',
         name: 'Updated Laptop',
-        categoryId: 1
+        categoryId: 1,
       });
 
       // Mock database responses
@@ -217,7 +231,7 @@ describe('LendingProduct Model', () => {
       const product = new LendingProduct({
         name: 'Test Product',
         categoryId: 1,
-        tags: ['electronics', 'laptop', 'portable']
+        tags: ['electronics', 'laptop', 'portable'],
       });
 
       // Mock database responses
@@ -254,27 +268,30 @@ describe('LendingProduct Model', () => {
       const product = new LendingProduct({
         name: 'Test Product',
         categoryId: 1,
-        serialNumber: 'DUPLICATE123'
+        serialNumber: 'DUPLICATE123',
       });
 
       // Mock duplicate serial number
-      mockConnection.execute
-        .mockResolvedValueOnce([[{ id: 'other-id' }], {}]); // Serial number exists
+      mockConnection.execute.mockResolvedValueOnce([[{ id: 'other-id' }], {}]); // Serial number exists
 
-      await expect(product.save()).rejects.toThrow('Serial number already exists');
+      await expect(product.save()).rejects.toThrow(
+        'Serial number already exists'
+      );
       expect(mockConnection.rollback).toHaveBeenCalled();
     });
 
     it('should handle database errors and rollback', async () => {
       const product = new LendingProduct({
         name: 'Test Product',
-        categoryId: 1
+        categoryId: 1,
       });
 
       const dbError = new Error('Database connection failed');
       mockConnection.execute.mockRejectedValue(dbError);
 
-      await expect(product.save()).rejects.toThrow('Database connection failed');
+      await expect(product.save()).rejects.toThrow(
+        'Database connection failed'
+      );
       expect(mockConnection.rollback).toHaveBeenCalled();
       expect(mockConnection.release).toHaveBeenCalled();
     });
@@ -295,11 +312,12 @@ describe('LendingProduct Model', () => {
           category_name: 'Electronics',
           image_urls: '["image1.jpg"]',
           specifications: '{"cpu": "Intel i7"}',
-          tags: 'electronics,laptop'
+          tags: 'electronics,laptop',
         };
 
-        require('../../config/database').monitoredQuery
-          .mockResolvedValue([[mockProduct]]);
+        require('../../config/database').monitoredQuery.mockResolvedValue([
+          [mockProduct],
+        ]);
 
         const result = await LendingProduct.findById('test-id');
 
@@ -312,8 +330,7 @@ describe('LendingProduct Model', () => {
       });
 
       it('should return null when product not found', async () => {
-        require('../../config/database').monitoredQuery
-          .mockResolvedValue([[]]);
+        require('../../config/database').monitoredQuery.mockResolvedValue([[]]);
 
         const result = await LendingProduct.findById('non-existent');
 
@@ -322,10 +339,13 @@ describe('LendingProduct Model', () => {
 
       it('should handle database errors', async () => {
         const dbError = new Error('Database error');
-        require('../../config/database').monitoredQuery
-          .mockRejectedValue(dbError);
+        require('../../config/database').monitoredQuery.mockRejectedValue(
+          dbError
+        );
 
-        await expect(LendingProduct.findById('test-id')).rejects.toThrow('Database error');
+        await expect(LendingProduct.findById('test-id')).rejects.toThrow(
+          'Database error'
+        );
       });
     });
 
@@ -338,7 +358,7 @@ describe('LendingProduct Model', () => {
             category_name: 'Electronics',
             image_urls: '[]',
             specifications: '{}',
-            tags: null
+            tags: null,
           },
           {
             id: 'product-2',
@@ -346,12 +366,13 @@ describe('LendingProduct Model', () => {
             category_name: 'Office',
             image_urls: '[]',
             specifications: '{}',
-            tags: 'office,supplies'
-          }
+            tags: 'office,supplies',
+          },
         ];
 
-        require('../../config/database').monitoredQuery
-          .mockResolvedValue([mockProducts]);
+        require('../../config/database').monitoredQuery.mockResolvedValue([
+          mockProducts,
+        ]);
 
         const result = await LendingProduct.findAll();
 
@@ -370,16 +391,16 @@ describe('LendingProduct Model', () => {
           sortBy: 'name',
           sortOrder: 'desc',
           limit: 10,
-          offset: 0
+          offset: 0,
         };
 
-        require('../../config/database').monitoredQuery
-          .mockResolvedValue([[]]);
+        require('../../config/database').monitoredQuery.mockResolvedValue([[]]);
 
         await LendingProduct.findAll(filters);
 
-        const [query, params] = require('../../config/database').monitoredQuery.mock.calls[0];
-        
+        const [query, params] = require('../../config/database').monitoredQuery
+          .mock.calls[0];
+
         expect(query).toContain('WHERE');
         expect(query).toContain('p.category_id = ?');
         expect(query).toContain('p.is_available = ?');
@@ -407,8 +428,10 @@ describe('LendingProduct Model', () => {
       });
 
       it('should prevent deletion of product with active lendings', async () => {
-        mockConnection.execute
-          .mockResolvedValueOnce([[{ id: 'active-lending' }], {}]); // Has active lending
+        mockConnection.execute.mockResolvedValueOnce([
+          [{ id: 'active-lending' }],
+          {},
+        ]); // Has active lending
 
         await expect(LendingProduct.deleteById('test-id')).rejects.toThrow(
           'Cannot delete product with active lending transactions'
@@ -423,8 +446,8 @@ describe('LendingProduct Model', () => {
         const mockCategoryStats = [{ category: 'Electronics', count: 5 }];
         const mockConditionStats = [{ condition_status: 'good', count: 7 }];
 
-        require('../../config/database').monitoredQuery
-          .mockResolvedValueOnce([mockStats])
+        require('../../config/database')
+          .monitoredQuery.mockResolvedValueOnce([mockStats])
           .mockResolvedValueOnce([mockCategoryStats])
           .mockResolvedValueOnce([mockConditionStats]);
 
@@ -433,7 +456,7 @@ describe('LendingProduct Model', () => {
         expect(result).toEqual({
           overview: mockStats[0],
           byCategory: mockCategoryStats,
-          byCondition: mockConditionStats
+          byCondition: mockConditionStats,
         });
       });
     });
@@ -449,12 +472,23 @@ describe('ProductCategory Model', () => {
   describe('findAll', () => {
     it('should return all categories', async () => {
       const mockCategories = [
-        { id: 1, name: 'Electronics', description: 'Electronic devices', parent_id: null },
-        { id: 2, name: 'Laptops', description: 'Laptop computers', parent_id: 1 }
+        {
+          id: 1,
+          name: 'Electronics',
+          description: 'Electronic devices',
+          parent_id: null,
+        },
+        {
+          id: 2,
+          name: 'Laptops',
+          description: 'Laptop computers',
+          parent_id: 1,
+        },
       ];
 
-      require('../../config/database').monitoredQuery
-        .mockResolvedValue([mockCategories]);
+      require('../../config/database').monitoredQuery.mockResolvedValue([
+        mockCategories,
+      ]);
 
       const result = await ProductCategory.findAll();
 
@@ -470,11 +504,12 @@ describe('ProductCategory Model', () => {
       const categoryData = {
         name: 'New Category',
         description: 'A new category',
-        parentId: null
+        parentId: null,
       };
 
-      require('../../config/database').monitoredQuery
-        .mockResolvedValue([{ insertId: 3 }]);
+      require('../../config/database').monitoredQuery.mockResolvedValue([
+        { insertId: 3 },
+      ]);
 
       const result = await ProductCategory.create(categoryData);
 

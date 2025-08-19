@@ -18,11 +18,27 @@ class LendingProduct {
     this.serialNumber = data.serialNumber || data.serial_number;
     this.purchaseDate = data.purchaseDate || data.purchase_date;
     this.warrantyExpiry = data.warrantyExpiry || data.warranty_expiry;
-    this.conditionStatus = data.conditionStatus || data.condition_status || 'good';
+    this.conditionStatus =
+      data.conditionStatus || data.condition_status || 'good';
     this.location = data.location;
-    this.isAvailable = data.isAvailable !== undefined ? data.isAvailable : data.is_available !== undefined ? data.is_available : true;
-    this.maxLendingPeriod = data.maxLendingPeriod !== undefined ? data.maxLendingPeriod : data.max_lending_period !== undefined ? data.max_lending_period : 30;
-    this.requiresApproval = data.requiresApproval !== undefined ? data.requiresApproval : data.requires_approval !== undefined ? data.requires_approval : false;
+    this.isAvailable =
+      data.isAvailable !== undefined
+        ? data.isAvailable
+        : data.is_available !== undefined
+          ? data.is_available
+          : true;
+    this.maxLendingPeriod =
+      data.maxLendingPeriod !== undefined
+        ? data.maxLendingPeriod
+        : data.max_lending_period !== undefined
+          ? data.max_lending_period
+          : 30;
+    this.requiresApproval =
+      data.requiresApproval !== undefined
+        ? data.requiresApproval
+        : data.requires_approval !== undefined
+          ? data.requires_approval
+          : false;
     this.imageUrls = data.imageUrls || data.image_urls || [];
     this.specifications = data.specifications || {};
     this.tags = data.tags || [];
@@ -63,17 +79,24 @@ class LendingProduct {
       errors.push('Location must be less than 100 characters');
     }
 
-    if (!['excellent', 'good', 'fair', 'needs_repair'].includes(this.conditionStatus)) {
+    if (
+      !['excellent', 'good', 'fair', 'needs_repair'].includes(
+        this.conditionStatus
+      )
+    ) {
       errors.push('Invalid condition status');
     }
 
-    if (typeof this.maxLendingPeriod === 'number' && (this.maxLendingPeriod < 1 || this.maxLendingPeriod > 365)) {
+    if (
+      typeof this.maxLendingPeriod === 'number' &&
+      (this.maxLendingPeriod < 1 || this.maxLendingPeriod > 365)
+    ) {
       errors.push('Max lending period must be between 1 and 365 days');
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -112,7 +135,8 @@ class LendingProduct {
 
       if (existingProduct.length > 0) {
         // Update existing product
-        await connection.execute(`
+        await connection.execute(
+          `
           UPDATE lending_products SET
             name = ?, description = ?, category_id = ?, subcategory = ?,
             brand = ?, model = ?, serial_number = ?, purchase_date = ?,
@@ -120,37 +144,68 @@ class LendingProduct {
             is_available = ?, max_lending_period = ?, requires_approval = ?,
             image_urls = ?, specifications = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
-        `, [
-          this.name, this.description, this.categoryId, this.subcategory,
-          this.brand, this.model, this.serialNumber, this.purchaseDate,
-          this.warrantyExpiry, this.conditionStatus, this.location,
-          this.isAvailable, this.maxLendingPeriod, this.requiresApproval,
-          JSON.stringify(this.imageUrls), JSON.stringify(this.specifications),
-          this.id
-        ]);
+        `,
+          [
+            this.name,
+            this.description,
+            this.categoryId,
+            this.subcategory,
+            this.brand,
+            this.model,
+            this.serialNumber,
+            this.purchaseDate,
+            this.warrantyExpiry,
+            this.conditionStatus,
+            this.location,
+            this.isAvailable,
+            this.maxLendingPeriod,
+            this.requiresApproval,
+            JSON.stringify(this.imageUrls),
+            JSON.stringify(this.specifications),
+            this.id,
+          ]
+        );
       } else {
         // Insert new product
-        await connection.execute(`
+        await connection.execute(
+          `
           INSERT INTO lending_products (
             id, name, description, category_id, subcategory, brand, model,
             serial_number, purchase_date, warranty_expiry, condition_status,
             location, is_available, max_lending_period, requires_approval,
             image_urls, specifications
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          this.id, this.name, this.description, this.categoryId, this.subcategory,
-          this.brand, this.model, this.serialNumber, this.purchaseDate,
-          this.warrantyExpiry, this.conditionStatus, this.location,
-          this.isAvailable, this.maxLendingPeriod, this.requiresApproval,
-          JSON.stringify(this.imageUrls), JSON.stringify(this.specifications)
-        ]);
+        `,
+          [
+            this.id,
+            this.name,
+            this.description,
+            this.categoryId,
+            this.subcategory,
+            this.brand,
+            this.model,
+            this.serialNumber,
+            this.purchaseDate,
+            this.warrantyExpiry,
+            this.conditionStatus,
+            this.location,
+            this.isAvailable,
+            this.maxLendingPeriod,
+            this.requiresApproval,
+            JSON.stringify(this.imageUrls),
+            JSON.stringify(this.specifications),
+          ]
+        );
       }
 
       // Handle tags
       if (this.tags && this.tags.length > 0) {
         // Delete existing tags
-        await connection.execute('DELETE FROM product_tags WHERE product_id = ?', [this.id]);
-        
+        await connection.execute(
+          'DELETE FROM product_tags WHERE product_id = ?',
+          [this.id]
+        );
+
         // Insert new tags
         for (const tag of this.tags) {
           if (tag && tag.trim()) {
@@ -181,7 +236,8 @@ class LendingProduct {
    */
   static async findById(id) {
     try {
-      const [rows] = await monitoredQuery(`
+      const [rows] = await monitoredQuery(
+        `
         SELECT p.*, pc.name as category_name,
                GROUP_CONCAT(pt.tag) as tags
         FROM lending_products p
@@ -189,7 +245,9 @@ class LendingProduct {
         LEFT JOIN product_tags pt ON p.id = pt.product_id
         WHERE p.id = ?
         GROUP BY p.id
-      `, [id]);
+      `,
+        [id]
+      );
 
       if (rows.length === 0) {
         return null;
@@ -197,7 +255,9 @@ class LendingProduct {
 
       const productData = rows[0];
       productData.imageUrls = JSON.parse(productData.image_urls || '[]');
-      productData.specifications = JSON.parse(productData.specifications || '{}');
+      productData.specifications = JSON.parse(
+        productData.specifications || '{}'
+      );
       productData.tags = productData.tags ? productData.tags.split(',') : [];
 
       return new LendingProduct(productData);
@@ -221,7 +281,7 @@ class LendingProduct {
         LEFT JOIN product_categories pc ON p.category_id = pc.id
         LEFT JOIN product_tags pt ON p.id = pt.product_id
       `;
-      
+
       const conditions = [];
       const params = [];
 
@@ -251,14 +311,18 @@ class LendingProduct {
       }
 
       if (filters.search) {
-        conditions.push('(p.name LIKE ? OR p.description LIKE ? OR p.brand LIKE ? OR p.model LIKE ?)');
+        conditions.push(
+          '(p.name LIKE ? OR p.description LIKE ? OR p.brand LIKE ? OR p.model LIKE ?)'
+        );
         const searchTerm = `%${filters.search}%`;
         params.push(searchTerm, searchTerm, searchTerm, searchTerm);
       }
 
       if (filters.tags && filters.tags.length > 0) {
         const tagConditions = filters.tags.map(() => 'pt.tag = ?').join(' OR ');
-        conditions.push(`p.id IN (SELECT DISTINCT product_id FROM product_tags WHERE ${tagConditions})`);
+        conditions.push(
+          `p.id IN (SELECT DISTINCT product_id FROM product_tags WHERE ${tagConditions})`
+        );
         params.push(...filters.tags);
       }
 
@@ -269,9 +333,14 @@ class LendingProduct {
       query += ' GROUP BY p.id';
 
       if (filters.sortBy) {
-        const sortField = filters.sortBy === 'name' ? 'p.name' : 
-                         filters.sortBy === 'brand' ? 'p.brand' :
-                         filters.sortBy === 'created_at' ? 'p.created_at' : 'p.name';
+        const sortField =
+          filters.sortBy === 'name'
+            ? 'p.name'
+            : filters.sortBy === 'brand'
+              ? 'p.brand'
+              : filters.sortBy === 'created_at'
+                ? 'p.created_at'
+                : 'p.name';
         const sortOrder = filters.sortOrder === 'desc' ? 'DESC' : 'ASC';
         query += ` ORDER BY ${sortField} ${sortOrder}`;
       } else {
@@ -281,7 +350,7 @@ class LendingProduct {
       if (filters.limit) {
         query += ' LIMIT ?';
         params.push(parseInt(filters.limit));
-        
+
         if (filters.offset) {
           query += ' OFFSET ?';
           params.push(parseInt(filters.offset));
@@ -320,16 +389,24 @@ class LendingProduct {
       const activeLendings = activeLendingsResult[0];
 
       if (activeLendings.length > 0) {
-        throw new Error('Cannot delete product with active lending transactions');
+        throw new Error(
+          'Cannot delete product with active lending transactions'
+        );
       }
 
       // Delete product tags
-      await connection.execute('DELETE FROM product_tags WHERE product_id = ?', [id]);
-      
+      await connection.execute(
+        'DELETE FROM product_tags WHERE product_id = ?',
+        [id]
+      );
+
       // Delete product
-      const deleteResult = await connection.execute('DELETE FROM lending_products WHERE id = ?', [id]);
+      const deleteResult = await connection.execute(
+        'DELETE FROM lending_products WHERE id = ?',
+        [id]
+      );
       const result = deleteResult[0];
-      
+
       await connection.commit();
       logger.info(`Product deleted successfully: ${id}`);
       return result.affectedRows > 0;
@@ -376,7 +453,7 @@ class LendingProduct {
       return {
         overview: stats[0],
         byCategory: categoryStats,
-        byCondition: conditionStats
+        byCondition: conditionStats,
       };
     } catch (error) {
       logger.error('Error getting product statistics:', error);
@@ -429,7 +506,7 @@ class ProductCategory {
 
       return new ProductCategory({
         id: result.insertId,
-        ...data
+        ...data,
       });
     } catch (error) {
       logger.error('Error creating category:', error);
@@ -448,11 +525,13 @@ class LendingTransaction {
     this.productId = data.productId || data.product_id;
     this.borrowerId = data.borrowerId || data.borrower_id;
     this.lendDate = data.lendDate || data.lend_date || new Date();
-    this.dueDate = data.dueDate || data.due_date || this.calculateDueDate(this.lendDate);
+    this.dueDate =
+      data.dueDate || data.due_date || this.calculateDueDate(this.lendDate);
     this.returnDate = data.returnDate || data.return_date || null;
     this.status = data.status || 'active';
     this.conditionLent = data.conditionLent || data.condition_lent || 'good';
-    this.conditionReturned = data.conditionReturned || data.condition_returned || null;
+    this.conditionReturned =
+      data.conditionReturned || data.condition_returned || null;
     this.notes = data.notes || '';
     this.approvedBy = data.approvedBy || data.approved_by || null;
     this.createdAt = data.createdAt || data.created_at;
@@ -523,21 +602,32 @@ class LendingTransaction {
       errors.push('Invalid condition lent');
     }
 
-    if (this.conditionReturned && !['excellent', 'good', 'fair', 'damaged'].includes(this.conditionReturned)) {
+    if (
+      this.conditionReturned &&
+      !['excellent', 'good', 'fair', 'damaged'].includes(this.conditionReturned)
+    ) {
       errors.push('Invalid condition returned');
     }
 
-    if (this.lendDate && this.dueDate && new Date(this.lendDate) >= new Date(this.dueDate)) {
+    if (
+      this.lendDate &&
+      this.dueDate &&
+      new Date(this.lendDate) >= new Date(this.dueDate)
+    ) {
       errors.push('Due date must be after lend date');
     }
 
-    if (this.returnDate && this.lendDate && new Date(this.returnDate) < new Date(this.lendDate)) {
+    if (
+      this.returnDate &&
+      this.lendDate &&
+      new Date(this.returnDate) < new Date(this.lendDate)
+    ) {
       errors.push('Return date cannot be before lend date');
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -590,7 +680,9 @@ class LendingTransaction {
       await connection.beginTransaction();
 
       // Check availability before creating transaction
-      const isAvailable = await LendingTransaction.checkAvailability(this.productId);
+      const isAvailable = await LendingTransaction.checkAvailability(
+        this.productId
+      );
       if (!isAvailable) {
         throw new Error('Product is not available for lending');
       }
@@ -609,29 +701,51 @@ class LendingTransaction {
 
       if (existing.length > 0) {
         // Update existing transaction
-        await connection.execute(`
+        await connection.execute(
+          `
           UPDATE lending_transactions SET
             product_id = ?, borrower_id = ?, lend_date = ?, due_date = ?,
             return_date = ?, status = ?, condition_lent = ?, condition_returned = ?,
             notes = ?, approved_by = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
-        `, [
-          this.productId, this.borrowerId, this.lendDate, this.dueDate,
-          this.returnDate, this.status, this.conditionLent, this.conditionReturned,
-          this.notes, this.approvedBy, this.id
-        ]);
+        `,
+          [
+            this.productId,
+            this.borrowerId,
+            this.lendDate,
+            this.dueDate,
+            this.returnDate,
+            this.status,
+            this.conditionLent,
+            this.conditionReturned,
+            this.notes,
+            this.approvedBy,
+            this.id,
+          ]
+        );
       } else {
         // Insert new transaction
-        await connection.execute(`
+        await connection.execute(
+          `
           INSERT INTO lending_transactions (
             id, product_id, borrower_id, lend_date, due_date, return_date,
             status, condition_lent, condition_returned, notes, approved_by
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          this.id, this.productId, this.borrowerId, this.lendDate, this.dueDate,
-          this.returnDate, this.status, this.conditionLent, this.conditionReturned,
-          this.notes, this.approvedBy
-        ]);
+        `,
+          [
+            this.id,
+            this.productId,
+            this.borrowerId,
+            this.lendDate,
+            this.dueDate,
+            this.returnDate,
+            this.status,
+            this.conditionLent,
+            this.conditionReturned,
+            this.notes,
+            this.approvedBy,
+          ]
+        );
 
         // Update product availability
         await connection.execute(
@@ -672,12 +786,21 @@ class LendingTransaction {
       this.notes = returnData.notes || this.notes;
 
       // Update transaction
-      await connection.execute(`
+      await connection.execute(
+        `
         UPDATE lending_transactions SET
           return_date = ?, condition_returned = ?, status = ?, notes = ?,
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
-      `, [this.returnDate, this.conditionReturned, this.status, this.notes, this.id]);
+      `,
+        [
+          this.returnDate,
+          this.conditionReturned,
+          this.status,
+          this.notes,
+          this.id,
+        ]
+      );
 
       // Update product availability
       await connection.execute(
@@ -712,7 +835,8 @@ class LendingTransaction {
    */
   static async findById(id) {
     try {
-      const [rows] = await monitoredQuery(`
+      const [rows] = await monitoredQuery(
+        `
         SELECT lt.*, 
                lp.name as product_name, lp.brand, lp.model,
                u.username as borrower_name, u.email as borrower_email,
@@ -722,7 +846,9 @@ class LendingTransaction {
         JOIN users u ON lt.borrower_id = u.id
         LEFT JOIN users approver ON lt.approved_by = approver.id
         WHERE lt.id = ?
-      `, [id]);
+      `,
+        [id]
+      );
 
       if (rows.length === 0) {
         return null;
@@ -753,7 +879,7 @@ class LendingTransaction {
         JOIN users u ON lt.borrower_id = u.id
         LEFT JOIN users approver ON lt.approved_by = approver.id
       `;
-      
+
       const conditions = [];
       const params = [];
 
@@ -773,11 +899,15 @@ class LendingTransaction {
       }
 
       if (filters.overdue) {
-        conditions.push('lt.due_date < CURDATE() AND lt.status IN ("active", "overdue")');
+        conditions.push(
+          'lt.due_date < CURDATE() AND lt.status IN ("active", "overdue")'
+        );
       }
 
       if (filters.dueSoon) {
-        conditions.push('lt.due_date <= DATE_ADD(CURDATE(), INTERVAL 3 DAY) AND lt.status = "active"');
+        conditions.push(
+          'lt.due_date <= DATE_ADD(CURDATE(), INTERVAL 3 DAY) AND lt.status = "active"'
+        );
       }
 
       if (conditions.length > 0) {
@@ -789,7 +919,7 @@ class LendingTransaction {
       if (filters.limit) {
         query += ' LIMIT ?';
         params.push(parseInt(filters.limit));
-        
+
         if (filters.offset) {
           query += ' OFFSET ?';
           params.push(parseInt(filters.offset));
@@ -841,7 +971,9 @@ class LendingTransaction {
         WHERE due_date < CURDATE() AND status = 'active'
       `);
 
-      logger.info(`Updated ${result.affectedRows} transactions to overdue status`);
+      logger.info(
+        `Updated ${result.affectedRows} transactions to overdue status`
+      );
       return result.affectedRows;
     } catch (error) {
       logger.error('Error updating overdue statuses:', error);
@@ -892,7 +1024,7 @@ class LendingTransaction {
       return {
         overview: stats[0],
         monthly: monthlyStats,
-        popularProducts: popularProducts
+        popularProducts: popularProducts,
       };
     } catch (error) {
       logger.error('Error getting lending statistics:', error);
@@ -925,7 +1057,7 @@ class LendingTransaction {
         JOIN users u ON lt.borrower_id = u.id
         LEFT JOIN users approver ON lt.approved_by = approver.id
       `;
-      
+
       const conditions = [];
       const params = [];
 
@@ -963,7 +1095,7 @@ class LendingTransaction {
       if (filters.limit) {
         query += ' LIMIT ?';
         params.push(parseInt(filters.limit));
-        
+
         if (filters.offset) {
           query += ' OFFSET ?';
           params.push(parseInt(filters.offset));
@@ -1003,22 +1135,26 @@ class LendingTransaction {
       // Determine date range based on period
       let dateCondition = '';
       let dateFormat = '%Y-%m';
-      
+
       switch (period) {
         case '30days':
-          dateCondition = 'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)';
+          dateCondition =
+            'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)';
           dateFormat = '%Y-%m-%d';
           break;
         case '90days':
-          dateCondition = 'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)';
+          dateCondition =
+            'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)';
           dateFormat = groupBy === 'week' ? '%Y-%u' : '%Y-%m-%d';
           break;
         case '6months':
-          dateCondition = 'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)';
+          dateCondition =
+            'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)';
           break;
         case '12months':
         default:
-          dateCondition = 'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)';
+          dateCondition =
+            'WHERE lt.lend_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)';
           break;
       }
 
@@ -1088,7 +1224,7 @@ class LendingTransaction {
         topBorrowers: userAnalytics,
         returnRates: returnRateData[0],
         period,
-        groupBy
+        groupBy,
       };
     } catch (error) {
       logger.error('Error getting lending analytics:', error);
@@ -1111,7 +1247,7 @@ class LendingTransaction {
         notes: reservationData.notes || '',
         approvedBy: reservationData.reservedBy,
         lendDate: null, // Will be set when actually lent
-        dueDate: null   // Will be calculated when actually lent
+        dueDate: null, // Will be calculated when actually lent
       });
 
       // Don't call save() as it has validation that requires lendDate/dueDate
@@ -1121,19 +1257,28 @@ class LendingTransaction {
         await connection.beginTransaction();
 
         // Check availability one more time
-        const isAvailable = await LendingTransaction.checkAvailability(reservationData.productId);
+        const isAvailable = await LendingTransaction.checkAvailability(
+          reservationData.productId
+        );
         if (!isAvailable) {
           throw new Error('Product is no longer available for reservation');
         }
 
-        await connection.execute(`
+        await connection.execute(
+          `
           INSERT INTO lending_transactions (
             id, product_id, borrower_id, status, notes, approved_by
           ) VALUES (?, ?, ?, ?, ?, ?)
-        `, [
-          reservation.id, reservation.productId, reservation.borrowerId,
-          reservation.status, reservation.notes, reservation.approvedBy
-        ]);
+        `,
+          [
+            reservation.id,
+            reservation.productId,
+            reservation.borrowerId,
+            reservation.status,
+            reservation.notes,
+            reservation.approvedBy,
+          ]
+        );
 
         // Mark product as temporarily unavailable
         await connection.execute(
@@ -1207,5 +1352,5 @@ class LendingTransaction {
 module.exports = {
   LendingProduct,
   ProductCategory,
-  LendingTransaction
+  LendingTransaction,
 };

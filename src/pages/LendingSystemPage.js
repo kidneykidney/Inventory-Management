@@ -5,9 +5,29 @@ import { Plus } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { Textarea } from '../components/ui/textarea';
 import { useToast } from '../hooks/use-toast';
 
@@ -33,7 +53,7 @@ const initialLendingData = [
       processor: 'M1 Pro',
       memory: '16GB',
       storage: '512GB SSD',
-      display: '16-inch Retina'
+      display: '16-inch Retina',
     },
     quantity: 5,
     available: 3,
@@ -43,8 +63,8 @@ const initialLendingData = [
     isAvailable: true,
     lendingPolicy: {
       maxLendingPeriod: 30,
-      requiresApproval: true
-    }
+      requiresApproval: true,
+    },
   },
   {
     id: 2,
@@ -58,7 +78,7 @@ const initialLendingData = [
     specifications: {
       material: 'Mesh',
       adjustable: 'Height, Arms, Tilt',
-      warranty: '12 years'
+      warranty: '12 years',
     },
     quantity: 8,
     available: 6,
@@ -68,8 +88,8 @@ const initialLendingData = [
     isAvailable: true,
     lendingPolicy: {
       maxLendingPeriod: 90,
-      requiresApproval: false
-    }
+      requiresApproval: false,
+    },
   },
   {
     id: 3,
@@ -83,7 +103,7 @@ const initialLendingData = [
     specifications: {
       display: '12.9-inch Liquid Retina',
       storage: '256GB',
-      connectivity: 'Wi-Fi + Cellular'
+      connectivity: 'Wi-Fi + Cellular',
     },
     quantity: 3,
     available: 0,
@@ -93,9 +113,9 @@ const initialLendingData = [
     isAvailable: false,
     lendingPolicy: {
       maxLendingPeriod: 14,
-      requiresApproval: true
-    }
-  }
+      requiresApproval: true,
+    },
+  },
 ];
 
 /**
@@ -104,19 +124,19 @@ const initialLendingData = [
  */
 const LendingSystemPage = () => {
   const { toast } = useToast();
-  
+
   // State management
   const [lendingData, setLendingData] = useState([...initialLendingData]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterAvailability, setFilterAvailability] = useState('all');
-  
+
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLendDialogOpen, setIsLendDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  
+
   // Form states
   const [formData, setFormData] = useState({
     sku: '',
@@ -131,10 +151,8 @@ const LendingSystemPage = () => {
     condition: 'excellent',
     tags: '',
     maxLendingPeriod: 30,
-    requiresApproval: false
+    requiresApproval: false,
   });
-  
-
 
   useEffect(() => {
     logger.info('LendingSystemPage component mounted');
@@ -143,18 +161,21 @@ const LendingSystemPage = () => {
 
   // Filter data based on search and filters
   const filteredData = lendingData.filter(item => {
-    const matchesSearch = 
+    const matchesSearch =
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesCategory = filterCategory === 'all' || item.category === filterCategory;
-    const matchesAvailability = 
-      filterAvailability === 'all' || 
+      item.tags.some(tag =>
+        tag.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+    const matchesCategory =
+      filterCategory === 'all' || item.category === filterCategory;
+    const matchesAvailability =
+      filterAvailability === 'all' ||
       (filterAvailability === 'available' && item.isAvailable) ||
       (filterAvailability === 'unavailable' && !item.isAvailable);
-    
+
     return matchesSearch && matchesCategory && matchesAvailability;
   });
 
@@ -162,14 +183,14 @@ const LendingSystemPage = () => {
   const categories = [...new Set(lendingData.map(item => item.category))];
 
   // Status badge variant based on availability
-  const getStatusVariant = (item) => {
+  const getStatusVariant = item => {
     if (!item.isAvailable) return 'destructive';
     if (item.available <= 2) return 'secondary';
     return 'default';
   };
 
   // Status text
-  const getStatusText = (item) => {
+  const getStatusText = item => {
     if (!item.isAvailable) return 'Unavailable';
     if (item.available <= 2) return 'Low Stock';
     return 'Available';
@@ -179,11 +200,9 @@ const LendingSystemPage = () => {
   const handleFormChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
-
-
 
   // Reset forms
   const resetForms = () => {
@@ -200,7 +219,7 @@ const LendingSystemPage = () => {
       condition: 'excellent',
       tags: '',
       maxLendingPeriod: 30,
-      requiresApproval: false
+      requiresApproval: false,
     });
   };
 
@@ -210,7 +229,7 @@ const LendingSystemPage = () => {
       toast({
         title: 'Validation Error',
         description: 'Please fill in all required fields',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -220,21 +239,24 @@ const LendingSystemPage = () => {
       ...formData,
       available: formData.quantity,
       specifications: {},
-      tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      tags: formData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag),
       isAvailable: formData.quantity > 0,
       lendingPolicy: {
         maxLendingPeriod: formData.maxLendingPeriod,
-        requiresApproval: formData.requiresApproval
-      }
+        requiresApproval: formData.requiresApproval,
+      },
     };
 
     setLendingData(prev => [...prev, newItem]);
     setIsAddDialogOpen(false);
     resetForms();
-    
+
     toast({
       title: 'Success',
-      description: 'Item added successfully to lending system'
+      description: 'Item added successfully to lending system',
     });
 
     logger.info('New lending item added', newItem);
@@ -249,13 +271,16 @@ const LendingSystemPage = () => {
         return {
           ...item,
           ...formData,
-          tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+          tags: formData.tags
+            .split(',')
+            .map(tag => tag.trim())
+            .filter(tag => tag),
           isAvailable: formData.quantity > 0,
           available: Math.min(formData.quantity, item.available),
           lendingPolicy: {
             maxLendingPeriod: formData.maxLendingPeriod,
-            requiresApproval: formData.requiresApproval
-          }
+            requiresApproval: formData.requiresApproval,
+          },
         };
       }
       return item;
@@ -265,22 +290,22 @@ const LendingSystemPage = () => {
     setIsEditDialogOpen(false);
     setSelectedItem(null);
     resetForms();
-    
+
     toast({
       title: 'Success',
-      description: 'Item updated successfully'
+      description: 'Item updated successfully',
     });
 
     logger.info('Lending item updated', { id: selectedItem.id });
   };
 
   // Process lending
-  const handleProcessLending = (formData) => {
+  const handleProcessLending = formData => {
     if (!selectedItem) {
       toast({
         title: 'Error',
         description: 'No item selected for lending',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -292,7 +317,7 @@ const LendingSystemPage = () => {
         return {
           ...item,
           available: newAvailable,
-          isAvailable: newAvailable > 0
+          isAvailable: newAvailable > 0,
         };
       }
       return item;
@@ -301,31 +326,31 @@ const LendingSystemPage = () => {
     setLendingData(updatedData);
     setIsLendDialogOpen(false);
     setSelectedItem(null);
-    
+
     toast({
       title: 'Lending Processed',
-      description: `${formData.quantity} ${selectedItem.name}(s) lent to ${formData.borrowerName}`
+      description: `${formData.quantity} ${selectedItem.name}(s) lent to ${formData.borrowerName}`,
     });
 
     logger.info('Item lent successfully', {
       item: selectedItem.name,
       quantity: formData.quantity,
-      borrower: formData.borrowerName
+      borrower: formData.borrowerName,
     });
   };
 
   // Delete item
-  const handleDeleteItem = (id) => {
+  const handleDeleteItem = id => {
     setLendingData(prev => prev.filter(item => item.id !== id));
     toast({
       title: 'Item Deleted',
-      description: 'Item removed from lending system'
+      description: 'Item removed from lending system',
     });
     logger.info('Lending item deleted', { id });
   };
 
   // Open edit dialog
-  const openEditDialog = (item) => {
+  const openEditDialog = item => {
     setSelectedItem(item);
     setFormData({
       sku: item.sku,
@@ -340,29 +365,33 @@ const LendingSystemPage = () => {
       condition: item.condition,
       tags: item.tags.join(', '),
       maxLendingPeriod: item.lendingPolicy.maxLendingPeriod,
-      requiresApproval: item.lendingPolicy.requiresApproval
+      requiresApproval: item.lendingPolicy.requiresApproval,
     });
     setIsEditDialogOpen(true);
   };
 
   // Open lending dialog
-  const openLendingDialog = (item) => {
+  const openLendingDialog = item => {
     setSelectedItem(item);
     setIsLendDialogOpen(true);
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className='p-6 space-y-6'>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className='flex justify-between items-center'>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Electronics & Office Components</h1>
-          <p className="text-muted-foreground">Manage lending and borrowing of company equipment</p>
+          <h1 className='text-3xl font-bold tracking-tight'>
+            Electronics & Office Components
+          </h1>
+          <p className='text-muted-foreground'>
+            Manage lending and borrowing of company equipment
+          </p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={() => setIsAddDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className='mr-2 h-4 w-4' />
               Add Item
             </Button>
           </DialogTrigger>
@@ -385,9 +414,7 @@ const LendingSystemPage = () => {
       <Card>
         <CardHeader>
           <CardTitle>Lending Items</CardTitle>
-          <CardDescription>
-            {filteredData.length} items found
-          </CardDescription>
+          <CardDescription>{filteredData.length} items found</CardDescription>
         </CardHeader>
         <CardContent>
           <LendingTable
@@ -402,127 +429,137 @@ const LendingSystemPage = () => {
 
       {/* Add Item Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className='max-w-2xl'>
           <DialogHeader>
             <DialogTitle>Add New Item</DialogTitle>
             <DialogDescription>
               Add a new item to the lending system
             </DialogDescription>
           </DialogHeader>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="sku">SKU *</Label>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='sku'>SKU *</Label>
               <Input
-                id="sku"
+                id='sku'
                 value={formData.sku}
-                onChange={(e) => handleFormChange('sku', e.target.value)}
-                placeholder="e.g., ELC001"
+                onChange={e => handleFormChange('sku', e.target.value)}
+                placeholder='e.g., ELC001'
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='name'>Name *</Label>
               <Input
-                id="name"
+                id='name'
                 value={formData.name}
-                onChange={(e) => handleFormChange('name', e.target.value)}
-                placeholder="e.g., MacBook Pro 16 inch"
+                onChange={e => handleFormChange('name', e.target.value)}
+                placeholder='e.g., MacBook Pro 16 inch'
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
-              <Select value={formData.category} onValueChange={(value) => handleFormChange('category', value)}>
+            <div className='space-y-2'>
+              <Label htmlFor='category'>Category *</Label>
+              <Select
+                value={formData.category}
+                onValueChange={value => handleFormChange('category', value)}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder='Select category' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Electronics">Electronics</SelectItem>
-                  <SelectItem value="Office Supplies">Office Supplies</SelectItem>
-                  <SelectItem value="Furniture">Furniture</SelectItem>
-                  <SelectItem value="Tools">Tools</SelectItem>
+                  <SelectItem value='Electronics'>Electronics</SelectItem>
+                  <SelectItem value='Office Supplies'>
+                    Office Supplies
+                  </SelectItem>
+                  <SelectItem value='Furniture'>Furniture</SelectItem>
+                  <SelectItem value='Tools'>Tools</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="subcategory">Subcategory</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='subcategory'>Subcategory</Label>
               <Input
-                id="subcategory"
+                id='subcategory'
                 value={formData.subcategory}
-                onChange={(e) => handleFormChange('subcategory', e.target.value)}
-                placeholder="e.g., Laptops"
+                onChange={e => handleFormChange('subcategory', e.target.value)}
+                placeholder='e.g., Laptops'
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="brand">Brand</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='brand'>Brand</Label>
               <Input
-                id="brand"
+                id='brand'
                 value={formData.brand}
-                onChange={(e) => handleFormChange('brand', e.target.value)}
-                placeholder="e.g., Apple"
+                onChange={e => handleFormChange('brand', e.target.value)}
+                placeholder='e.g., Apple'
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="model">Model</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='model'>Model</Label>
               <Input
-                id="model"
+                id='model'
                 value={formData.model}
-                onChange={(e) => handleFormChange('model', e.target.value)}
-                placeholder="e.g., MacBook Pro"
+                onChange={e => handleFormChange('model', e.target.value)}
+                placeholder='e.g., MacBook Pro'
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="serialNumber">Serial Number</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='serialNumber'>Serial Number</Label>
               <Input
-                id="serialNumber"
+                id='serialNumber'
                 value={formData.serialNumber}
-                onChange={(e) => handleFormChange('serialNumber', e.target.value)}
-                placeholder="e.g., C02XW0XHJGH5"
+                onChange={e => handleFormChange('serialNumber', e.target.value)}
+                placeholder='e.g., C02XW0XHJGH5'
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="quantity">Quantity</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='quantity'>Quantity</Label>
               <Input
-                id="quantity"
-                type="number"
-                min="1"
+                id='quantity'
+                type='number'
+                min='1'
                 value={formData.quantity}
-                onChange={(e) => handleFormChange('quantity', parseInt(e.target.value) || 1)}
+                onChange={e =>
+                  handleFormChange('quantity', parseInt(e.target.value) || 1)
+                }
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='location'>Location</Label>
               <Input
-                id="location"
+                id='location'
                 value={formData.location}
-                onChange={(e) => handleFormChange('location', e.target.value)}
-                placeholder="e.g., Tech Storage A"
+                onChange={e => handleFormChange('location', e.target.value)}
+                placeholder='e.g., Tech Storage A'
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="condition">Condition</Label>
-              <Select value={formData.condition} onValueChange={(value) => handleFormChange('condition', value)}>
+            <div className='space-y-2'>
+              <Label htmlFor='condition'>Condition</Label>
+              <Select
+                value={formData.condition}
+                onValueChange={value => handleFormChange('condition', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="excellent">Excellent</SelectItem>
-                  <SelectItem value="good">Good</SelectItem>
-                  <SelectItem value="fair">Fair</SelectItem>
-                  <SelectItem value="needs_repair">Needs Repair</SelectItem>
+                  <SelectItem value='excellent'>Excellent</SelectItem>
+                  <SelectItem value='good'>Good</SelectItem>
+                  <SelectItem value='fair'>Fair</SelectItem>
+                  <SelectItem value='needs_repair'>Needs Repair</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-2 space-y-2">
-              <Label htmlFor="tags">Tags (comma-separated)</Label>
+            <div className='col-span-2 space-y-2'>
+              <Label htmlFor='tags'>Tags (comma-separated)</Label>
               <Input
-                id="tags"
+                id='tags'
                 value={formData.tags}
-                onChange={(e) => handleFormChange('tags', e.target.value)}
-                placeholder="e.g., laptop, development, design"
+                onChange={e => handleFormChange('tags', e.target.value)}
+                placeholder='e.g., laptop, development, design'
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+            <Button variant='outline' onClick={() => setIsAddDialogOpen(false)}>
               Cancel
             </Button>
             <Button onClick={handleAddItem}>Add Item</Button>
@@ -532,65 +569,73 @@ const LendingSystemPage = () => {
 
       {/* Edit Item Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className='max-w-2xl'>
           <DialogHeader>
             <DialogTitle>Edit Item</DialogTitle>
-            <DialogDescription>
-              Update item information
-            </DialogDescription>
+            <DialogDescription>Update item information</DialogDescription>
           </DialogHeader>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-sku">SKU *</Label>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-sku'>SKU *</Label>
               <Input
-                id="edit-sku"
+                id='edit-sku'
                 value={formData.sku}
-                onChange={(e) => handleFormChange('sku', e.target.value)}
+                onChange={e => handleFormChange('sku', e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-name">Name *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-name'>Name *</Label>
               <Input
-                id="edit-name"
+                id='edit-name'
                 value={formData.name}
-                onChange={(e) => handleFormChange('name', e.target.value)}
+                onChange={e => handleFormChange('name', e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-category">Category *</Label>
-              <Select value={formData.category} onValueChange={(value) => handleFormChange('category', value)}>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-category'>Category *</Label>
+              <Select
+                value={formData.category}
+                onValueChange={value => handleFormChange('category', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Electronics">Electronics</SelectItem>
-                  <SelectItem value="Office Supplies">Office Supplies</SelectItem>
-                  <SelectItem value="Furniture">Furniture</SelectItem>
-                  <SelectItem value="Tools">Tools</SelectItem>
+                  <SelectItem value='Electronics'>Electronics</SelectItem>
+                  <SelectItem value='Office Supplies'>
+                    Office Supplies
+                  </SelectItem>
+                  <SelectItem value='Furniture'>Furniture</SelectItem>
+                  <SelectItem value='Tools'>Tools</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-quantity">Quantity</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-quantity'>Quantity</Label>
               <Input
-                id="edit-quantity"
-                type="number"
-                min="1"
+                id='edit-quantity'
+                type='number'
+                min='1'
                 value={formData.quantity}
-                onChange={(e) => handleFormChange('quantity', parseInt(e.target.value) || 1)}
+                onChange={e =>
+                  handleFormChange('quantity', parseInt(e.target.value) || 1)
+                }
               />
             </div>
-            <div className="col-span-2 space-y-2">
-              <Label htmlFor="edit-tags">Tags (comma-separated)</Label>
+            <div className='col-span-2 space-y-2'>
+              <Label htmlFor='edit-tags'>Tags (comma-separated)</Label>
               <Input
-                id="edit-tags"
+                id='edit-tags'
                 value={formData.tags}
-                onChange={(e) => handleFormChange('tags', e.target.value)}
+                onChange={e => handleFormChange('tags', e.target.value)}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+            <Button
+              variant='outline'
+              onClick={() => setIsEditDialogOpen(false)}
+            >
               Cancel
             </Button>
             <Button onClick={handleEditItem}>Update Item</Button>
@@ -603,7 +648,7 @@ const LendingSystemPage = () => {
         isOpen={isLendDialogOpen}
         onClose={() => setIsLendDialogOpen(false)}
         onSubmit={handleProcessLending}
-        title="Lend Item"
+        title='Lend Item'
         item={selectedItem}
       />
     </div>

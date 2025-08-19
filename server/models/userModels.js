@@ -53,7 +53,7 @@ class User {
           userData.department || null,
           userData.phone || null,
           userData.address || null,
-          userData.emailVerified || false
+          userData.emailVerified || false,
         ]
       );
 
@@ -177,8 +177,8 @@ class User {
           page,
           limit,
           total,
-          pages: Math.ceil(total / limit)
-        }
+          pages: Math.ceil(total / limit),
+        },
       };
     } catch (error) {
       logger.error('Error finding all users:', error);
@@ -203,8 +203,12 @@ class User {
           fields.push('password_hash = ?');
           values.push(bcrypt.hashSync(updateData[key], 10));
         } else if (key !== 'id') {
-          const dbField = key === 'profileImage' ? 'profile_image' : 
-                         key === 'emailVerified' ? 'email_verified' : key;
+          const dbField =
+            key === 'profileImage'
+              ? 'profile_image'
+              : key === 'emailVerified'
+                ? 'email_verified'
+                : key;
           fields.push(`${dbField} = ?`);
           values.push(updateData[key]);
         }
@@ -331,7 +335,7 @@ class User {
         total: totalRows[0].total,
         active: activeRows[0].active,
         admins: adminRows[0].admins,
-        recentRegistrations: recentRows[0].recent
+        recentRegistrations: recentRows[0].recent,
       };
     } catch (error) {
       logger.error('Error getting user stats:', error);
@@ -358,7 +362,7 @@ class User {
       lastLogin: this.lastLogin,
       emailVerified: this.emailVerified,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      updatedAt: this.updatedAt,
     };
   }
 }
@@ -400,7 +404,7 @@ class UserSession {
           tokenHash,
           sessionData.deviceInfo || null,
           sessionData.ipAddress || null,
-          sessionData.expiresAt
+          sessionData.expiresAt,
         ]
       );
 
@@ -490,5 +494,5 @@ class UserSession {
 
 module.exports = {
   User,
-  UserSession
+  UserSession,
 };

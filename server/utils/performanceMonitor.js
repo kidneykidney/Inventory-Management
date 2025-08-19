@@ -7,13 +7,13 @@ class PerformanceMonitor {
       database: new Map(),
       memory: [],
       cpu: [],
-      errors: []
+      errors: [],
     };
     this.thresholds = {
       responseTime: 1000, // ms
       memoryUsage: 80, // percentage
       cpuUsage: 80, // percentage
-      errorRate: 5 // percentage
+      errorRate: 5, // percentage
     };
   }
 
@@ -22,10 +22,10 @@ class PerformanceMonitor {
     const startTime = Date.now();
     const originalSend = res.send;
 
-    res.send = function(data) {
+    res.send = function (data) {
       const endTime = Date.now();
       const duration = endTime - startTime;
-      
+
       const metric = {
         method: req.method,
         url: req.url,
@@ -33,7 +33,7 @@ class PerformanceMonitor {
         duration,
         timestamp: new Date(),
         userAgent: req.get('User-Agent'),
-        ip: req.ip
+        ip: req.ip,
       };
 
       performanceMonitor.recordRequestMetric(metric);
@@ -46,13 +46,13 @@ class PerformanceMonitor {
   // Record request metrics
   recordRequestMetric(metric) {
     const key = `${metric.method}:${metric.url}`;
-    
+
     if (!this.metrics.requests.has(key)) {
       this.metrics.requests.set(key, []);
     }
-    
+
     this.metrics.requests.get(key).push(metric);
-    
+
     // Keep only last 1000 requests per endpoint
     if (this.metrics.requests.get(key).length > 1000) {
       this.metrics.requests.get(key).shift();
@@ -70,7 +70,7 @@ class PerformanceMonitor {
       query: query.substring(0, 100), // Truncate for privacy
       duration,
       error: error ? error.message : null,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     if (!this.metrics.database.has('queries')) {
@@ -101,13 +101,13 @@ class PerformanceMonitor {
       heapTotal: memUsage.heapTotal,
       heapUsed: memUsage.heapUsed,
       external: memUsage.external,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     const cpuMetric = {
       user: cpuUsage.user,
       system: cpuUsage.system,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     this.metrics.memory.push(memMetric);
@@ -125,13 +125,14 @@ class PerformanceMonitor {
   // Get performance summary
   getPerformanceSummary() {
     const now = Date.now();
-    const oneHourAgo = now - (60 * 60 * 1000);
+    const oneHourAgo = now - 60 * 60 * 1000;
 
     const recentRequests = [];
     for (const [endpoint, requests] of this.metrics.requests) {
       const recent = requests.filter(r => r.timestamp.getTime() > oneHourAgo);
       if (recent.length > 0) {
-        const avgDuration = recent.reduce((sum, r) => sum + r.duration, 0) / recent.length;
+        const avgDuration =
+          recent.reduce((sum, r) => sum + r.duration, 0) / recent.length;
         const errorCount = recent.filter(r => r.statusCode >= 400).length;
         const errorRate = (errorCount / recent.length) * 100;
 
@@ -140,34 +141,46 @@ class PerformanceMonitor {
           requestCount: recent.length,
           avgResponseTime: Math.round(avgDuration),
           errorRate: Math.round(errorRate * 100) / 100,
-          slowRequests: recent.filter(r => r.duration > this.thresholds.responseTime).length
+          slowRequests: recent.filter(
+            r => r.duration > this.thresholds.responseTime
+          ).length,
         });
       }
     }
 
-    const recentMemory = this.metrics.memory.filter(m => m.timestamp.getTime() > oneHourAgo);
-    const avgMemoryUsage = recentMemory.length > 0 
-      ? recentMemory.reduce((sum, m) => sum + m.heapUsed, 0) / recentMemory.length 
-      : 0;
+    const recentMemory = this.metrics.memory.filter(
+      m => m.timestamp.getTime() > oneHourAgo
+    );
+    const avgMemoryUsage =
+      recentMemory.length > 0
+        ? recentMemory.reduce((sum, m) => sum + m.heapUsed, 0) /
+          recentMemory.length
+        : 0;
 
     return {
       timestamp: new Date(),
       requests: {
         total: recentRequests.reduce((sum, r) => sum + r.requestCount, 0),
         endpoints: recentRequests,
-        avgResponseTime: recentRequests.length > 0 
-          ? Math.round(recentRequests.reduce((sum, r) => sum + r.avgResponseTime, 0) / recentRequests.length)
-          : 0
+        avgResponseTime:
+          recentRequests.length > 0
+            ? Math.round(
+                recentRequests.reduce((sum, r) => sum + r.avgResponseTime, 0) /
+                  recentRequests.length
+              )
+            : 0,
       },
       system: {
         memoryUsage: Math.round(avgMemoryUsage / 1024 / 1024), // MB
         uptime: Math.round(process.uptime()),
-        nodeVersion: process.version
+        nodeVersion: process.version,
       },
       database: {
         queryCount: this.metrics.database.get('queries')?.length || 0,
-        slowQueries: this.metrics.database.get('queries')?.filter(q => q.duration > 1000).length || 0
-      }
+        slowQueries:
+          this.metrics.database.get('queries')?.filter(q => q.duration > 1000)
+            .length || 0,
+      },
     };
   }
 
@@ -175,8 +188,8 @@ class PerformanceMonitor {
   getCoreWebVitalsBaseline() {
     return {
       LCP: { threshold: 2500, good: 2500, poor: 4000 }, // Largest Contentful Paint
-      FID: { threshold: 100, good: 100, poor: 300 },   // First Input Delay
-      CLS: { threshold: 0.1, good: 0.1, poor: 0.25 }   // Cumulative Layout Shift
+      FID: { threshold: 100, good: 100, poor: 300 }, // First Input Delay
+      CLS: { threshold: 0.1, good: 0.1, poor: 0.25 }, // Cumulative Layout Shift
     };
   }
 
@@ -202,7 +215,7 @@ class PerformanceMonitor {
           type: 'slow_response',
           endpoint: endpoint.endpoint,
           value: endpoint.avgResponseTime,
-          threshold: this.thresholds.responseTime
+          threshold: this.thresholds.responseTime,
         });
       }
 
@@ -211,18 +224,19 @@ class PerformanceMonitor {
           type: 'high_error_rate',
           endpoint: endpoint.endpoint,
           value: endpoint.errorRate,
-          threshold: this.thresholds.errorRate
+          threshold: this.thresholds.errorRate,
         });
       }
     });
 
     // Check memory usage
-    const memoryUsagePercent = (summary.system.memoryUsage / (1024 * 1024)) * 100; // Rough estimate
+    const memoryUsagePercent =
+      (summary.system.memoryUsage / (1024 * 1024)) * 100; // Rough estimate
     if (memoryUsagePercent > this.thresholds.memoryUsage) {
       alerts.push({
         type: 'high_memory_usage',
         value: memoryUsagePercent,
-        threshold: this.thresholds.memoryUsage
+        threshold: this.thresholds.memoryUsage,
       });
     }
 

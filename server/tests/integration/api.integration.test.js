@@ -14,12 +14,12 @@ require('./setup');
 // Create test app
 const createTestApp = () => {
   const app = express();
-  
+
   // Middleware
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  
+
   // Routes
   app.use('/api/v1/agile', agileRoutes);
   app.use('/api/v1/epics', epicRoutes);
@@ -27,22 +27,22 @@ const createTestApp = () => {
   app.use('/api/v1/sprints', sprintRoutes);
   app.use('/api/v1/auth', authRoutes);
   app.use('/api/v1/users', userRoutes);
-  
+
   // Error handling
   app.use((err, req, res, next) => {
     res.status(500).json({
       success: false,
       message: 'Internal server error',
-      error: process.env.NODE_ENV === 'test' ? err.message : undefined
+      error: process.env.NODE_ENV === 'test' ? err.message : undefined,
     });
   });
-  
+
   return app;
 };
 
 describe('API Integration Tests', () => {
   let app;
-  
+
   beforeAll(() => {
     app = createTestApp();
   });
@@ -57,7 +57,7 @@ describe('API Integration Tests', () => {
         expect(response.body.success).toBe(true);
         expect(Array.isArray(response.body.data)).toBe(true);
         expect(response.body.data.length).toBeGreaterThan(0);
-        
+
         const epic = response.body.data[0];
         expect(epic).toHaveProperty('id');
         expect(epic).toHaveProperty('title');
@@ -71,10 +71,12 @@ describe('API Integration Tests', () => {
       it('should create a new epic with valid data', async () => {
         const epicData = {
           title: 'Integration Test Epic',
-          description: 'This is a comprehensive description for the integration test epic that meets all validation requirements',
-          businessValue: 'Provides significant business value for testing integration between components',
+          description:
+            'This is a comprehensive description for the integration test epic that meets all validation requirements',
+          businessValue:
+            'Provides significant business value for testing integration between components',
           status: 'planned',
-          priority: 'high'
+          priority: 'high',
         };
 
         const response = await request(app)
@@ -92,7 +94,7 @@ describe('API Integration Tests', () => {
         const invalidEpicData = {
           title: 'Bad', // Too short
           description: 'Short', // Too short
-          businessValue: 'No value'
+          businessValue: 'No value',
         };
 
         const response = await request(app)
@@ -110,8 +112,9 @@ describe('API Integration Tests', () => {
       it('should update existing epic', async () => {
         const updateData = {
           title: 'Updated Integration Test Epic',
-          description: 'This is an updated comprehensive description for the integration test epic that meets all validation requirements',
-          status: 'in-progress'
+          description:
+            'This is an updated comprehensive description for the integration test epic that meets all validation requirements',
+          status: 'in-progress',
         };
 
         const response = await request(app)
@@ -128,7 +131,8 @@ describe('API Integration Tests', () => {
       it('should return 404 for non-existent epic', async () => {
         const updateData = {
           title: 'Updated Title',
-          description: 'Updated description that meets minimum length requirements'
+          description:
+            'Updated description that meets minimum length requirements',
         };
 
         const response = await request(app)
@@ -152,7 +156,7 @@ describe('API Integration Tests', () => {
         expect(response.body.success).toBe(true);
         expect(Array.isArray(response.body.data)).toBe(true);
         expect(response.body.data.length).toBeGreaterThan(0);
-        
+
         const story = response.body.data[0];
         expect(story).toHaveProperty('id');
         expect(story).toHaveProperty('title');
@@ -166,15 +170,16 @@ describe('API Integration Tests', () => {
       it('should create a new user story with valid data', async () => {
         const storyData = {
           title: 'Integration Test User Story',
-          description: 'As a developer, I want to test story creation through integration tests, so that I can verify the API works correctly',
+          description:
+            'As a developer, I want to test story creation through integration tests, so that I can verify the API works correctly',
           acceptanceCriteria: [
             'WHEN developer sends valid story data THEN story is created successfully',
-            'GIVEN valid story data WHEN API processes request THEN response includes story details'
+            'GIVEN valid story data WHEN API processes request THEN response includes story details',
           ],
           storyPoints: 5,
           priority: 'high',
           status: 'backlog',
-          epicId: 'epic-1'
+          epicId: 'epic-1',
         };
 
         const response = await request(app)
@@ -192,10 +197,13 @@ describe('API Integration Tests', () => {
       it('should reject story with invalid story points', async () => {
         const invalidStoryData = {
           title: 'Invalid Story Points Test',
-          description: 'As a developer, I want to test invalid story points, so that validation works correctly',
-          acceptanceCriteria: ['WHEN invalid points provided THEN validation error occurs'],
+          description:
+            'As a developer, I want to test invalid story points, so that validation works correctly',
+          acceptanceCriteria: [
+            'WHEN invalid points provided THEN validation error occurs',
+          ],
           storyPoints: 4, // Invalid Fibonacci number
-          priority: 'medium'
+          priority: 'medium',
         };
 
         const response = await request(app)
@@ -205,9 +213,9 @@ describe('API Integration Tests', () => {
 
         expect(response.body.success).toBe(false);
         expect(response.body.errors).toBeDefined();
-        expect(response.body.errors.some(error => 
-          error.includes('Fibonacci')
-        )).toBe(true);
+        expect(
+          response.body.errors.some(error => error.includes('Fibonacci'))
+        ).toBe(true);
       });
     });
   });
@@ -222,7 +230,7 @@ describe('API Integration Tests', () => {
         expect(response.body.success).toBe(true);
         expect(Array.isArray(response.body.data)).toBe(true);
         expect(response.body.data.length).toBeGreaterThan(0);
-        
+
         const sprint = response.body.data[0];
         expect(sprint).toHaveProperty('id');
         expect(sprint).toHaveProperty('number');
@@ -240,7 +248,7 @@ describe('API Integration Tests', () => {
           endDate: '2024-03-14',
           goal: 'Complete integration testing framework and validate all API endpoints',
           capacity: 40,
-          status: 'planning'
+          status: 'planning',
         };
 
         const response = await request(app)
@@ -261,7 +269,7 @@ describe('API Integration Tests', () => {
           startDate: '2024-03-14',
           endDate: '2024-03-01', // End date before start date
           goal: 'Invalid date range test sprint',
-          capacity: 40
+          capacity: 40,
         };
 
         const response = await request(app)
@@ -271,9 +279,11 @@ describe('API Integration Tests', () => {
 
         expect(response.body.success).toBe(false);
         expect(response.body.errors).toBeDefined();
-        expect(response.body.errors.some(error => 
-          error.includes('End date must be after start date')
-        )).toBe(true);
+        expect(
+          response.body.errors.some(error =>
+            error.includes('End date must be after start date')
+          )
+        ).toBe(true);
       });
     });
   });
@@ -283,10 +293,12 @@ describe('API Integration Tests', () => {
       // Create an epic
       const epicData = {
         title: 'Cross-Integration Test Epic',
-        description: 'This epic is created to test cross-entity relationships in integration tests',
-        businessValue: 'Validates that relationships between entities work correctly',
+        description:
+          'This epic is created to test cross-entity relationships in integration tests',
+        businessValue:
+          'Validates that relationships between entities work correctly',
         status: 'planned',
-        priority: 'medium'
+        priority: 'medium',
       };
 
       const epicResponse = await request(app)
@@ -299,15 +311,16 @@ describe('API Integration Tests', () => {
       // Create a story linked to the epic
       const storyData = {
         title: 'Cross-Integration Test Story',
-        description: 'As a developer, I want to test epic-story relationships, so that data integrity is maintained',
+        description:
+          'As a developer, I want to test epic-story relationships, so that data integrity is maintained',
         acceptanceCriteria: [
           'WHEN story is created with epic ID THEN it is linked to the epic',
-          'WHEN epic is queried THEN it includes linked stories'
+          'WHEN epic is queried THEN it includes linked stories',
         ],
         storyPoints: 3,
         priority: 'medium',
         status: 'backlog',
-        epicId: epicId
+        epicId: epicId,
       };
 
       const storyResponse = await request(app)
@@ -320,12 +333,16 @@ describe('API Integration Tests', () => {
         .get('/api/v1/agile/epics')
         .expect(200);
 
-      const createdEpic = epicsResponse.body.data.find(epic => epic.id === epicId);
+      const createdEpic = epicsResponse.body.data.find(
+        epic => epic.id === epicId
+      );
       expect(createdEpic).toBeDefined();
       expect(createdEpic.stories).toBeDefined();
       expect(Array.isArray(createdEpic.stories)).toBe(true);
-      
-      const linkedStory = createdEpic.stories.find(story => story.id === storyResponse.body.data.id);
+
+      const linkedStory = createdEpic.stories.find(
+        story => story.id === storyResponse.body.data.id
+      );
       expect(linkedStory).toBeDefined();
       expect(linkedStory.title).toBe(storyData.title);
     });
@@ -384,18 +401,14 @@ describe('API Integration Tests', () => {
   describe('Performance Integration', () => {
     it('should handle multiple concurrent requests', async () => {
       const requests = [];
-      
+
       // Create 10 concurrent requests
       for (let i = 0; i < 10; i++) {
-        requests.push(
-          request(app)
-            .get('/api/v1/agile/epics')
-            .expect(200)
-        );
+        requests.push(request(app).get('/api/v1/agile/epics').expect(200));
       }
 
       const responses = await Promise.all(requests);
-      
+
       // All requests should succeed
       responses.forEach(response => {
         expect(response.body.success).toBe(true);
@@ -405,14 +418,12 @@ describe('API Integration Tests', () => {
 
     it('should respond within acceptable time limits', async () => {
       const startTime = Date.now();
-      
-      await request(app)
-        .get('/api/v1/agile/backlog/metrics')
-        .expect(200);
-      
+
+      await request(app).get('/api/v1/agile/backlog/metrics').expect(200);
+
       const endTime = Date.now();
       const responseTime = endTime - startTime;
-      
+
       // Should respond within 1 second
       expect(responseTime).toBeLessThan(1000);
     });

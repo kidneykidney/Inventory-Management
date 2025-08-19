@@ -9,7 +9,7 @@ describe('EmailTemplateService', () => {
         lendDate: new Date('2024-01-15'),
         dueDate: new Date('2024-02-15'),
         productSpecs: 'M1 Pro, 16GB RAM, 512GB SSD',
-        lendingId: 'LT-001'
+        lendingId: 'LT-001',
       };
 
       const template = emailTemplateService.generateTemplate(
@@ -32,7 +32,7 @@ describe('EmailTemplateService', () => {
         productName: 'iPad Pro',
         dueDate: new Date('2024-02-20'),
         daysUntilDue: 3,
-        lendingId: 'LT-002'
+        lendingId: 'LT-002',
       };
 
       const template = emailTemplateService.generateTemplate(
@@ -55,7 +55,7 @@ describe('EmailTemplateService', () => {
         productName: 'Dell Monitor',
         dueDate: new Date('2024-01-10'),
         daysOverdue: 5,
-        lendingId: 'LT-003'
+        lendingId: 'LT-003',
       };
 
       const template = emailTemplateService.generateTemplate(
@@ -63,7 +63,9 @@ describe('EmailTemplateService', () => {
         data
       );
 
-      expect(template.subject).toBe('OVERDUE NOTICE - Dell Monitor (5 days overdue)');
+      expect(template.subject).toBe(
+        'OVERDUE NOTICE - Dell Monitor (5 days overdue)'
+      );
       expect(template.html).toContain('Bob Johnson');
       expect(template.html).toContain('Dell Monitor');
       expect(template.html).toContain('5');
@@ -78,7 +80,7 @@ describe('EmailTemplateService', () => {
         productName: 'Wireless Mouse',
         returnDate: new Date('2024-02-10'),
         condition: 'excellent',
-        lendingId: 'LT-004'
+        lendingId: 'LT-004',
       };
 
       const template = emailTemplateService.generateTemplate(
@@ -100,7 +102,7 @@ describe('EmailTemplateService', () => {
         borrowerName: 'Charlie Wilson',
         productName: 'Conference Camera',
         approverName: 'Admin User',
-        lendingId: 'LT-005'
+        lendingId: 'LT-005',
       };
 
       const template = emailTemplateService.generateTemplate(
@@ -108,7 +110,9 @@ describe('EmailTemplateService', () => {
         data
       );
 
-      expect(template.subject).toBe('Lending Request Approved - Conference Camera');
+      expect(template.subject).toBe(
+        'Lending Request Approved - Conference Camera'
+      );
       expect(template.html).toContain('Charlie Wilson');
       expect(template.html).toContain('Conference Camera');
       expect(template.html).toContain('Admin User');
@@ -131,7 +135,7 @@ describe('EmailTemplateService', () => {
         productName: 'Test Product',
         lendDate: new Date('2024-01-15'),
         dueDate: new Date('2024-02-15'),
-        lendingId: 'LT-001'
+        lendingId: 'LT-001',
         // productSpecs is missing
       };
 
@@ -152,7 +156,7 @@ describe('EmailTemplateService', () => {
         productName: 'Test Product',
         lendDate: new Date('2024-01-15T10:30:00Z'),
         dueDate: new Date('2024-02-15T15:45:00Z'),
-        lendingId: 'LT-001'
+        lendingId: 'LT-001',
       };
 
       const template = emailTemplateService.generateTemplate(
@@ -161,20 +165,38 @@ describe('EmailTemplateService', () => {
       );
 
       // Check that dates are formatted as locale date strings
-      expect(template.html).toContain(new Date('2024-01-15T10:30:00Z').toLocaleDateString());
-      expect(template.html).toContain(new Date('2024-02-15T15:45:00Z').toLocaleDateString());
-      expect(template.text).toContain(new Date('2024-01-15T10:30:00Z').toLocaleDateString());
-      expect(template.text).toContain(new Date('2024-02-15T15:45:00Z').toLocaleDateString());
+      expect(template.html).toContain(
+        new Date('2024-01-15T10:30:00Z').toLocaleDateString()
+      );
+      expect(template.html).toContain(
+        new Date('2024-02-15T15:45:00Z').toLocaleDateString()
+      );
+      expect(template.text).toContain(
+        new Date('2024-01-15T10:30:00Z').toLocaleDateString()
+      );
+      expect(template.text).toContain(
+        new Date('2024-02-15T15:45:00Z').toLocaleDateString()
+      );
     });
   });
 
   describe('template constants', () => {
     it('should have all required template types', () => {
-      expect(emailTemplateService.templates.LENDING_CONFIRMATION).toBe('lending_confirmation');
-      expect(emailTemplateService.templates.RETURN_REMINDER).toBe('return_reminder');
-      expect(emailTemplateService.templates.OVERDUE_NOTICE).toBe('overdue_notice');
-      expect(emailTemplateService.templates.RETURN_CONFIRMATION).toBe('return_confirmation');
-      expect(emailTemplateService.templates.LENDING_REQUEST_APPROVAL).toBe('lending_request_approval');
+      expect(emailTemplateService.templates.LENDING_CONFIRMATION).toBe(
+        'lending_confirmation'
+      );
+      expect(emailTemplateService.templates.RETURN_REMINDER).toBe(
+        'return_reminder'
+      );
+      expect(emailTemplateService.templates.OVERDUE_NOTICE).toBe(
+        'overdue_notice'
+      );
+      expect(emailTemplateService.templates.RETURN_CONFIRMATION).toBe(
+        'return_confirmation'
+      );
+      expect(emailTemplateService.templates.LENDING_REQUEST_APPROVAL).toBe(
+        'lending_request_approval'
+      );
     });
   });
 });

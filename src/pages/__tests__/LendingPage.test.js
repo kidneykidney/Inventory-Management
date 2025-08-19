@@ -6,8 +6,8 @@ import LendingPage from '../LendingPage';
 // Mock the toast hook
 jest.mock('../../hooks/use-toast', () => ({
   useToast: () => ({
-    toast: jest.fn()
-  })
+    toast: jest.fn(),
+  }),
 }));
 
 // Mock fetch
@@ -25,7 +25,7 @@ const mockProducts = [
     maxLendingPeriod: 30,
     isAvailable: true,
     tags: ['laptop', 'development'],
-    imageUrls: ['https://example.com/image1.jpg']
+    imageUrls: ['https://example.com/image1.jpg'],
   },
   {
     id: 'product-2',
@@ -38,27 +38,27 @@ const mockProducts = [
     maxLendingPeriod: 14,
     isAvailable: false,
     tags: ['tablet', 'design'],
-    imageUrls: []
-  }
+    imageUrls: [],
+  },
 ];
 
 const mockCategories = [
   { id: 'cat-1', name: 'Electronics' },
-  { id: 'cat-2', name: 'Office Supplies' }
+  { id: 'cat-2', name: 'Office Supplies' },
 ];
 
 describe('LendingPage', () => {
   beforeEach(() => {
     fetch.mockClear();
     localStorage.setItem('token', 'mock-token');
-    
+
     // Mock successful API responses
     fetch
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockProducts })
+        json: () => Promise.resolve({ success: true, data: mockProducts }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockCategories })
+        json: () => Promise.resolve({ success: true, data: mockCategories }),
       });
   });
 
@@ -87,7 +87,9 @@ describe('LendingPage', () => {
     });
 
     // Search for MacBook
-    const searchInput = screen.getByPlaceholderText('Search products, brands, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'MacBook' } });
 
     await waitFor(() => {
@@ -125,7 +127,9 @@ describe('LendingPage', () => {
     fireEvent.click(addToCartButtons[0]);
 
     await waitFor(() => {
-      expect(screen.getByText('1 item(s) in your lending cart')).toBeInTheDocument();
+      expect(
+        screen.getByText('1 item(s) in your lending cart')
+      ).toBeInTheDocument();
       expect(screen.getByText('In Cart')).toBeInTheDocument();
     });
   });
@@ -154,14 +158,18 @@ describe('LendingPage', () => {
     fireEvent.click(addToCartButtons[0]);
 
     await waitFor(() => {
-      expect(screen.getByText('1 item(s) in your lending cart')).toBeInTheDocument();
+      expect(
+        screen.getByText('1 item(s) in your lending cart')
+      ).toBeInTheDocument();
     });
 
     // Clear cart
     fireEvent.click(screen.getByText('Clear Cart'));
 
     await waitFor(() => {
-      expect(screen.queryByText('1 item(s) in your lending cart')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('1 item(s) in your lending cart')
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -169,16 +177,16 @@ describe('LendingPage', () => {
     // Mock successful checkout
     fetch
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockProducts })
+        json: () => Promise.resolve({ success: true, data: mockProducts }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockCategories })
+        json: () => Promise.resolve({ success: true, data: mockCategories }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockProducts })
+        json: () => Promise.resolve({ success: true, data: mockProducts }),
       });
 
     render(<LendingPage />);
@@ -192,7 +200,9 @@ describe('LendingPage', () => {
     fireEvent.click(addToCartButtons[0]);
 
     await waitFor(() => {
-      expect(screen.getByText('1 item(s) in your lending cart')).toBeInTheDocument();
+      expect(
+        screen.getByText('1 item(s) in your lending cart')
+      ).toBeInTheDocument();
     });
 
     // Checkout
@@ -205,8 +215,8 @@ describe('LendingPage', () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer mock-token'
-          }
+            Authorization: 'Bearer mock-token',
+          },
         })
       );
     });
@@ -220,11 +230,15 @@ describe('LendingPage', () => {
     });
 
     // Search for non-existent product
-    const searchInput = screen.getByPlaceholderText('Search products, brands, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'NonExistentProduct' } });
 
     await waitFor(() => {
-      expect(screen.getByText('No products match your search criteria')).toBeInTheDocument();
+      expect(
+        screen.getByText('No products match your search criteria')
+      ).toBeInTheDocument();
       expect(screen.getByText('Clear Filters')).toBeInTheDocument();
     });
   });
@@ -237,7 +251,9 @@ describe('LendingPage', () => {
     });
 
     // Apply search filter
-    const searchInput = screen.getByPlaceholderText('Search products, brands, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'NonExistentProduct' } });
 
     await waitFor(() => {

@@ -4,7 +4,14 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
 
 /**
  * LendingForm component for processing lending transactions
@@ -20,7 +27,7 @@ const LendingForm = ({
   onClose,
   onSubmit,
   title = 'Lend Item',
-  item = null
+  item = null,
 }) => {
   const [formData, setFormData] = useState({
     borrowerName: '',
@@ -28,7 +35,7 @@ const LendingForm = ({
     purpose: '',
     quantity: 1,
     returnDate: '',
-    notes: ''
+    notes: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -37,11 +44,13 @@ const LendingForm = ({
   useEffect(() => {
     if (item && item.lendingPolicy) {
       const returnDate = new Date();
-      returnDate.setDate(returnDate.getDate() + item.lendingPolicy.maxLendingPeriod);
+      returnDate.setDate(
+        returnDate.getDate() + item.lendingPolicy.maxLendingPeriod
+      );
       setFormData(prev => ({
         ...prev,
         returnDate: returnDate.toISOString().split('T')[0],
-        quantity: 1
+        quantity: 1,
       }));
     }
   }, [item]);
@@ -55,7 +64,7 @@ const LendingForm = ({
         purpose: '',
         quantity: 1,
         returnDate: '',
-        notes: ''
+        notes: '',
       });
       setErrors({});
     }
@@ -64,14 +73,14 @@ const LendingForm = ({
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
-        [field]: null
+        [field]: null,
       }));
     }
   };
@@ -105,9 +114,9 @@ const LendingForm = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit && onSubmit(formData);
     }
@@ -130,7 +139,7 @@ const LendingForm = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className='max-w-md'>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
@@ -139,121 +148,137 @@ const LendingForm = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {/* Item Information */}
-            <div className="bg-muted p-3 rounded-md">
-              <div className="text-sm font-medium">{item.name}</div>
-              <div className="text-sm text-muted-foreground">
+            <div className='bg-muted p-3 rounded-md'>
+              <div className='text-sm font-medium'>{item.name}</div>
+              <div className='text-sm text-muted-foreground'>
                 Available Quantity: {item.available}
               </div>
             </div>
 
             {/* Borrower Name */}
-            <div className="space-y-2">
-              <Label htmlFor="borrower-name">Borrower Name *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='borrower-name'>Borrower Name *</Label>
               <Input
-                id="borrower-name"
-                type="text"
+                id='borrower-name'
+                type='text'
                 value={formData.borrowerName}
-                onChange={(e) => handleInputChange('borrowerName', e.target.value)}
+                onChange={e =>
+                  handleInputChange('borrowerName', e.target.value)
+                }
                 placeholder="Enter borrower's name"
-                aria-label="Borrower Name"
+                aria-label='Borrower Name'
                 className={errors.borrowerName ? 'border-destructive' : ''}
               />
               {errors.borrowerName && (
-                <div className="text-sm text-destructive">{errors.borrowerName}</div>
+                <div className='text-sm text-destructive'>
+                  {errors.borrowerName}
+                </div>
               )}
             </div>
 
             {/* Borrower Email */}
-            <div className="space-y-2">
-              <Label htmlFor="borrower-email">Borrower Email *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='borrower-email'>Borrower Email *</Label>
               <Input
-                id="borrower-email"
-                type="email"
+                id='borrower-email'
+                type='email'
                 value={formData.borrowerEmail}
-                onChange={(e) => handleInputChange('borrowerEmail', e.target.value)}
+                onChange={e =>
+                  handleInputChange('borrowerEmail', e.target.value)
+                }
                 placeholder="Enter borrower's email"
-                aria-label="Borrower Email"
+                aria-label='Borrower Email'
                 className={errors.borrowerEmail ? 'border-destructive' : ''}
               />
               {errors.borrowerEmail && (
-                <div className="text-sm text-destructive">{errors.borrowerEmail}</div>
+                <div className='text-sm text-destructive'>
+                  {errors.borrowerEmail}
+                </div>
               )}
             </div>
 
             {/* Quantity and Return Date */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="quantity">Quantity</Label>
+            <div className='grid grid-cols-2 gap-4'>
+              <div className='space-y-2'>
+                <Label htmlFor='quantity'>Quantity</Label>
                 <Input
-                  id="quantity"
-                  type="number"
-                  min="1"
+                  id='quantity'
+                  type='number'
+                  min='1'
                   max={item.available}
                   value={formData.quantity}
-                  onChange={(e) => handleInputChange('quantity', parseInt(e.target.value) || 1)}
-                  aria-label="Quantity"
+                  onChange={e =>
+                    handleInputChange('quantity', parseInt(e.target.value) || 1)
+                  }
+                  aria-label='Quantity'
                   className={errors.quantity ? 'border-destructive' : ''}
                 />
                 {errors.quantity && (
-                  <div className="text-sm text-destructive">{errors.quantity}</div>
+                  <div className='text-sm text-destructive'>
+                    {errors.quantity}
+                  </div>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="return-date">Return Date</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='return-date'>Return Date</Label>
                 <Input
-                  id="return-date"
-                  type="date"
+                  id='return-date'
+                  type='date'
                   value={formData.returnDate}
-                  onChange={(e) => handleInputChange('returnDate', e.target.value)}
-                  aria-label="Return Date"
+                  onChange={e =>
+                    handleInputChange('returnDate', e.target.value)
+                  }
+                  aria-label='Return Date'
                   className={errors.returnDate ? 'border-destructive' : ''}
                 />
                 {errors.returnDate && (
-                  <div className="text-sm text-destructive">{errors.returnDate}</div>
+                  <div className='text-sm text-destructive'>
+                    {errors.returnDate}
+                  </div>
                 )}
               </div>
             </div>
 
             {/* Purpose */}
-            <div className="space-y-2">
-              <Label htmlFor="purpose">Purpose</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='purpose'>Purpose</Label>
               <Textarea
-                id="purpose"
+                id='purpose'
                 value={formData.purpose}
-                onChange={(e) => handleInputChange('purpose', e.target.value)}
-                placeholder="Reason for borrowing..."
+                onChange={e => handleInputChange('purpose', e.target.value)}
+                placeholder='Reason for borrowing...'
                 rows={3}
-                aria-label="Purpose"
+                aria-label='Purpose'
               />
             </div>
 
             {/* Notes */}
-            <div className="space-y-2">
-              <Label htmlFor="notes">Notes</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='notes'>Notes</Label>
               <Textarea
-                id="notes"
+                id='notes'
                 value={formData.notes}
-                onChange={(e) => handleInputChange('notes', e.target.value)}
-                placeholder="Additional notes..."
+                onChange={e => handleInputChange('notes', e.target.value)}
+                placeholder='Additional notes...'
                 rows={2}
-                aria-label="Notes"
+                aria-label='Notes'
               />
             </div>
           </div>
 
-          <DialogFooter className="mt-6">
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className='mt-6'>
+            <Button type='button' variant='outline' onClick={onClose}>
               Cancel
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type='submit'
               disabled={!isFormValid()}
-              aria-label="Process Lending"
+              aria-label='Process Lending'
             >
-              <Send className="mr-2 h-4 w-4" />
+              <Send className='mr-2 h-4 w-4' />
               Process Lending
             </Button>
           </DialogFooter>

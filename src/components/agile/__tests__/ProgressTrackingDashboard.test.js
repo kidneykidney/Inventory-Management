@@ -8,20 +8,20 @@ import { apiService } from '../../../api/apiService';
 jest.mock('../../../api/apiService', () => ({
   apiService: {
     get: jest.fn(),
-  }
+  },
 }));
 
 // Mock Chart.js components
 jest.mock('react-chartjs-2', () => ({
-  Line: () => <div data-testid="line-chart">Line Chart</div>,
-  Bar: () => <div data-testid="bar-chart">Bar Chart</div>,
+  Line: () => <div data-testid='line-chart'>Line Chart</div>,
+  Bar: () => <div data-testid='bar-chart'>Bar Chart</div>,
 }));
 
 // Mock child components
 jest.mock('../VelocityChart', () => {
   return function MockVelocityChart({ data, currentSprint }) {
     return (
-      <div data-testid="velocity-chart">
+      <div data-testid='velocity-chart'>
         Velocity Chart - Sprint: {currentSprint?.number || 'None'}
       </div>
     );
@@ -31,7 +31,7 @@ jest.mock('../VelocityChart', () => {
 jest.mock('../BurnupChart', () => {
   return function MockBurnupChart({ data, sprint }) {
     return (
-      <div data-testid="burnup-chart">
+      <div data-testid='burnup-chart'>
         Burnup Chart - Sprint: {sprint?.number || 'None'}
       </div>
     );
@@ -41,7 +41,7 @@ jest.mock('../BurnupChart', () => {
 jest.mock('../TeamCapacityVisualization', () => {
   return function MockTeamCapacityVisualization({ data, sprint }) {
     return (
-      <div data-testid="team-capacity">
+      <div data-testid='team-capacity'>
         Team Capacity - Sprint: {sprint?.number || 'None'}
       </div>
     );
@@ -51,7 +51,7 @@ jest.mock('../TeamCapacityVisualization', () => {
 jest.mock('../ProgressMetricsCards', () => {
   return function MockProgressMetricsCards({ metrics, sprint }) {
     return (
-      <div data-testid="progress-metrics">
+      <div data-testid='progress-metrics'>
         Progress Metrics - Sprint: {sprint?.number || 'None'}
       </div>
     );
@@ -66,7 +66,7 @@ describe('ProgressTrackingDashboard', () => {
       status: 'complete',
       startDate: '2024-01-01',
       endDate: '2024-01-14',
-      goal: 'Complete user authentication'
+      goal: 'Complete user authentication',
     },
     {
       id: '2',
@@ -74,23 +74,23 @@ describe('ProgressTrackingDashboard', () => {
       status: 'active',
       startDate: '2024-01-15',
       endDate: '2024-01-28',
-      goal: 'Implement dashboard features'
-    }
+      goal: 'Implement dashboard features',
+    },
   ];
 
   const mockVelocityData = [
     { number: 1, plannedPoints: 20, completedPoints: 18, velocity: 18 },
-    { number: 2, plannedPoints: 25, completedPoints: 22, velocity: 22 }
+    { number: 2, plannedPoints: 25, completedPoints: 22, velocity: 22 },
   ];
 
   const mockBurnupData = {
     burnupData: [
       { date: '2024-01-15', totalScope: 25, completedWork: 0 },
-      { date: '2024-01-16', totalScope: 25, completedWork: 5 }
+      { date: '2024-01-16', totalScope: 25, completedWork: 5 },
     ],
     scopeChange: 0,
     isOnTrack: true,
-    projectionAccuracy: 80
+    projectionAccuracy: 80,
   };
 
   const mockTeamCapacity = {
@@ -101,28 +101,32 @@ describe('ProgressTrackingDashboard', () => {
         role: 'Developer',
         capacity: 40,
         allocated: 35,
-        assignedStories: []
-      }
+        assignedStories: [],
+      },
     ],
     totalCapacity: 40,
     totalAllocated: 35,
-    utilizationRate: 87.5
+    utilizationRate: 87.5,
   };
 
   const mockProgressMetrics = {
     velocityTrend: { current: 22, change: 10 },
-    sprintProgress: { completionRate: 60, completedStories: 3, totalStories: 5 },
+    sprintProgress: {
+      completionRate: 60,
+      completedStories: 3,
+      totalStories: 5,
+    },
     teamUtilization: { rate: 87.5, activeMembers: 1 },
     qualityMetrics: { score: 8.5, testsPass: 95 },
     riskIndicators: [],
-    predictiveAnalytics: { completionForecast: 'On Time', confidence: 'high' }
+    predictiveAnalytics: { completionForecast: 'On Time', confidence: 'high' },
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup default API responses
-    apiService.get.mockImplementation((url) => {
+    apiService.get.mockImplementation(url => {
       if (url === '/api/v1/sprints') {
         return Promise.resolve({ data: { data: mockSprints } });
       }
@@ -144,25 +148,31 @@ describe('ProgressTrackingDashboard', () => {
 
   it('renders loading state initially', () => {
     render(<ProgressTrackingDashboard />);
-    
-    expect(screen.getByText('Loading progress tracking dashboard...')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('Loading progress tracking dashboard...')
+    ).toBeInTheDocument();
   });
 
   it('renders dashboard with data after loading', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Progress Tracking')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Real-time sprint progress, velocity tracking, and team capacity visualization')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Real-time sprint progress, velocity tracking, and team capacity visualization'
+      )
+    ).toBeInTheDocument();
     expect(screen.getByTestId('velocity-chart')).toBeInTheDocument();
     expect(screen.getByTestId('progress-metrics')).toBeInTheDocument();
   });
 
   it('displays sprint selector with available sprints', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Progress Tracking')).toBeInTheDocument();
     });
@@ -174,19 +184,21 @@ describe('ProgressTrackingDashboard', () => {
 
   it('shows active sprint by default', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('velocity-chart')).toBeInTheDocument();
     });
 
     // Should show the active sprint (Sprint 2)
     expect(screen.getByText('Velocity Chart - Sprint: 2')).toBeInTheDocument();
-    expect(screen.getByText('Progress Metrics - Sprint: 2')).toBeInTheDocument();
+    expect(
+      screen.getByText('Progress Metrics - Sprint: 2')
+    ).toBeInTheDocument();
   });
 
   it('loads sprint-specific data when sprint is selected', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Progress Tracking')).toBeInTheDocument();
     });
@@ -199,7 +211,7 @@ describe('ProgressTrackingDashboard', () => {
 
   it('displays burnup chart when data is available', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('burnup-chart')).toBeInTheDocument();
     });
@@ -209,7 +221,7 @@ describe('ProgressTrackingDashboard', () => {
 
   it('displays team capacity visualization when data is available', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('team-capacity')).toBeInTheDocument();
     });
@@ -219,7 +231,7 @@ describe('ProgressTrackingDashboard', () => {
 
   it('shows real-time status indicators', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Real-time Status')).toBeInTheDocument();
     });
@@ -231,7 +243,7 @@ describe('ProgressTrackingDashboard', () => {
 
   it('handles refresh button click', async () => {
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Progress Tracking')).toBeInTheDocument();
     });
@@ -247,18 +259,23 @@ describe('ProgressTrackingDashboard', () => {
 
   it('handles API errors gracefully', async () => {
     apiService.get.mockRejectedValue(new Error('API Error'));
-    
+
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
-      expect(screen.getByText('Failed to load dashboard data')).toBeInTheDocument();
+      expect(
+        screen.getByText('Failed to load dashboard data')
+      ).toBeInTheDocument();
     });
   });
 
   it('shows no active sprint message when no sprints are active', async () => {
-    const inactiveSprints = mockSprints.map(sprint => ({ ...sprint, status: 'complete' }));
-    
-    apiService.get.mockImplementation((url) => {
+    const inactiveSprints = mockSprints.map(sprint => ({
+      ...sprint,
+      status: 'complete',
+    }));
+
+    apiService.get.mockImplementation(url => {
       if (url === '/api/v1/sprints') {
         return Promise.resolve({ data: { data: inactiveSprints } });
       }
@@ -269,7 +286,7 @@ describe('ProgressTrackingDashboard', () => {
     });
 
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Progress Tracking')).toBeInTheDocument();
     });
@@ -279,31 +296,37 @@ describe('ProgressTrackingDashboard', () => {
   });
 
   it('displays error message when sprint-specific data fails to load', async () => {
-    apiService.get.mockImplementation((url) => {
+    apiService.get.mockImplementation(url => {
       if (url === '/api/v1/sprints') {
         return Promise.resolve({ data: { data: mockSprints } });
       }
       if (url === '/api/v1/sprints/velocity') {
         return Promise.resolve({ data: { data: mockVelocityData } });
       }
-      if (url.includes('/burnup') || url.includes('/capacity') || url.includes('/metrics')) {
+      if (
+        url.includes('/burnup') ||
+        url.includes('/capacity') ||
+        url.includes('/metrics')
+      ) {
         return Promise.reject(new Error('Sprint data error'));
       }
       return Promise.resolve({ data: { data: null } });
     });
 
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
-      expect(screen.getByText('Failed to load sprint data')).toBeInTheDocument();
+      expect(
+        screen.getByText('Failed to load sprint data')
+      ).toBeInTheDocument();
     });
   });
 
   it('sets up auto-refresh interval', async () => {
     jest.useFakeTimers();
-    
+
     render(<ProgressTrackingDashboard />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Progress Tracking')).toBeInTheDocument();
     });

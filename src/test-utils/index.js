@@ -7,9 +7,7 @@ import { ThemeProvider } from '../utils/ThemeContext';
 const AllTheProviders = ({ children }) => {
   return (
     <BrowserRouter>
-      <ThemeProvider>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider>{children}</ThemeProvider>
     </BrowserRouter>
   );
 };
@@ -41,7 +39,8 @@ export const createMockEpic = (overrides = {}) => ({
 export const createMockUserStory = (overrides = {}) => ({
   id: 'story-1',
   title: 'Test User Story',
-  description: 'As a user, I want to test functionality, so that I can verify it works',
+  description:
+    'As a user, I want to test functionality, so that I can verify it works',
   acceptanceCriteria: [
     'WHEN user performs action THEN system responds correctly',
     'GIVEN valid input WHEN user submits THEN data is saved',
@@ -105,7 +104,7 @@ export const mockFetchError = (error = 'Network error') => {
 // Form testing helpers
 export const fillForm = async (getByLabelText, formData) => {
   const { fireEvent } = await import('@testing-library/react');
-  
+
   Object.entries(formData).forEach(([field, value]) => {
     const input = getByLabelText(new RegExp(field, 'i'));
     fireEvent.change(input, { target: { value } });
@@ -114,7 +113,9 @@ export const fillForm = async (getByLabelText, formData) => {
 
 export const submitForm = async (getByRole, buttonText = 'submit') => {
   const { fireEvent } = await import('@testing-library/react');
-  
-  const submitButton = getByRole('button', { name: new RegExp(buttonText, 'i') });
+
+  const submitButton = getByRole('button', {
+    name: new RegExp(buttonText, 'i'),
+  });
   fireEvent.click(submitButton);
 };

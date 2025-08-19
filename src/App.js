@@ -18,9 +18,13 @@ const ReportsPage = React.lazy(() => import('./pages/ReportsPage'));
 const SettingsPage = React.lazy(() => import('./pages/SettingsPage'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
 const AgileBacklogPage = React.lazy(() => import('./pages/AgileBacklogPage'));
-const SprintPlanningPage = React.lazy(() => import('./pages/SprintPlanningPage'));
+const SprintPlanningPage = React.lazy(
+  () => import('./pages/SprintPlanningPage')
+);
 const TechnicalDebtPage = React.lazy(() => import('./pages/TechnicalDebtPage'));
-const StakeholderDashboardPage = React.lazy(() => import('./pages/StakeholderDashboardPage'));
+const StakeholderDashboardPage = React.lazy(
+  () => import('./pages/StakeholderDashboardPage')
+);
 const AnalyticsPage = React.lazy(() => import('./pages/AnalyticsPage'));
 const AdminPanelPage = React.lazy(() => import('./pages/AdminPanelPage'));
 
@@ -31,8 +35,8 @@ import ToastProvider from './components/ui/toast-provider';
 
 // Loading component
 const LoadingSpinner = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+  <div className='flex items-center justify-center min-h-screen'>
+    <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600'></div>
   </div>
 );
 
@@ -55,10 +59,10 @@ function App() {
   // Log application start and initialize performance tracking
   React.useEffect(() => {
     logger.info('Inventory Management System initialized');
-    
+
     // Initialize performance tracking
     performanceTracker.init();
-    
+
     // Track initial page load
     performanceTracker.trackUserInteraction('app_start', document.body);
   }, []);
@@ -86,11 +90,11 @@ function App() {
               </Routes>
             </Suspense>
           ) : (
-            <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+            <div className='flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800'>
               <Navbar onLogout={logout} />
-              <div className="flex flex-1">
+              <div className='flex flex-1'>
                 <Sidebar />
-                <main className="flex-1 overflow-y-auto">
+                <main className='flex-1 overflow-y-auto'>
                   <Suspense fallback={<LoadingSpinner />}>
                     <Routes>
                       <Route path='/' element={<EnhancedDashboard />} />
@@ -107,8 +111,14 @@ function App() {
                         path='/sprint-planning'
                         element={<SprintPlanningPage />}
                       />
-                      <Route path='/technical-debt' element={<TechnicalDebtPage />} />
-                      <Route path='/stakeholder-dashboard' element={<StakeholderDashboardPage />} />
+                      <Route
+                        path='/technical-debt'
+                        element={<TechnicalDebtPage />}
+                      />
+                      <Route
+                        path='/stakeholder-dashboard'
+                        element={<StakeholderDashboardPage />}
+                      />
                       <Route path='/analytics' element={<AnalyticsPage />} />
                       <Route path='/admin' element={<AdminPanelPage />} />
                     </Routes>

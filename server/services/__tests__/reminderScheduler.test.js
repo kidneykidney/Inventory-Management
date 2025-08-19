@@ -11,18 +11,18 @@ jest.mock('node-cron');
 describe('ReminderScheduler', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Mock cron.schedule
     const mockJob = {
       start: jest.fn(),
       stop: jest.fn(),
-      nextDate: jest.fn().mockReturnValue(new Date())
+      nextDate: jest.fn().mockReturnValue(new Date()),
     };
     cron.schedule.mockReturnValue(mockJob);
-    
+
     // Mock database execute method
     db.execute = jest.fn();
-    
+
     // Reset scheduler state
     reminderScheduler.stop();
   });
@@ -37,7 +37,7 @@ describe('ReminderScheduler', () => {
         expect.any(Function),
         expect.objectContaining({
           scheduled: false,
-          timezone: process.env.TIMEZONE || 'UTC'
+          timezone: process.env.TIMEZONE || 'UTC',
         })
       );
       expect(cron.schedule).toHaveBeenCalledWith(
@@ -45,7 +45,7 @@ describe('ReminderScheduler', () => {
         expect.any(Function),
         expect.objectContaining({
           scheduled: false,
-          timezone: process.env.TIMEZONE || 'UTC'
+          timezone: process.env.TIMEZONE || 'UTC',
         })
       );
 
@@ -88,24 +88,26 @@ describe('ReminderScheduler', () => {
           productName: 'MacBook Pro',
           userEmail: 'user1@example.com',
           userName: 'John Doe',
-          due_date: new Date()
+          due_date: new Date(),
         },
         {
           id: 'LT-002',
           productName: 'iPad Pro',
           userEmail: 'user2@example.com',
           userName: 'Jane Smith',
-          due_date: new Date()
-        }
+          due_date: new Date(),
+        },
       ];
 
       db.execute.mockResolvedValue([mockTransactions]);
-      notificationService.sendReturnReminder.mockResolvedValue({ success: true });
+      notificationService.sendReturnReminder.mockResolvedValue({
+        success: true,
+      });
 
       await reminderScheduler.processReminders();
 
       expect(db.execute).toHaveBeenCalledWith(
-        expect.stringContaining('WHERE lt.status = \'active\''),
+        expect.stringContaining("WHERE lt.status = 'active'"),
         expect.any(Array)
       );
 
@@ -128,14 +130,14 @@ describe('ReminderScheduler', () => {
           id: 'LT-001',
           productName: 'MacBook Pro',
           userEmail: 'user1@example.com',
-          userName: 'John Doe'
+          userName: 'John Doe',
         },
         {
           id: 'LT-002',
           productName: 'iPad Pro',
           userEmail: 'user2@example.com',
-          userName: 'Jane Smith'
-        }
+          userName: 'Jane Smith',
+        },
       ];
 
       db.execute.mockResolvedValue([mockTransactions]);
@@ -166,20 +168,22 @@ describe('ReminderScheduler', () => {
           userEmail: 'user3@example.com',
           userName: 'Bob Johnson',
           status: 'active',
-          daysOverdue: 2
-        }
+          daysOverdue: 2,
+        },
       ];
 
       db.execute
         .mockResolvedValueOnce([mockTransactions]) // SELECT query
         .mockResolvedValueOnce([]); // UPDATE query
 
-      notificationService.sendOverdueNotice.mockResolvedValue({ success: true });
+      notificationService.sendOverdueNotice.mockResolvedValue({
+        success: true,
+      });
 
       await reminderScheduler.processOverdueNotices();
 
       expect(db.execute).toHaveBeenCalledWith(
-        expect.stringContaining('WHERE lt.status = \'active\''),
+        expect.stringContaining("WHERE lt.status = 'active'"),
         []
       );
 
@@ -191,7 +195,7 @@ describe('ReminderScheduler', () => {
 
       // Should update transaction status to overdue
       expect(db.execute).toHaveBeenCalledWith(
-        'UPDATE lending_transactions SET status = \'overdue\' WHERE id = ?',
+        "UPDATE lending_transactions SET status = 'overdue' WHERE id = ?",
         ['LT-003']
       );
     });
@@ -204,17 +208,19 @@ describe('ReminderScheduler', () => {
           userEmail: 'user3@example.com',
           userName: 'Bob Johnson',
           status: 'overdue',
-          daysOverdue: 5
-        }
+          daysOverdue: 5,
+        },
       ];
 
       db.execute.mockResolvedValueOnce([mockTransactions]);
-      notificationService.sendOverdueNotice.mockResolvedValue({ success: true });
+      notificationService.sendOverdueNotice.mockResolvedValue({
+        success: true,
+      });
 
       await reminderScheduler.processOverdueNotices();
 
       expect(notificationService.sendOverdueNotice).toHaveBeenCalledTimes(1);
-      
+
       // Should not call UPDATE query since status is already overdue
       expect(db.execute).toHaveBeenCalledTimes(1);
     });
@@ -230,11 +236,13 @@ describe('ReminderScheduler', () => {
         productName: 'Wireless Mouse',
         userEmail: 'user4@example.com',
         userName: 'Alice Brown',
-        due_date: futureDate
+        due_date: futureDate,
       };
 
       db.execute.mockResolvedValue([[mockTransaction]]);
-      notificationService.sendReturnReminder.mockResolvedValue({ success: true });
+      notificationService.sendReturnReminder.mockResolvedValue({
+        success: true,
+      });
 
       await reminderScheduler.processImmediateReminder('LT-004');
 
@@ -259,11 +267,13 @@ describe('ReminderScheduler', () => {
         productName: 'Conference Camera',
         userEmail: 'user5@example.com',
         userName: 'Charlie Wilson',
-        due_date: pastDate
+        due_date: pastDate,
       };
 
       db.execute.mockResolvedValue([[mockTransaction]]);
-      notificationService.sendOverdueNotice.mockResolvedValue({ success: true });
+      notificationService.sendOverdueNotice.mockResolvedValue({
+        success: true,
+      });
 
       await reminderScheduler.processImmediateReminder('LT-005');
 
@@ -277,8 +287,9 @@ describe('ReminderScheduler', () => {
     it('should handle transaction not found', async () => {
       db.execute.mockResolvedValue([[]]);
 
-      await expect(reminderScheduler.processImmediateReminder('LT-999'))
-        .rejects.toThrow('Transaction LT-999 not found');
+      await expect(
+        reminderScheduler.processImmediateReminder('LT-999')
+      ).rejects.toThrow('Transaction LT-999 not found');
     });
   });
 

@@ -6,8 +6,8 @@ import ReturnProcessDialog from '../ReturnProcessDialog';
 // Mock the toast hook
 jest.mock('../../../hooks/use-toast', () => ({
   useToast: () => ({
-    toast: jest.fn()
-  })
+    toast: jest.fn(),
+  }),
 }));
 
 // Mock fetch
@@ -20,7 +20,7 @@ const mockTransaction = {
   productModel: '13-inch',
   lendDate: '2024-01-01T00:00:00Z',
   dueDate: '2024-01-31T00:00:00Z',
-  status: 'active'
+  status: 'active',
 };
 
 describe('ReturnProcessDialog', () => {
@@ -91,14 +91,16 @@ describe('ReturnProcessDialog', () => {
     fireEvent.click(screen.getByLabelText(/damaged/i));
 
     expect(screen.getByText('Damage Reported')).toBeInTheDocument();
-    expect(screen.getByText(/Please provide detailed notes about the damage/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Please provide detailed notes about the damage/)
+    ).toBeInTheDocument();
   });
 
   it('shows overdue warning for overdue items', () => {
     const overdueTransaction = {
       ...mockTransaction,
       status: 'overdue',
-      dueDate: '2023-12-01T00:00:00Z' // Past date
+      dueDate: '2023-12-01T00:00:00Z', // Past date
     };
 
     render(
@@ -118,7 +120,7 @@ describe('ReturnProcessDialog', () => {
     const mockOnClose = jest.fn();
 
     fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ success: true })
+      json: () => Promise.resolve({ success: true }),
     });
 
     render(
@@ -132,7 +134,7 @@ describe('ReturnProcessDialog', () => {
 
     // Fill in notes
     fireEvent.change(screen.getByPlaceholderText(/Any additional comments/), {
-      target: { value: 'Item returned in good condition' }
+      target: { value: 'Item returned in good condition' },
     });
 
     // Submit form
@@ -145,9 +147,9 @@ describe('ReturnProcessDialog', () => {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer mock-token'
+            Authorization: 'Bearer mock-token',
           },
-          body: expect.stringContaining('good')
+          body: expect.stringContaining('good'),
         })
       );
     });
@@ -160,7 +162,7 @@ describe('ReturnProcessDialog', () => {
 
   it('handles return failure', async () => {
     fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ success: false, message: 'Return failed' })
+      json: () => Promise.resolve({ success: false, message: 'Return failed' }),
     });
 
     render(
@@ -209,9 +211,11 @@ describe('ReturnProcessDialog', () => {
       />
     );
 
-    const notesTextarea = screen.getByPlaceholderText(/Any additional comments/);
+    const notesTextarea = screen.getByPlaceholderText(
+      /Any additional comments/
+    );
     fireEvent.change(notesTextarea, {
-      target: { value: 'Test notes' }
+      target: { value: 'Test notes' },
     });
 
     expect(notesTextarea.value).toBe('Test notes');

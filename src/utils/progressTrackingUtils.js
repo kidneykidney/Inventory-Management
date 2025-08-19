@@ -8,14 +8,14 @@
  * @param {Array} sprints - Array of sprint data
  * @returns {Object} - Velocity trend analysis
  */
-export const calculateVelocityTrend = (sprints) => {
+export const calculateVelocityTrend = sprints => {
   if (!sprints || sprints.length < 2) {
     return {
       current: 0,
       average: 0,
       trend: 'stable',
       change: 0,
-      confidence: 'low'
+      confidence: 'low',
     };
   }
 
@@ -30,12 +30,14 @@ export const calculateVelocityTrend = (sprints) => {
       average: 0,
       trend: 'stable',
       change: 0,
-      confidence: 'low'
+      confidence: 'low',
     };
   }
 
   const current = velocities[velocities.length - 1];
-  const average = Math.round(velocities.reduce((sum, v) => sum + v, 0) / velocities.length);
+  const average = Math.round(
+    velocities.reduce((sum, v) => sum + v, 0) / velocities.length
+  );
 
   // Calculate trend over last 3 sprints vs previous 3
   let trend = 'stable';
@@ -45,12 +47,14 @@ export const calculateVelocityTrend = (sprints) => {
   if (velocities.length >= 4) {
     const recent = velocities.slice(-2);
     const previous = velocities.slice(-4, -2);
-    
+
     const recentAvg = recent.reduce((sum, v) => sum + v, 0) / recent.length;
-    const previousAvg = previous.reduce((sum, v) => sum + v, 0) / previous.length;
-    
-    change = previousAvg > 0 ? ((recentAvg - previousAvg) / previousAvg) * 100 : 0;
-    
+    const previousAvg =
+      previous.reduce((sum, v) => sum + v, 0) / previous.length;
+
+    change =
+      previousAvg > 0 ? ((recentAvg - previousAvg) / previousAvg) * 100 : 0;
+
     if (Math.abs(change) > 10) {
       trend = change > 0 ? 'increasing' : 'decreasing';
       confidence = velocities.length >= 6 ? 'high' : 'medium';
@@ -63,7 +67,7 @@ export const calculateVelocityTrend = (sprints) => {
     trend,
     change: Math.round(change),
     confidence,
-    dataPoints: velocities.length
+    dataPoints: velocities.length,
   };
 };
 
@@ -84,35 +88,49 @@ export const calculateSprintProgress = (sprint, stories) => {
       pointsRemaining: 0,
       daysRemaining: 0,
       onTrack: false,
-      velocity: 0
+      velocity: 0,
     };
   }
 
   const totalStories = stories.length;
-  const completedStories = stories.filter(story => story.status === 'done').length;
-  const totalPoints = stories.reduce((sum, story) => sum + (story.story_points || 0), 0);
+  const completedStories = stories.filter(
+    story => story.status === 'done'
+  ).length;
+  const totalPoints = stories.reduce(
+    (sum, story) => sum + (story.story_points || 0),
+    0
+  );
   const completedPoints = stories
     .filter(story => story.status === 'done')
     .reduce((sum, story) => sum + (story.story_points || 0), 0);
 
-  const completionRate = totalPoints > 0 ? (completedPoints / totalPoints) * 100 : 0;
+  const completionRate =
+    totalPoints > 0 ? (completedPoints / totalPoints) * 100 : 0;
   const pointsRemaining = totalPoints - completedPoints;
 
   // Calculate days remaining
   const endDate = new Date(sprint.endDate);
   const today = new Date();
-  const daysRemaining = Math.max(0, Math.ceil((endDate - today) / (1000 * 60 * 60 * 24)));
+  const daysRemaining = Math.max(
+    0,
+    Math.ceil((endDate - today) / (1000 * 60 * 60 * 24))
+  );
 
   // Calculate if sprint is on track
   const sprintDuration = Math.ceil(
-    (new Date(sprint.endDate) - new Date(sprint.startDate)) / (1000 * 60 * 60 * 24)
+    (new Date(sprint.endDate) - new Date(sprint.startDate)) /
+      (1000 * 60 * 60 * 24)
   );
   const daysElapsed = sprintDuration - daysRemaining;
-  const expectedProgress = sprintDuration > 0 ? (daysElapsed / sprintDuration) * 100 : 0;
+  const expectedProgress =
+    sprintDuration > 0 ? (daysElapsed / sprintDuration) * 100 : 0;
   const onTrack = completionRate >= expectedProgress * 0.8; // 80% of expected progress
 
   // Calculate current velocity
-  const velocity = daysElapsed > 0 ? Math.round(completedPoints / daysElapsed * sprintDuration) : 0;
+  const velocity =
+    daysElapsed > 0
+      ? Math.round((completedPoints / daysElapsed) * sprintDuration)
+      : 0;
 
   return {
     completionRate: Math.round(completionRate),
@@ -124,7 +142,7 @@ export const calculateSprintProgress = (sprint, stories) => {
     daysRemaining,
     onTrack,
     velocity,
-    expectedProgress: Math.round(expectedProgress)
+    expectedProgress: Math.round(expectedProgress),
   };
 };
 
@@ -133,7 +151,7 @@ export const calculateSprintProgress = (sprint, stories) => {
  * @param {Array} teamMembers - Array of team member data
  * @returns {Object} - Team capacity analysis
  */
-export const calculateTeamCapacity = (teamMembers) => {
+export const calculateTeamCapacity = teamMembers => {
   if (!teamMembers || teamMembers.length === 0) {
     return {
       totalCapacity: 0,
@@ -143,13 +161,20 @@ export const calculateTeamCapacity = (teamMembers) => {
       overAllocatedMembers: 0,
       optimallyUtilizedMembers: 0,
       underUtilizedMembers: 0,
-      activeMembers: 0
+      activeMembers: 0,
     };
   }
 
-  const totalCapacity = teamMembers.reduce((sum, member) => sum + (member.capacity || 0), 0);
-  const totalAllocated = teamMembers.reduce((sum, member) => sum + (member.allocated || 0), 0);
-  const utilizationRate = totalCapacity > 0 ? (totalAllocated / totalCapacity) * 100 : 0;
+  const totalCapacity = teamMembers.reduce(
+    (sum, member) => sum + (member.capacity || 0),
+    0
+  );
+  const totalAllocated = teamMembers.reduce(
+    (sum, member) => sum + (member.allocated || 0),
+    0
+  );
+  const utilizationRate =
+    totalCapacity > 0 ? (totalAllocated / totalCapacity) * 100 : 0;
   const availableCapacity = Math.max(0, totalCapacity - totalAllocated);
 
   // Categorize team members by utilization
@@ -158,7 +183,8 @@ export const calculateTeamCapacity = (teamMembers) => {
   let underUtilizedMembers = 0;
 
   teamMembers.forEach(member => {
-    const memberUtilization = member.capacity > 0 ? (member.allocated / member.capacity) * 100 : 0;
+    const memberUtilization =
+      member.capacity > 0 ? (member.allocated / member.capacity) * 100 : 0;
     if (memberUtilization > 100) {
       overAllocatedMembers++;
     } else if (memberUtilization >= 85) {
@@ -176,7 +202,7 @@ export const calculateTeamCapacity = (teamMembers) => {
     overAllocatedMembers,
     optimallyUtilizedMembers,
     underUtilizedMembers,
-    activeMembers: teamMembers.length
+    activeMembers: teamMembers.length,
   };
 };
 
@@ -197,60 +223,81 @@ export const calculateBurndownData = (sprint, stories, dailyProgress) => {
       completionRate: 0,
       daysElapsed: 0,
       workingDays: 0,
-      currentProgress: null
+      currentProgress: null,
     };
   }
 
-  const totalStoryPoints = stories.reduce((sum, story) => sum + (story.story_points || 0), 0);
+  const totalStoryPoints = stories.reduce(
+    (sum, story) => sum + (story.story_points || 0),
+    0
+  );
   const completedStoryPoints = stories
     .filter(story => story.status === 'done')
     .reduce((sum, story) => sum + (story.story_points || 0), 0);
   const remainingStoryPoints = totalStoryPoints - completedStoryPoints;
-  const completionRate = totalStoryPoints > 0 ? Math.round((completedStoryPoints / totalStoryPoints) * 100) : 0;
+  const completionRate =
+    totalStoryPoints > 0
+      ? Math.round((completedStoryPoints / totalStoryPoints) * 100)
+      : 0;
 
   // Calculate working days
   const startDate = new Date(sprint.startDate);
   const endDate = new Date(sprint.endDate);
   const today = new Date();
-  
+
   const workingDays = calculateWorkingDays(startDate, endDate);
   const daysElapsed = calculateWorkingDays(startDate, Math.min(today, endDate));
 
   // Generate burndown data points
   const burndownData = [];
-  
+
   if (dailyProgress && dailyProgress.length > 0) {
     // Use actual daily progress data
     dailyProgress.forEach((day, index) => {
-      const idealRemaining = totalStoryPoints - (totalStoryPoints / workingDays) * (index + 1);
+      const idealRemaining =
+        totalStoryPoints - (totalStoryPoints / workingDays) * (index + 1);
       burndownData.push({
         date: day.date,
         idealRemaining: Math.max(0, Math.round(idealRemaining)),
-        actualRemaining: day.remainingPoints || 0
+        actualRemaining: day.remainingPoints || 0,
       });
     });
   } else {
     // Generate ideal burndown line
     for (let day = 0; day <= workingDays; day++) {
       const date = addWorkingDays(startDate, day);
-      const idealRemaining = totalStoryPoints - (totalStoryPoints / workingDays) * day;
+      const idealRemaining =
+        totalStoryPoints - (totalStoryPoints / workingDays) * day;
       const actualRemaining = day <= daysElapsed ? remainingStoryPoints : null;
-      
+
       burndownData.push({
         date: date.toISOString().split('T')[0],
         idealRemaining: Math.max(0, Math.round(idealRemaining)),
-        actualRemaining: actualRemaining
+        actualRemaining: actualRemaining,
       });
     }
   }
 
   // Calculate current progress variance
-  const currentProgress = daysElapsed > 0 ? {
-    idealRemaining: Math.round(totalStoryPoints - (totalStoryPoints / workingDays) * daysElapsed),
-    actualRemaining: remainingStoryPoints,
-    variance: remainingStoryPoints - (totalStoryPoints - (totalStoryPoints / workingDays) * daysElapsed),
-    isOnTrack: Math.abs(remainingStoryPoints - (totalStoryPoints - (totalStoryPoints / workingDays) * daysElapsed)) <= totalStoryPoints * 0.1
-  } : null;
+  const currentProgress =
+    daysElapsed > 0
+      ? {
+          idealRemaining: Math.round(
+            totalStoryPoints - (totalStoryPoints / workingDays) * daysElapsed
+          ),
+          actualRemaining: remainingStoryPoints,
+          variance:
+            remainingStoryPoints -
+            (totalStoryPoints - (totalStoryPoints / workingDays) * daysElapsed),
+          isOnTrack:
+            Math.abs(
+              remainingStoryPoints -
+                (totalStoryPoints -
+                  (totalStoryPoints / workingDays) * daysElapsed)
+            ) <=
+            totalStoryPoints * 0.1,
+        }
+      : null;
 
   return {
     burndownData,
@@ -260,7 +307,7 @@ export const calculateBurndownData = (sprint, stories, dailyProgress) => {
     completionRate,
     daysElapsed,
     workingDays,
-    currentProgress
+    currentProgress,
   };
 };
 
@@ -277,20 +324,26 @@ export const calculateBurnupData = (sprint, stories, scopeChanges) => {
       burnupData: [],
       scopeChange: 0,
       isOnTrack: false,
-      projectionAccuracy: 0
+      projectionAccuracy: 0,
     };
   }
 
   const startDate = new Date(sprint.startDate);
   const endDate = new Date(sprint.endDate);
   const workingDays = calculateWorkingDays(startDate, endDate);
-  
-  const initialScope = stories.reduce((sum, story) => sum + (story.story_points || 0), 0);
+
+  const initialScope = stories.reduce(
+    (sum, story) => sum + (story.story_points || 0),
+    0
+  );
   let currentScope = initialScope;
-  
+
   // Calculate scope changes
   if (scopeChanges && scopeChanges.length > 0) {
-    const totalScopeChange = scopeChanges.reduce((sum, change) => sum + change.points, 0);
+    const totalScopeChange = scopeChanges.reduce(
+      (sum, change) => sum + change.points,
+      0
+    );
     currentScope = initialScope + totalScopeChange;
   }
 
@@ -304,36 +357,44 @@ export const calculateBurnupData = (sprint, stories, scopeChanges) => {
   for (let day = 0; day <= workingDays; day++) {
     const date = addWorkingDays(startDate, day);
     const today = new Date();
-    
+
     if (date <= today) {
       // Historical data
-      const dayCompletedPoints = Math.min(completedPoints, (completedPoints / workingDays) * day);
+      const dayCompletedPoints = Math.min(
+        completedPoints,
+        (completedPoints / workingDays) * day
+      );
       burnupData.push({
         date: date.toISOString().split('T')[0],
         totalScope: currentScope,
         completedWork: Math.round(dayCompletedPoints),
-        projectedCompletion: null
+        projectedCompletion: null,
       });
     } else {
       // Projected data
-      const projectedCompletion = completedPoints + ((currentScope - completedPoints) / (workingDays - day + 1));
+      const projectedCompletion =
+        completedPoints +
+        (currentScope - completedPoints) / (workingDays - day + 1);
       burnupData.push({
         date: date.toISOString().split('T')[0],
         totalScope: currentScope,
         completedWork: null,
-        projectedCompletion: Math.round(Math.min(projectedCompletion, currentScope))
+        projectedCompletion: Math.round(
+          Math.min(projectedCompletion, currentScope)
+        ),
       });
     }
   }
 
-  const isOnTrack = completedPoints >= (currentScope * 0.7); // 70% completion threshold
-  const projectionAccuracy = currentScope > 0 ? (completedPoints / currentScope) * 100 : 0;
+  const isOnTrack = completedPoints >= currentScope * 0.7; // 70% completion threshold
+  const projectionAccuracy =
+    currentScope > 0 ? (completedPoints / currentScope) * 100 : 0;
 
   return {
     burnupData,
     scopeChange,
     isOnTrack,
-    projectionAccuracy: Math.round(projectionAccuracy)
+    projectionAccuracy: Math.round(projectionAccuracy),
   };
 };
 
@@ -346,15 +407,16 @@ export const calculateBurnupData = (sprint, stories, scopeChanges) => {
 export const calculateWorkingDays = (startDate, endDate) => {
   let count = 0;
   const current = new Date(startDate);
-  
+
   while (current <= endDate) {
     const dayOfWeek = current.getDay();
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Not Sunday (0) or Saturday (6)
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      // Not Sunday (0) or Saturday (6)
       count++;
     }
     current.setDate(current.getDate() + 1);
   }
-  
+
   return count;
 };
 
@@ -367,20 +429,21 @@ export const calculateWorkingDays = (startDate, endDate) => {
 export const addWorkingDays = (startDate, days) => {
   const result = new Date(startDate);
   let addedDays = 0;
-  
+
   // If days is 0, return the start date
   if (days === 0) {
     return result;
   }
-  
+
   while (addedDays < days) {
     result.setDate(result.getDate() + 1);
     const dayOfWeek = result.getDay();
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Not Sunday (0) or Saturday (6)
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      // Not Sunday (0) or Saturday (6)
       addedDays++;
     }
   }
-  
+
   return result;
 };
 
@@ -392,40 +455,49 @@ export const addWorkingDays = (startDate, days) => {
  * @param {Array} historicalSprints - Historical sprint data
  * @returns {Object} - Comprehensive progress metrics
  */
-export const generateProgressMetrics = (sprint, stories, teamMembers, historicalSprints) => {
+export const generateProgressMetrics = (
+  sprint,
+  stories,
+  teamMembers,
+  historicalSprints
+) => {
   const velocityTrend = calculateVelocityTrend(historicalSprints);
   const sprintProgress = calculateSprintProgress(sprint, stories);
   const teamUtilization = calculateTeamCapacity(teamMembers);
-  
+
   // Calculate quality metrics (placeholder - would integrate with actual quality tools)
   const qualityMetrics = {
     score: 8.5, // Out of 10
     testsPass: 95, // Percentage
     codeCoverage: 85, // Percentage
-    technicalDebt: 'Low' // Low, Medium, High
+    technicalDebt: 'Low', // Low, Medium, High
   };
 
   // Identify risk indicators
   const riskIndicators = [];
-  
+
   if (sprintProgress.completionRate < 50 && sprintProgress.daysRemaining < 3) {
     riskIndicators.push({
       level: 'high',
-      description: 'Sprint completion at risk - low progress with few days remaining'
+      description:
+        'Sprint completion at risk - low progress with few days remaining',
     });
   }
-  
+
   if (teamUtilization.overAllocatedMembers > 0) {
     riskIndicators.push({
       level: 'medium',
-      description: `${teamUtilization.overAllocatedMembers} team member(s) over-allocated`
+      description: `${teamUtilization.overAllocatedMembers} team member(s) over-allocated`,
     });
   }
-  
-  if (velocityTrend.trend === 'decreasing' && Math.abs(velocityTrend.change) > 20) {
+
+  if (
+    velocityTrend.trend === 'decreasing' &&
+    Math.abs(velocityTrend.change) > 20
+  ) {
     riskIndicators.push({
       level: 'medium',
-      description: 'Team velocity declining significantly'
+      description: 'Team velocity declining significantly',
     });
   }
 
@@ -433,9 +505,9 @@ export const generateProgressMetrics = (sprint, stories, teamMembers, historical
   const predictiveAnalytics = {
     completionForecast: sprintProgress.onTrack ? 'On Time' : 'Delayed',
     confidence: velocityTrend.confidence,
-    recommendation: sprintProgress.onTrack 
-      ? 'Continue current pace' 
-      : 'Consider scope adjustment or timeline extension'
+    recommendation: sprintProgress.onTrack
+      ? 'Continue current pace'
+      : 'Consider scope adjustment or timeline extension',
   };
 
   return {
@@ -444,6 +516,6 @@ export const generateProgressMetrics = (sprint, stories, teamMembers, historical
     teamUtilization,
     qualityMetrics,
     riskIndicators,
-    predictiveAnalytics
+    predictiveAnalytics,
   };
 };

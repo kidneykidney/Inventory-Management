@@ -25,7 +25,7 @@ fi
 
 # Run frontend tests
 echo "🧪 Running frontend tests..."
-if ! npm test -- --run --passWithNoTests --watchAll=false; then
+if ! npm test -- --passWithNoTests --watchAll=false; then
     echo "❌ Frontend tests failed. Please fix failing tests before committing."
     exit 1
 fi

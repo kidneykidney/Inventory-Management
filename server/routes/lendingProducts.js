@@ -19,20 +19,25 @@ const storage = multer.diskStorage({
     }
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
   storage: storage,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
-    files: 5 // Maximum 5 files
+    files: 5, // Maximum 5 files
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
     const mimetype = allowedTypes.test(file.mimetype);
 
     if (mimetype && extname) {
@@ -40,7 +45,7 @@ const upload = multer({
     } else {
       cb(new Error('Only image files are allowed'));
     }
-  }
+  },
 });
 
 /**
@@ -52,7 +57,10 @@ router.get('/', authenticateToken, async (req, res) => {
   try {
     const filters = {
       categoryId: req.query.categoryId,
-      isAvailable: req.query.isAvailable !== undefined ? req.query.isAvailable === 'true' : undefined,
+      isAvailable:
+        req.query.isAvailable !== undefined
+          ? req.query.isAvailable === 'true'
+          : undefined,
       brand: req.query.brand,
       condition: req.query.condition,
       location: req.query.location,
@@ -61,7 +69,7 @@ router.get('/', authenticateToken, async (req, res) => {
       sortBy: req.query.sortBy,
       sortOrder: req.query.sortOrder,
       limit: req.query.limit,
-      offset: req.query.offset
+      offset: req.query.offset,
     };
 
     // Remove undefined values
@@ -72,18 +80,18 @@ router.get('/', authenticateToken, async (req, res) => {
     });
 
     const products = await LendingProduct.findAll(filters);
-    
+
     res.json({
       success: true,
       data: products,
-      count: products.length
+      count: products.length,
     });
   } catch (error) {
     logger.error('Error fetching products:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch products',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -96,24 +104,24 @@ router.get('/', authenticateToken, async (req, res) => {
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
     const product = await LendingProduct.findById(req.params.id);
-    
+
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Product not found',
       });
     }
 
     res.json({
       success: true,
-      data: product
+      data: product,
     });
   } catch (error) {
     logger.error('Error fetching product:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch product',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -123,123 +131,141 @@ router.get('/:id', authenticateToken, async (req, res) => {
  * @desc Create new product
  * @access Private (Admin only)
  */
-router.post('/', authenticateToken, upload.array('images', 5), async (req, res) => {
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({
+router.post(
+  '/',
+  authenticateToken,
+  upload.array('images', 5),
+  async (req, res) => {
+    try {
+      // Check if user is admin
+      if (req.user.role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          message: 'Admin access required',
+        });
+      }
+
+      const productData = {
+        ...req.body,
+        specifications: req.body.specifications
+          ? JSON.parse(req.body.specifications)
+          : {},
+        tags: req.body.tags ? JSON.parse(req.body.tags) : [],
+      };
+
+      // Handle uploaded images
+      if (req.files && req.files.length > 0) {
+        productData.imageUrls = req.files.map(
+          file => `/uploads/products/${file.filename}`
+        );
+      }
+
+      const product = new LendingProduct(productData);
+      await product.save();
+
+      res.status(201).json({
+        success: true,
+        message: 'Product created successfully',
+        data: product,
+      });
+    } catch (error) {
+      logger.error('Error creating product:', error);
+
+      // Clean up uploaded files if product creation failed
+      if (req.files && req.files.length > 0) {
+        req.files.forEach(async file => {
+          try {
+            await fs.unlink(file.path);
+          } catch (unlinkError) {
+            logger.error('Error deleting uploaded file:', unlinkError);
+          }
+        });
+      }
+
+      res.status(400).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Failed to create product',
+        error: error.message,
       });
     }
-
-    const productData = {
-      ...req.body,
-      specifications: req.body.specifications ? JSON.parse(req.body.specifications) : {},
-      tags: req.body.tags ? JSON.parse(req.body.tags) : []
-    };
-
-    // Handle uploaded images
-    if (req.files && req.files.length > 0) {
-      productData.imageUrls = req.files.map(file => `/uploads/products/${file.filename}`);
-    }
-
-    const product = new LendingProduct(productData);
-    await product.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Product created successfully',
-      data: product
-    });
-  } catch (error) {
-    logger.error('Error creating product:', error);
-    
-    // Clean up uploaded files if product creation failed
-    if (req.files && req.files.length > 0) {
-      req.files.forEach(async (file) => {
-        try {
-          await fs.unlink(file.path);
-        } catch (unlinkError) {
-          logger.error('Error deleting uploaded file:', unlinkError);
-        }
-      });
-    }
-
-    res.status(400).json({
-      success: false,
-      message: 'Failed to create product',
-      error: error.message
-    });
   }
-});
+);
 
 /**
  * @route PUT /api/lending/products/:id
  * @desc Update product
  * @access Private (Admin only)
  */
-router.put('/:id', authenticateToken, upload.array('images', 5), async (req, res) => {
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({
+router.put(
+  '/:id',
+  authenticateToken,
+  upload.array('images', 5),
+  async (req, res) => {
+    try {
+      // Check if user is admin
+      if (req.user.role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          message: 'Admin access required',
+        });
+      }
+
+      const existingProduct = await LendingProduct.findById(req.params.id);
+      if (!existingProduct) {
+        return res.status(404).json({
+          success: false,
+          message: 'Product not found',
+        });
+      }
+
+      const productData = {
+        ...req.body,
+        id: req.params.id,
+        specifications: req.body.specifications
+          ? JSON.parse(req.body.specifications)
+          : existingProduct.specifications,
+        tags: req.body.tags ? JSON.parse(req.body.tags) : existingProduct.tags,
+      };
+
+      // Handle uploaded images
+      if (req.files && req.files.length > 0) {
+        productData.imageUrls = req.files.map(
+          file => `/uploads/products/${file.filename}`
+        );
+      } else if (req.body.keepExistingImages === 'true') {
+        productData.imageUrls = existingProduct.imageUrls;
+      }
+
+      const product = new LendingProduct(productData);
+      await product.save();
+
+      res.json({
+        success: true,
+        message: 'Product updated successfully',
+        data: product,
+      });
+    } catch (error) {
+      logger.error('Error updating product:', error);
+
+      // Clean up uploaded files if product update failed
+      if (req.files && req.files.length > 0) {
+        req.files.forEach(async file => {
+          try {
+            await fs.unlink(file.path);
+          } catch (unlinkError) {
+            logger.error('Error deleting uploaded file:', unlinkError);
+          }
+        });
+      }
+
+      res.status(400).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Failed to update product',
+        error: error.message,
       });
     }
-
-    const existingProduct = await LendingProduct.findById(req.params.id);
-    if (!existingProduct) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      });
-    }
-
-    const productData = {
-      ...req.body,
-      id: req.params.id,
-      specifications: req.body.specifications ? JSON.parse(req.body.specifications) : existingProduct.specifications,
-      tags: req.body.tags ? JSON.parse(req.body.tags) : existingProduct.tags
-    };
-
-    // Handle uploaded images
-    if (req.files && req.files.length > 0) {
-      productData.imageUrls = req.files.map(file => `/uploads/products/${file.filename}`);
-    } else if (req.body.keepExistingImages === 'true') {
-      productData.imageUrls = existingProduct.imageUrls;
-    }
-
-    const product = new LendingProduct(productData);
-    await product.save();
-
-    res.json({
-      success: true,
-      message: 'Product updated successfully',
-      data: product
-    });
-  } catch (error) {
-    logger.error('Error updating product:', error);
-    
-    // Clean up uploaded files if product update failed
-    if (req.files && req.files.length > 0) {
-      req.files.forEach(async (file) => {
-        try {
-          await fs.unlink(file.path);
-        } catch (unlinkError) {
-          logger.error('Error deleting uploaded file:', unlinkError);
-        }
-      });
-    }
-
-    res.status(400).json({
-      success: false,
-      message: 'Failed to update product',
-      error: error.message
-    });
   }
-});
+);
 
 /**
  * @route DELETE /api/lending/products/:id
@@ -252,7 +278,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
@@ -260,7 +286,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Product not found',
       });
     }
 
@@ -277,24 +303,24 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     }
 
     const deleted = await LendingProduct.deleteById(req.params.id);
-    
+
     if (!deleted) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Product not found',
       });
     }
 
     res.json({
       success: true,
-      message: 'Product deleted successfully'
+      message: 'Product deleted successfully',
     });
   } catch (error) {
     logger.error('Error deleting product:', error);
     res.status(400).json({
       success: false,
       message: 'Failed to delete product',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -310,22 +336,22 @@ router.get('/statistics/overview', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const statistics = await LendingProduct.getStatistics();
-    
+
     res.json({
       success: true,
-      data: statistics
+      data: statistics,
     });
   } catch (error) {
     logger.error('Error fetching product statistics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch statistics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -338,17 +364,17 @@ router.get('/statistics/overview', authenticateToken, async (req, res) => {
 router.get('/categories/all', authenticateToken, async (req, res) => {
   try {
     const categories = await ProductCategory.findAll();
-    
+
     res.json({
       success: true,
-      data: categories
+      data: categories,
     });
   } catch (error) {
     logger.error('Error fetching categories:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch categories',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -364,7 +390,7 @@ router.post('/categories', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
@@ -373,27 +399,27 @@ router.post('/categories', authenticateToken, async (req, res) => {
     if (!name || name.trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Category name is required'
+        message: 'Category name is required',
       });
     }
 
     const category = await ProductCategory.create({
       name: name.trim(),
       description: description?.trim(),
-      parentId: parentId || null
+      parentId: parentId || null,
     });
 
     res.status(201).json({
       success: true,
       message: 'Category created successfully',
-      data: category
+      data: category,
     });
   } catch (error) {
     logger.error('Error creating category:', error);
     res.status(400).json({
       success: false,
       message: 'Failed to create category',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -406,61 +432,72 @@ router.post('/categories', authenticateToken, async (req, res) => {
 router.get('/search/suggestions', authenticateToken, async (req, res) => {
   try {
     const { query } = req.query;
-    
+
     if (!query || query.length < 2) {
       return res.json({
         success: true,
         data: {
           products: [],
           brands: [],
-          tags: []
-        }
+          tags: [],
+        },
       });
     }
 
     const searchTerm = `%${query}%`;
-    
+
     // Get product name suggestions
-    const [productSuggestions] = await require('../config/database').monitoredQuery(`
+    const [productSuggestions] =
+      await require('../config/database').monitoredQuery(
+        `
       SELECT DISTINCT name
       FROM lending_products
       WHERE name LIKE ?
       ORDER BY name
       LIMIT 5
-    `, [searchTerm]);
+    `,
+        [searchTerm]
+      );
 
     // Get brand suggestions
-    const [brandSuggestions] = await require('../config/database').monitoredQuery(`
+    const [brandSuggestions] =
+      await require('../config/database').monitoredQuery(
+        `
       SELECT DISTINCT brand
       FROM lending_products
       WHERE brand LIKE ? AND brand IS NOT NULL
       ORDER BY brand
       LIMIT 5
-    `, [searchTerm]);
+    `,
+        [searchTerm]
+      );
 
     // Get tag suggestions
-    const [tagSuggestions] = await require('../config/database').monitoredQuery(`
+    const [tagSuggestions] = await require('../config/database').monitoredQuery(
+      `
       SELECT DISTINCT tag
       FROM product_tags
       WHERE tag LIKE ?
       ORDER BY tag
       LIMIT 5
-    `, [searchTerm]);
+    `,
+      [searchTerm]
+    );
 
     res.json({
       success: true,
       data: {
         products: productSuggestions.map(p => p.name),
         brands: brandSuggestions.map(b => b.brand),
-        tags: tagSuggestions.map(t => t.tag)
-      }
+        tags: tagSuggestions.map(t => t.tag),
+      },
     });
   } catch (error) {
     logger.error('Error fetching search suggestions:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch suggestions',
-      error: error.message
+      error: error.message,
     });
   }
 });

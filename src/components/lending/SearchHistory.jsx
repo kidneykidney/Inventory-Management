@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
-import { 
+import {
   Clock,
   Star,
   Trash2,
@@ -13,7 +13,7 @@ import {
   TrendingUp,
   X,
   Edit2,
-  Save
+  Save,
 } from 'lucide-react';
 import searchService from '../../services/searchService';
 
@@ -21,10 +21,10 @@ import searchService from '../../services/searchService';
  * SearchHistory Component
  * Manages search history and saved searches functionality
  */
-const SearchHistory = ({ 
+const SearchHistory = ({
   onSearchSelect,
   onSavedSearchSelect,
-  className = ""
+  className = '',
 }) => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [savedSearches, setSavedSearches] = useState([]);
@@ -44,7 +44,7 @@ const SearchHistory = ({
     const analytics = searchService.getSearchAnalytics();
     setSearchHistory(analytics.recentSearches);
     setPopularSearches(analytics.popularSearches);
-    
+
     // Load saved searches from localStorage
     const saved = loadSavedSearches();
     setSavedSearches(saved);
@@ -62,7 +62,7 @@ const SearchHistory = ({
   };
 
   // Save searches to localStorage
-  const saveSavedSearches = (searches) => {
+  const saveSavedSearches = searches => {
     try {
       localStorage.setItem('savedProductSearches', JSON.stringify(searches));
     } catch (error) {
@@ -79,10 +79,13 @@ const SearchHistory = ({
       query,
       createdAt: new Date().toISOString(),
       lastUsed: new Date().toISOString(),
-      useCount: 1
+      useCount: 1,
     };
 
-    const updatedSaved = [newSavedSearch, ...savedSearches.filter(s => s.query !== query)];
+    const updatedSaved = [
+      newSavedSearch,
+      ...savedSearches.filter(s => s.query !== query),
+    ];
     setSavedSearches(updatedSaved);
     saveSavedSearches(updatedSaved);
     setShowSaveDialog(false);
@@ -90,7 +93,7 @@ const SearchHistory = ({
   };
 
   // Delete a saved search
-  const deleteSavedSearch = (id) => {
+  const deleteSavedSearch = id => {
     const updatedSaved = savedSearches.filter(s => s.id !== id);
     setSavedSearches(updatedSaved);
     saveSavedSearches(updatedSaved);
@@ -98,7 +101,7 @@ const SearchHistory = ({
 
   // Update saved search name
   const updateSavedSearchName = (id, newName) => {
-    const updatedSaved = savedSearches.map(s => 
+    const updatedSaved = savedSearches.map(s =>
       s.id === id ? { ...s, name: newName } : s
     );
     setSavedSearches(updatedSaved);
@@ -108,16 +111,16 @@ const SearchHistory = ({
   };
 
   // Use a saved search
-  const handleUseSavedSearch = (savedSearch) => {
+  const handleUseSavedSearch = savedSearch => {
     // Update use count and last used
-    const updatedSaved = savedSearches.map(s => 
-      s.id === savedSearch.id 
+    const updatedSaved = savedSearches.map(s =>
+      s.id === savedSearch.id
         ? { ...s, useCount: s.useCount + 1, lastUsed: new Date().toISOString() }
         : s
     );
     setSavedSearches(updatedSaved);
     saveSavedSearches(updatedSaved);
-    
+
     onSavedSearchSelect?.(savedSearch);
   };
 
@@ -129,12 +132,12 @@ const SearchHistory = ({
   };
 
   // Handle search selection
-  const handleSearchSelect = (query) => {
+  const handleSearchSelect = query => {
     onSearchSelect?.(query);
   };
 
   // Start editing a saved search name
-  const startEditing = (savedSearch) => {
+  const startEditing = savedSearch => {
     setEditingSearch(savedSearch.id);
     setEditName(savedSearch.name);
   };
@@ -146,13 +149,13 @@ const SearchHistory = ({
   };
 
   // Show save dialog
-  const showSaveSearchDialog = (query) => {
+  const showSaveSearchDialog = query => {
     setCurrentSearchToSave(query);
     setShowSaveDialog(true);
   };
 
   // Check if a search is already saved
-  const isSearchSaved = (query) => {
+  const isSearchSaved = query => {
     return savedSearches.some(s => s.query === query);
   };
 
@@ -161,44 +164,47 @@ const SearchHistory = ({
       {/* Recent Searches */}
       {searchHistory.length > 0 && (
         <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Clock className="h-4 w-4 text-gray-500" />
+          <CardHeader className='pb-3'>
+            <div className='flex items-center justify-between'>
+              <CardTitle className='text-base flex items-center gap-2'>
+                <Clock className='h-4 w-4 text-gray-500' />
                 Recent Searches
               </CardTitle>
               <Button
-                variant="ghost"
-                size="sm"
+                variant='ghost'
+                size='sm'
                 onClick={clearSearchHistory}
-                className="text-xs text-gray-500 hover:text-red-600"
+                className='text-xs text-gray-500 hover:text-red-600'
               >
-                <Trash2 className="h-3 w-3 mr-1" />
+                <Trash2 className='h-3 w-3 mr-1' />
                 Clear
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div className='space-y-2'>
               {searchHistory.slice(0, 10).map((query, index) => (
-                <div key={index} className="flex items-center justify-between group">
+                <div
+                  key={index}
+                  className='flex items-center justify-between group'
+                >
                   <button
                     onClick={() => handleSearchSelect(query)}
-                    className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 flex-1 text-left"
+                    className='flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 flex-1 text-left'
                   >
-                    <Search className="h-3 w-3 text-gray-400" />
+                    <Search className='h-3 w-3 text-gray-400' />
                     {query}
                   </button>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className='flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity'>
                     {!isSearchSaved(query) && (
                       <Button
-                        variant="ghost"
-                        size="sm"
+                        variant='ghost'
+                        size='sm'
                         onClick={() => showSaveSearchDialog(query)}
-                        className="h-6 w-6 p-0"
-                        title="Save search"
+                        className='h-6 w-6 p-0'
+                        title='Save search'
                       >
-                        <Bookmark className="h-3 w-3" />
+                        <Bookmark className='h-3 w-3' />
                       </Button>
                     )}
                   </div>
@@ -212,96 +218,105 @@ const SearchHistory = ({
       {/* Saved Searches */}
       {savedSearches.length > 0 && (
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <BookmarkCheck className="h-4 w-4 text-gray-500" />
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-base flex items-center gap-2'>
+              <BookmarkCheck className='h-4 w-4 text-gray-500' />
               Saved Searches
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className='space-y-3'>
               {savedSearches
                 .sort((a, b) => new Date(b.lastUsed) - new Date(a.lastUsed))
-                .map((savedSearch) => (
-                <div key={savedSearch.id} className="group">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      {editingSearch === savedSearch.id ? (
-                        <div className="flex items-center gap-2">
-                          <Input
-                            value={editName}
-                            onChange={(e) => setEditName(e.target.value)}
-                            className="text-sm h-8"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                updateSavedSearchName(savedSearch.id, editName);
-                              } else if (e.key === 'Escape') {
-                                cancelEditing();
+                .map(savedSearch => (
+                  <div key={savedSearch.id} className='group'>
+                    <div className='flex items-center justify-between'>
+                      <div className='flex-1 min-w-0'>
+                        {editingSearch === savedSearch.id ? (
+                          <div className='flex items-center gap-2'>
+                            <Input
+                              value={editName}
+                              onChange={e => setEditName(e.target.value)}
+                              className='text-sm h-8'
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  updateSavedSearchName(
+                                    savedSearch.id,
+                                    editName
+                                  );
+                                } else if (e.key === 'Escape') {
+                                  cancelEditing();
+                                }
+                              }}
+                              autoFocus
+                            />
+                            <Button
+                              variant='ghost'
+                              size='sm'
+                              onClick={() =>
+                                updateSavedSearchName(savedSearch.id, editName)
                               }
-                            }}
-                            autoFocus
-                          />
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => updateSavedSearchName(savedSearch.id, editName)}
-                            className="h-6 w-6 p-0"
+                              className='h-6 w-6 p-0'
+                            >
+                              <Save className='h-3 w-3' />
+                            </Button>
+                            <Button
+                              variant='ghost'
+                              size='sm'
+                              onClick={cancelEditing}
+                              className='h-6 w-6 p-0'
+                            >
+                              <X className='h-3 w-3' />
+                            </Button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleUseSavedSearch(savedSearch)}
+                            className='text-left w-full'
                           >
-                            <Save className="h-3 w-3" />
+                            <div className='font-medium text-sm text-gray-900 hover:text-blue-600 truncate'>
+                              {savedSearch.name}
+                            </div>
+                            <div className='text-xs text-gray-500 flex items-center gap-2 mt-1'>
+                              <span>"{savedSearch.query}"</span>
+                              <span>•</span>
+                              <span>Used {savedSearch.useCount} times</span>
+                              <span>•</span>
+                              <span>
+                                {new Date(
+                                  savedSearch.lastUsed
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </button>
+                        )}
+                      </div>
+
+                      {editingSearch !== savedSearch.id && (
+                        <div className='flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity'>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            onClick={() => startEditing(savedSearch)}
+                            className='h-6 w-6 p-0'
+                            title='Edit name'
+                          >
+                            <Edit2 className='h-3 w-3' />
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={cancelEditing}
-                            className="h-6 w-6 p-0"
+                            variant='ghost'
+                            size='sm'
+                            onClick={() => deleteSavedSearch(savedSearch.id)}
+                            className='h-6 w-6 p-0 text-red-600 hover:text-red-700'
+                            title='Delete saved search'
                           >
-                            <X className="h-3 w-3" />
+                            <Trash2 className='h-3 w-3' />
                           </Button>
                         </div>
-                      ) : (
-                        <button
-                          onClick={() => handleUseSavedSearch(savedSearch)}
-                          className="text-left w-full"
-                        >
-                          <div className="font-medium text-sm text-gray-900 hover:text-blue-600 truncate">
-                            {savedSearch.name}
-                          </div>
-                          <div className="text-xs text-gray-500 flex items-center gap-2 mt-1">
-                            <span>"{savedSearch.query}"</span>
-                            <span>•</span>
-                            <span>Used {savedSearch.useCount} times</span>
-                            <span>•</span>
-                            <span>{new Date(savedSearch.lastUsed).toLocaleDateString()}</span>
-                          </div>
-                        </button>
                       )}
                     </div>
-                    
-                    {editingSearch !== savedSearch.id && (
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => startEditing(savedSearch)}
-                          className="h-6 w-6 p-0"
-                          title="Edit name"
-                        >
-                          <Edit2 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteSavedSearch(savedSearch.id)}
-                          className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
-                          title="Delete saved search"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    )}
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </CardContent>
         </Card>
@@ -310,33 +325,35 @@ const SearchHistory = ({
       {/* Popular Searches */}
       {popularSearches.length > 0 && (
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-gray-500" />
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-base flex items-center gap-2'>
+              <TrendingUp className='h-4 w-4 text-gray-500' />
               Popular Searches
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
+            <div className='flex flex-wrap gap-2'>
               {popularSearches.slice(0, 8).map((search, index) => (
-                <div key={index} className="flex items-center gap-1">
+                <div key={index} className='flex items-center gap-1'>
                   <Badge
-                    variant="outline"
-                    className="cursor-pointer hover:bg-gray-50 flex items-center gap-1"
+                    variant='outline'
+                    className='cursor-pointer hover:bg-gray-50 flex items-center gap-1'
                     onClick={() => handleSearchSelect(search.query)}
                   >
                     {search.query}
-                    <span className="text-xs text-gray-500">({search.count})</span>
+                    <span className='text-xs text-gray-500'>
+                      ({search.count})
+                    </span>
                   </Badge>
                   {!isSearchSaved(search.query) && (
                     <Button
-                      variant="ghost"
-                      size="sm"
+                      variant='ghost'
+                      size='sm'
                       onClick={() => showSaveSearchDialog(search.query)}
-                      className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100"
-                      title="Save search"
+                      className='h-5 w-5 p-0 opacity-0 group-hover:opacity-100'
+                      title='Save search'
                     >
-                      <Bookmark className="h-3 w-3" />
+                      <Bookmark className='h-3 w-3' />
                     </Button>
                   )}
                 </div>
@@ -348,31 +365,31 @@ const SearchHistory = ({
 
       {/* Save Search Dialog */}
       {showSaveDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4">
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <Card className='w-full max-w-md mx-4'>
             <CardHeader>
-              <CardTitle className="text-lg">Save Search</CardTitle>
+              <CardTitle className='text-lg'>Save Search</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
                   Search Query
                 </label>
                 <Input
                   value={currentSearchToSave}
                   disabled
-                  className="bg-gray-50"
+                  className='bg-gray-50'
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className='block text-sm font-medium text-gray-700 mb-1'>
                   Name (optional)
                 </label>
                 <Input
                   placeholder={`Search: ${currentSearchToSave}`}
                   value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  onKeyDown={(e) => {
+                  onChange={e => setEditName(e.target.value)}
+                  onKeyDown={e => {
                     if (e.key === 'Enter') {
                       saveSearch(currentSearchToSave, editName);
                     } else if (e.key === 'Escape') {
@@ -382,9 +399,9 @@ const SearchHistory = ({
                   }}
                 />
               </div>
-              <div className="flex items-center gap-2 justify-end">
+              <div className='flex items-center gap-2 justify-end'>
                 <Button
-                  variant="outline"
+                  variant='outline'
                   onClick={() => {
                     setShowSaveDialog(false);
                     setEditName('');
@@ -404,21 +421,25 @@ const SearchHistory = ({
       )}
 
       {/* Empty State */}
-      {searchHistory.length === 0 && savedSearches.length === 0 && popularSearches.length === 0 && (
-        <Card className="p-8 text-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-              <Search className="h-6 w-6 text-gray-400" />
+      {searchHistory.length === 0 &&
+        savedSearches.length === 0 &&
+        popularSearches.length === 0 && (
+          <Card className='p-8 text-center'>
+            <div className='flex flex-col items-center gap-4'>
+              <div className='w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center'>
+                <Search className='h-6 w-6 text-gray-400' />
+              </div>
+              <div>
+                <h3 className='font-medium text-gray-900 mb-1'>
+                  No search history yet
+                </h3>
+                <p className='text-sm text-gray-600'>
+                  Start searching to see your recent and popular searches here.
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-medium text-gray-900 mb-1">No search history yet</h3>
-              <p className="text-sm text-gray-600">
-                Start searching to see your recent and popular searches here.
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
+          </Card>
+        )}
     </div>
   );
 };

@@ -19,8 +19,8 @@ console.error = (...args) => {
   if (
     typeof args[0] === 'string' &&
     (args[0].includes('Warning: ReactDOM.render is deprecated') ||
-     args[0].includes('Warning: componentWillReceiveProps') ||
-     args[0].includes('Warning: componentWillMount'))
+      args[0].includes('Warning: componentWillReceiveProps') ||
+      args[0].includes('Warning: componentWillMount'))
   ) {
     return;
   }

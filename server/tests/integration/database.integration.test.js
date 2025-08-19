@@ -1,6 +1,6 @@
-const { 
-  initTestDatabase, 
-  resetDatabase, 
+const {
+  initTestDatabase,
+  resetDatabase,
   seedTestData,
   executeQuery,
   insertTestData,
@@ -8,7 +8,7 @@ const {
   deleteTestData,
   createMockEpic,
   createMockUserStory,
-  createMockSprint
+  createMockSprint,
 } = require('../../test-utils');
 
 // Import test setup
@@ -24,13 +24,13 @@ describe('Database Integration Tests', () => {
 
     it('should handle multiple concurrent connections', async () => {
       const queries = [];
-      
+
       for (let i = 0; i < 10; i++) {
         queries.push(executeQuery('SELECT ? as value', [i]));
       }
 
       const results = await Promise.all(queries);
-      
+
       expect(results).toHaveLength(10);
       results.forEach((result, index) => {
         expect(result[0].value).toBe(index);
@@ -43,8 +43,9 @@ describe('Database Integration Tests', () => {
       const epicData = createMockEpic({
         id: 'test-epic-1',
         title: 'Database Integration Test Epic',
-        description: 'This epic is created to test database integration functionality',
-        business_value: 'Validates database operations work correctly'
+        description:
+          'This epic is created to test database integration functionality',
+        business_value: 'Validates database operations work correctly',
       });
 
       // Insert epic
@@ -62,7 +63,7 @@ describe('Database Integration Tests', () => {
       const epicData = createMockEpic({
         id: 'test-epic-update',
         title: 'Original Title',
-        status: 'planned'
+        status: 'planned',
       });
 
       await insertTestData('epics', epicData);
@@ -74,7 +75,9 @@ describe('Database Integration Tests', () => {
       );
 
       // Verify update
-      const updatedEpics = await findTestData('epics', { id: 'test-epic-update' });
+      const updatedEpics = await findTestData('epics', {
+        id: 'test-epic-update',
+      });
       expect(updatedEpics[0].title).toBe('Updated Title');
       expect(updatedEpics[0].status).toBe('in-progress');
     });
@@ -82,7 +85,7 @@ describe('Database Integration Tests', () => {
     it('should delete epic data correctly', async () => {
       const epicData = createMockEpic({
         id: 'test-epic-delete',
-        title: 'Epic to Delete'
+        title: 'Epic to Delete',
       });
 
       await insertTestData('epics', epicData);
@@ -92,7 +95,9 @@ describe('Database Integration Tests', () => {
       expect(epics).toHaveLength(1);
 
       // Delete epic
-      const deleteResult = await deleteTestData('epics', { id: 'test-epic-delete' });
+      const deleteResult = await deleteTestData('epics', {
+        id: 'test-epic-delete',
+      });
       expect(deleteResult.affectedRows).toBe(1);
 
       // Verify deletion
@@ -108,15 +113,17 @@ describe('Database Integration Tests', () => {
         title: 'JSON Test Story',
         acceptance_criteria: JSON.stringify([
           'WHEN user performs action THEN system responds',
-          'GIVEN valid input WHEN user submits THEN data is saved'
-        ])
+          'GIVEN valid input WHEN user submits THEN data is saved',
+        ]),
       });
 
       await insertTestData('user_stories', storyData);
 
-      const retrievedStories = await findTestData('user_stories', { id: 'test-story-json' });
+      const retrievedStories = await findTestData('user_stories', {
+        id: 'test-story-json',
+      });
       expect(retrievedStories).toHaveLength(1);
-      
+
       const criteria = JSON.parse(retrievedStories[0].acceptance_criteria);
       expect(Array.isArray(criteria)).toBe(true);
       expect(criteria).toHaveLength(2);
@@ -127,7 +134,7 @@ describe('Database Integration Tests', () => {
       // Create epic first
       const epicData = createMockEpic({
         id: 'test-epic-relationship',
-        title: 'Relationship Test Epic'
+        title: 'Relationship Test Epic',
       });
       await insertTestData('epics', epicData);
 
@@ -135,22 +142,27 @@ describe('Database Integration Tests', () => {
       const storyData = createMockUserStory({
         id: 'test-story-relationship',
         title: 'Relationship Test Story',
-        epic_id: 'test-epic-relationship'
+        epic_id: 'test-epic-relationship',
       });
       await insertTestData('user_stories', storyData);
 
       // Query stories by epic
-      const epicStories = await findTestData('user_stories', { epic_id: 'test-epic-relationship' });
+      const epicStories = await findTestData('user_stories', {
+        epic_id: 'test-epic-relationship',
+      });
       expect(epicStories).toHaveLength(1);
       expect(epicStories[0].title).toBe('Relationship Test Story');
 
       // Query with JOIN to verify relationship
-      const joinResult = await executeQuery(`
+      const joinResult = await executeQuery(
+        `
         SELECT e.title as epic_title, s.title as story_title
         FROM epics e
         JOIN user_stories s ON e.id = s.epic_id
         WHERE e.id = ?
-      `, ['test-epic-relationship']);
+      `,
+        ['test-epic-relationship']
+      );
 
       expect(joinResult).toHaveLength(1);
       expect(joinResult[0].epic_title).toBe('Relationship Test Epic');
@@ -164,14 +176,16 @@ describe('Database Integration Tests', () => {
         id: 'test-sprint-dates',
         number: 99,
         start_date: '2024-03-01',
-        end_date: '2024-03-14'
+        end_date: '2024-03-14',
       });
 
       await insertTestData('sprints', sprintData);
 
-      const retrievedSprints = await findTestData('sprints', { id: 'test-sprint-dates' });
+      const retrievedSprints = await findTestData('sprints', {
+        id: 'test-sprint-dates',
+      });
       expect(retrievedSprints).toHaveLength(1);
-      
+
       // Dates should be properly stored and retrieved
       expect(retrievedSprints[0].start_date).toBeTruthy();
       expect(retrievedSprints[0].end_date).toBeTruthy();
@@ -180,12 +194,12 @@ describe('Database Integration Tests', () => {
     it('should enforce unique sprint numbers', async () => {
       const sprint1 = createMockSprint({
         id: 'test-sprint-unique-1',
-        number: 100
+        number: 100,
       });
 
       const sprint2 = createMockSprint({
         id: 'test-sprint-unique-2',
-        number: 100 // Same number
+        number: 100, // Same number
       });
 
       await insertTestData('sprints', sprint1);
@@ -200,7 +214,7 @@ describe('Database Integration Tests', () => {
       // Create test epic
       const epicData = createMockEpic({
         id: 'test-epic-metrics',
-        title: 'Metrics Test Epic'
+        title: 'Metrics Test Epic',
       });
       await insertTestData('epics', epicData);
 
@@ -210,20 +224,20 @@ describe('Database Integration Tests', () => {
           id: 'story-metrics-1',
           epic_id: 'test-epic-metrics',
           story_points: 5,
-          status: 'done'
+          status: 'done',
         }),
         createMockUserStory({
           id: 'story-metrics-2',
           epic_id: 'test-epic-metrics',
           story_points: 8,
-          status: 'in-progress'
+          status: 'in-progress',
         }),
         createMockUserStory({
           id: 'story-metrics-3',
           epic_id: 'test-epic-metrics',
           story_points: 3,
-          status: 'backlog'
-        })
+          status: 'backlog',
+        }),
       ];
 
       for (const story of stories) {
@@ -258,20 +272,20 @@ describe('Database Integration Tests', () => {
           id: 'filter-story-1',
           status: 'backlog',
           priority: 'high',
-          story_points: 5
+          story_points: 5,
         }),
         createMockUserStory({
           id: 'filter-story-2',
           status: 'in-progress',
           priority: 'high',
-          story_points: 8
+          story_points: 8,
         }),
         createMockUserStory({
           id: 'filter-story-3',
           status: 'backlog',
           priority: 'medium',
-          story_points: 3
-        })
+          story_points: 3,
+        }),
       ];
 
       for (const story of testStories) {
@@ -279,11 +293,14 @@ describe('Database Integration Tests', () => {
       }
 
       // Filter by status and priority
-      const filteredStories = await executeQuery(`
+      const filteredStories = await executeQuery(
+        `
         SELECT * FROM user_stories 
         WHERE status = ? AND priority = ?
         ORDER BY story_points DESC
-      `, ['backlog', 'high']);
+      `,
+        ['backlog', 'high']
+      );
 
       expect(filteredStories).toHaveLength(1);
       expect(filteredStories[0].id).toBe('filter-story-1');
@@ -302,25 +319,42 @@ describe('Database Integration Tests', () => {
         // Insert epic
         await connection.execute(
           'INSERT INTO epics (id, title, description, business_value, status, priority) VALUES (?, ?, ?, ?, ?, ?)',
-          ['transaction-epic', 'Transaction Test', 'Test description', 'Test value', 'planned', 'high']
+          [
+            'transaction-epic',
+            'Transaction Test',
+            'Test description',
+            'Test value',
+            'planned',
+            'high',
+          ]
         );
 
         // Insert story
         await connection.execute(
           'INSERT INTO user_stories (id, title, description, acceptance_criteria, story_points, priority, status, epic_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-          ['transaction-story', 'Transaction Story', 'Test story', '[]', 5, 'high', 'backlog', 'transaction-epic']
+          [
+            'transaction-story',
+            'Transaction Story',
+            'Test story',
+            '[]',
+            5,
+            'high',
+            'backlog',
+            'transaction-epic',
+          ]
         );
 
         await connection.commit();
 
         // Verify both records exist
         const epics = await findTestData('epics', { id: 'transaction-epic' });
-        const stories = await findTestData('user_stories', { id: 'transaction-story' });
+        const stories = await findTestData('user_stories', {
+          id: 'transaction-story',
+        });
 
         expect(epics).toHaveLength(1);
         expect(stories).toHaveLength(1);
         expect(stories[0].epic_id).toBe('transaction-epic');
-
       } catch (error) {
         await connection.rollback();
         throw error;
@@ -339,21 +373,38 @@ describe('Database Integration Tests', () => {
         // Insert valid epic
         await connection.execute(
           'INSERT INTO epics (id, title, description, business_value, status, priority) VALUES (?, ?, ?, ?, ?, ?)',
-          ['rollback-epic', 'Rollback Test', 'Test description', 'Test value', 'planned', 'high']
+          [
+            'rollback-epic',
+            'Rollback Test',
+            'Test description',
+            'Test value',
+            'planned',
+            'high',
+          ]
         );
 
         // Try to insert invalid story (should fail)
-        await expect(connection.execute(
-          'INSERT INTO user_stories (id, title, description, acceptance_criteria, story_points, priority, status, epic_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-          ['rollback-story', null, 'Test story', '[]', 5, 'high', 'backlog', 'rollback-epic'] // null title should fail
-        )).rejects.toThrow();
+        await expect(
+          connection.execute(
+            'INSERT INTO user_stories (id, title, description, acceptance_criteria, story_points, priority, status, epic_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+              'rollback-story',
+              null,
+              'Test story',
+              '[]',
+              5,
+              'high',
+              'backlog',
+              'rollback-epic',
+            ] // null title should fail
+          )
+        ).rejects.toThrow();
 
         await connection.rollback();
 
         // Verify no records were inserted
         const epics = await findTestData('epics', { id: 'rollback-epic' });
         expect(epics).toHaveLength(0);
-
       } catch (error) {
         await connection.rollback();
       } finally {
@@ -372,7 +423,7 @@ describe('Database Integration Tests', () => {
         const storyData = createMockUserStory({
           id: `bulk-story-${i}`,
           title: `Bulk Story ${i}`,
-          story_points: (i % 5) + 1 // Vary story points
+          story_points: (i % 5) + 1, // Vary story points
         });
         insertPromises.push(insertTestData('user_stories', storyData));
       }
@@ -386,7 +437,10 @@ describe('Database Integration Tests', () => {
       expect(duration).toBeLessThan(5000); // 5 seconds
 
       // Verify all stories were inserted
-      const allStories = await executeQuery('SELECT COUNT(*) as count FROM user_stories WHERE id LIKE ?', ['bulk-story-%']);
+      const allStories = await executeQuery(
+        'SELECT COUNT(*) as count FROM user_stories WHERE id LIKE ?',
+        ['bulk-story-%']
+      );
       expect(allStories[0].count).toBe(100);
     });
 
@@ -396,7 +450,7 @@ describe('Database Integration Tests', () => {
         const epicData = createMockEpic({
           id: `perf-epic-${i}`,
           title: `Performance Epic ${i}`,
-          status: i % 2 === 0 ? 'planned' : 'in-progress'
+          status: i % 2 === 0 ? 'planned' : 'in-progress',
         });
         await insertTestData('epics', epicData);
 
@@ -407,7 +461,7 @@ describe('Database Integration Tests', () => {
             title: `Performance Story ${i}-${j}`,
             epic_id: `perf-epic-${i}`,
             story_points: (j % 3) + 1,
-            status: j % 2 === 0 ? 'done' : 'backlog'
+            status: j % 2 === 0 ? 'done' : 'backlog',
           });
           await insertTestData('user_stories', storyData);
         }

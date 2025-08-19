@@ -2,7 +2,10 @@ const request = require('supertest');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const lendingTransactionsRouter = require('../routes/lendingTransactions');
-const { LendingTransaction, LendingProduct } = require('../models/lendingModels');
+const {
+  LendingTransaction,
+  LendingProduct,
+} = require('../models/lendingModels');
 
 // Mock the models
 jest.mock('../models/lendingModels');
@@ -18,7 +21,7 @@ jest.mock('../middleware/auth', () => ({
   authenticateToken: (req, res, next) => {
     req.user = { id: 1, role: 'user' };
     next();
-  }
+  },
 }));
 
 const app = express();
@@ -36,7 +39,7 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'product-123',
         name: 'MacBook Pro',
         maxLendingPeriod: 30,
-        requiresApproval: false
+        requiresApproval: false,
       };
 
       const mockTransaction = {
@@ -45,25 +48,29 @@ describe('Lending Transactions API Integration Tests', () => {
         borrowerId: 1,
         status: 'active',
         lendDate: new Date().toISOString(),
-        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       };
 
       LendingProduct.findById.mockResolvedValue(mockProduct);
       LendingTransaction.checkAvailability.mockResolvedValue(true);
-      LendingTransaction.prototype.save = jest.fn().mockResolvedValue(mockTransaction);
+      LendingTransaction.prototype.save = jest
+        .fn()
+        .mockResolvedValue(mockTransaction);
 
       const response = await request(app)
         .post('/api/lending-transactions')
         .send({
           productId: 'product-123',
           conditionLent: 'excellent',
-          notes: 'For development work'
+          notes: 'For development work',
         });
 
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual(mockTransaction);
-      expect(LendingTransaction.checkAvailability).toHaveBeenCalledWith('product-123');
+      expect(LendingTransaction.checkAvailability).toHaveBeenCalledWith(
+        'product-123'
+      );
     });
 
     it('should return 404 if product not found', async () => {
@@ -72,7 +79,7 @@ describe('Lending Transactions API Integration Tests', () => {
       const response = await request(app)
         .post('/api/lending-transactions')
         .send({
-          productId: 'non-existent-product'
+          productId: 'non-existent-product',
         });
 
       expect(response.status).toBe(404);
@@ -82,26 +89,28 @@ describe('Lending Transactions API Integration Tests', () => {
 
     it('should return 400 if product not available', async () => {
       const mockProduct = { id: 'product-123', name: 'MacBook Pro' };
-      
+
       LendingProduct.findById.mockResolvedValue(mockProduct);
       LendingTransaction.checkAvailability.mockResolvedValue(false);
 
       const response = await request(app)
         .post('/api/lending-transactions')
         .send({
-          productId: 'product-123'
+          productId: 'product-123',
         });
 
       expect(response.status).toBe(400);
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Product is not available for lending');
+      expect(response.body.message).toBe(
+        'Product is not available for lending'
+      );
     });
 
     it('should return 400 if productId is missing', async () => {
       const response = await request(app)
         .post('/api/lending-transactions')
         .send({
-          notes: 'Missing product ID'
+          notes: 'Missing product ID',
         });
 
       expect(response.status).toBe(400);
@@ -117,20 +126,19 @@ describe('Lending Transactions API Integration Tests', () => {
           id: 'transaction-1',
           productId: 'product-1',
           borrowerId: 1,
-          status: 'active'
+          status: 'active',
         },
         {
           id: 'transaction-2',
           productId: 'product-2',
           borrowerId: 1,
-          status: 'returned'
-        }
+          status: 'returned',
+        },
       ];
 
       LendingTransaction.findAll.mockResolvedValue(mockTransactions);
 
-      const response = await request(app)
-        .get('/api/lending-transactions');
+      const response = await request(app).get('/api/lending-transactions');
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
@@ -144,18 +152,19 @@ describe('Lending Transactions API Integration Tests', () => {
           id: 'transaction-1',
           productId: 'product-1',
           borrowerId: 1,
-          status: 'active'
-        }
+          status: 'active',
+        },
       ];
 
       LendingTransaction.findAll.mockResolvedValue(mockTransactions);
 
-      const response = await request(app)
-        .get('/api/lending-transactions?status=active');
+      const response = await request(app).get(
+        '/api/lending-transactions?status=active'
+      );
 
       expect(response.status).toBe(200);
       expect(LendingTransaction.findAll).toHaveBeenCalledWith({
-        status: 'active'
+        status: 'active',
       });
     });
 
@@ -165,18 +174,19 @@ describe('Lending Transactions API Integration Tests', () => {
           id: 'transaction-1',
           productId: 'product-1',
           borrowerId: 1,
-          status: 'active'
-        }
+          status: 'active',
+        },
       ];
 
       LendingTransaction.findAll.mockResolvedValue(mockTransactions);
 
-      const response = await request(app)
-        .get('/api/lending-transactions?myTransactions=true');
+      const response = await request(app).get(
+        '/api/lending-transactions?myTransactions=true'
+      );
 
       expect(response.status).toBe(200);
       expect(LendingTransaction.findAll).toHaveBeenCalledWith({
-        borrowerId: 1
+        borrowerId: 1,
       });
     });
   });
@@ -187,13 +197,14 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'transaction-123',
         productId: 'product-123',
         borrowerId: 1,
-        status: 'active'
+        status: 'active',
       };
 
       LendingTransaction.findById.mockResolvedValue(mockTransaction);
 
-      const response = await request(app)
-        .get('/api/lending-transactions/transaction-123');
+      const response = await request(app).get(
+        '/api/lending-transactions/transaction-123'
+      );
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
@@ -203,8 +214,9 @@ describe('Lending Transactions API Integration Tests', () => {
     it('should return 404 if transaction not found', async () => {
       LendingTransaction.findById.mockResolvedValue(null);
 
-      const response = await request(app)
-        .get('/api/lending-transactions/non-existent');
+      const response = await request(app).get(
+        '/api/lending-transactions/non-existent'
+      );
 
       expect(response.status).toBe(404);
       expect(response.body.success).toBe(false);
@@ -216,13 +228,14 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'transaction-123',
         productId: 'product-123',
         borrowerId: 2, // Different user
-        status: 'active'
+        status: 'active',
       };
 
       LendingTransaction.findById.mockResolvedValue(mockTransaction);
 
-      const response = await request(app)
-        .get('/api/lending-transactions/transaction-123');
+      const response = await request(app).get(
+        '/api/lending-transactions/transaction-123'
+      );
 
       expect(response.status).toBe(403);
       expect(response.body.success).toBe(false);
@@ -240,8 +253,8 @@ describe('Lending Transactions API Integration Tests', () => {
         processReturn: jest.fn().mockResolvedValue({
           id: 'transaction-123',
           status: 'returned',
-          returnDate: new Date()
-        })
+          returnDate: new Date(),
+        }),
       };
 
       LendingTransaction.findById.mockResolvedValue(mockTransaction);
@@ -250,7 +263,7 @@ describe('Lending Transactions API Integration Tests', () => {
         .put('/api/lending-transactions/transaction-123/return')
         .send({
           conditionReturned: 'good',
-          notes: 'Returned in good condition'
+          notes: 'Returned in good condition',
         });
 
       expect(response.status).toBe(200);
@@ -259,7 +272,7 @@ describe('Lending Transactions API Integration Tests', () => {
       expect(mockTransaction.processReturn).toHaveBeenCalledWith({
         conditionReturned: 'good',
         notes: 'Returned in good condition',
-        returnDate: expect.any(Date)
+        returnDate: expect.any(Date),
       });
     });
 
@@ -268,7 +281,7 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'transaction-123',
         productId: 'product-123',
         borrowerId: 1,
-        status: 'returned'
+        status: 'returned',
       };
 
       LendingTransaction.findById.mockResolvedValue(mockTransaction);
@@ -276,7 +289,7 @@ describe('Lending Transactions API Integration Tests', () => {
       const response = await request(app)
         .put('/api/lending-transactions/transaction-123/return')
         .send({
-          conditionReturned: 'good'
+          conditionReturned: 'good',
         });
 
       expect(response.status).toBe(400);
@@ -289,7 +302,7 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'transaction-123',
         productId: 'product-123',
         borrowerId: 2, // Different user
-        status: 'active'
+        status: 'active',
       };
 
       LendingTransaction.findById.mockResolvedValue(mockTransaction);
@@ -297,7 +310,7 @@ describe('Lending Transactions API Integration Tests', () => {
       const response = await request(app)
         .put('/api/lending-transactions/transaction-123/return')
         .send({
-          conditionReturned: 'good'
+          conditionReturned: 'good',
         });
 
       expect(response.status).toBe(403);
@@ -312,7 +325,7 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'product-123',
         name: 'MacBook Pro',
         maxLendingPeriod: 30,
-        requiresApproval: false
+        requiresApproval: false,
       };
 
       LendingTransaction.checkAvailability.mockResolvedValue(true);
@@ -321,7 +334,7 @@ describe('Lending Transactions API Integration Tests', () => {
       const response = await request(app)
         .post('/api/lending-transactions/check-availability')
         .send({
-          productId: 'product-123'
+          productId: 'product-123',
         });
 
       expect(response.status).toBe(200);
@@ -331,7 +344,7 @@ describe('Lending Transactions API Integration Tests', () => {
         productName: 'MacBook Pro',
         isAvailable: true,
         maxLendingPeriod: 30,
-        requiresApproval: false
+        requiresApproval: false,
       });
     });
 
@@ -352,7 +365,7 @@ describe('Lending Transactions API Integration Tests', () => {
       const response = await request(app)
         .post('/api/lending-transactions/check-availability')
         .send({
-          productId: 'non-existent'
+          productId: 'non-existent',
         });
 
       expect(response.status).toBe(404);
@@ -368,21 +381,20 @@ describe('Lending Transactions API Integration Tests', () => {
           total_transactions: 100,
           active_transactions: 25,
           overdue_transactions: 5,
-          returned_transactions: 70
+          returned_transactions: 70,
         },
         monthly: [
           { month: '2024-01', transactions_count: 15 },
-          { month: '2024-02', transactions_count: 20 }
+          { month: '2024-02', transactions_count: 20 },
         ],
-        popularProducts: [
-          { product_name: 'MacBook Pro', lending_count: 10 }
-        ]
+        popularProducts: [{ product_name: 'MacBook Pro', lending_count: 10 }],
       };
 
       LendingTransaction.getStatistics.mockResolvedValue(mockStats);
 
-      const response = await request(app)
-        .get('/api/lending-transactions/statistics/overview');
+      const response = await request(app).get(
+        '/api/lending-transactions/statistics/overview'
+      );
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
@@ -397,20 +409,21 @@ describe('Lending Transactions API Integration Tests', () => {
           id: 'transaction-1',
           productId: 'product-1',
           borrowerId: 1,
-          status: 'active'
-        }
+          status: 'active',
+        },
       ];
 
       LendingTransaction.findAll.mockResolvedValue(mockTransactions);
 
-      const response = await request(app)
-        .get('/api/lending-transactions/my-transactions/list');
+      const response = await request(app).get(
+        '/api/lending-transactions/my-transactions/list'
+      );
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual(mockTransactions);
       expect(LendingTransaction.findAll).toHaveBeenCalledWith({
-        borrowerId: 1
+        borrowerId: 1,
       });
     });
   });
@@ -424,14 +437,15 @@ describe('Lending Transactions API Integration Tests', () => {
           borrowerId: 1,
           status: 'returned',
           lendingDuration: 15,
-          daysOverdue: 0
-        }
+          daysOverdue: 0,
+        },
       ];
 
       LendingTransaction.getHistory = jest.fn().mockResolvedValue(mockHistory);
 
-      const response = await request(app)
-        .get('/api/lending-transactions/history');
+      const response = await request(app).get(
+        '/api/lending-transactions/history'
+      );
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
@@ -439,17 +453,20 @@ describe('Lending Transactions API Integration Tests', () => {
       expect(LendingTransaction.getHistory).toHaveBeenCalledWith({
         borrowerId: 1,
         limit: 50,
-        offset: 0
+        offset: 0,
       });
     });
 
     it('should return 403 when non-admin tries to view other user history', async () => {
-      const response = await request(app)
-        .get('/api/lending-transactions/history?userId=2');
+      const response = await request(app).get(
+        '/api/lending-transactions/history?userId=2'
+      );
 
       expect(response.status).toBe(403);
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Admin access required to view other users\' history');
+      expect(response.body.message).toBe(
+        "Admin access required to view other users' history"
+      );
     });
   });
 
@@ -462,8 +479,9 @@ describe('Lending Transactions API Integration Tests', () => {
     });
 
     it('should return 403 for non-admin users', async () => {
-      const response = await request(app)
-        .get('/api/lending-transactions/analytics/trends');
+      const response = await request(app).get(
+        '/api/lending-transactions/analytics/trends'
+      );
 
       expect(response.status).toBe(403);
       expect(response.body.success).toBe(false);
@@ -477,25 +495,27 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'product-123',
         name: 'MacBook Pro',
         maxLendingPeriod: 30,
-        requiresApproval: false
+        requiresApproval: false,
       };
 
       const mockReservation = {
         id: 'reservation-123',
         productId: 'product-123',
         borrowerId: 1,
-        status: 'reserved'
+        status: 'reserved',
       };
 
       LendingProduct.findById.mockResolvedValue(mockProduct);
       LendingTransaction.checkAvailability.mockResolvedValue(true);
-      LendingTransaction.createReservation = jest.fn().mockResolvedValue(mockReservation);
+      LendingTransaction.createReservation = jest
+        .fn()
+        .mockResolvedValue(mockReservation);
 
       const response = await request(app)
         .post('/api/lending-transactions/reserve')
         .send({
           productId: 'product-123',
-          reservationNotes: 'Need for presentation'
+          reservationNotes: 'Need for presentation',
         });
 
       expect(response.status).toBe(201);
@@ -505,25 +525,27 @@ describe('Lending Transactions API Integration Tests', () => {
         productId: 'product-123',
         borrowerId: 1,
         notes: 'Need for presentation',
-        reservedBy: 1
+        reservedBy: 1,
       });
     });
 
     it('should return 400 if product not available for reservation', async () => {
       const mockProduct = { id: 'product-123', name: 'MacBook Pro' };
-      
+
       LendingProduct.findById.mockResolvedValue(mockProduct);
       LendingTransaction.checkAvailability.mockResolvedValue(false);
 
       const response = await request(app)
         .post('/api/lending-transactions/reserve')
         .send({
-          productId: 'product-123'
+          productId: 'product-123',
         });
 
       expect(response.status).toBe(400);
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Product is not available for reservation');
+      expect(response.body.message).toBe(
+        'Product is not available for reservation'
+      );
     });
   });
 
@@ -533,19 +555,22 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'reservation-123',
         productId: 'product-123',
         borrowerId: 1,
-        status: 'reserved'
+        status: 'reserved',
       };
 
       LendingTransaction.findById.mockResolvedValue(mockReservation);
       LendingTransaction.cancelReservation = jest.fn().mockResolvedValue(true);
 
-      const response = await request(app)
-        .delete('/api/lending-transactions/reserve/reservation-123');
+      const response = await request(app).delete(
+        '/api/lending-transactions/reserve/reservation-123'
+      );
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
       expect(response.body.message).toBe('Reservation cancelled successfully');
-      expect(LendingTransaction.cancelReservation).toHaveBeenCalledWith('reservation-123');
+      expect(LendingTransaction.cancelReservation).toHaveBeenCalledWith(
+        'reservation-123'
+      );
     });
 
     it('should return 400 if trying to cancel non-reserved item', async () => {
@@ -553,17 +578,20 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'transaction-123',
         productId: 'product-123',
         borrowerId: 1,
-        status: 'active'
+        status: 'active',
       };
 
       LendingTransaction.findById.mockResolvedValue(mockTransaction);
 
-      const response = await request(app)
-        .delete('/api/lending-transactions/reserve/transaction-123');
+      const response = await request(app).delete(
+        '/api/lending-transactions/reserve/transaction-123'
+      );
 
       expect(response.status).toBe(400);
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Only reserved items can be cancelled');
+      expect(response.body.message).toBe(
+        'Only reserved items can be cancelled'
+      );
     });
 
     it('should return 403 if user cannot cancel reservation', async () => {
@@ -571,13 +599,14 @@ describe('Lending Transactions API Integration Tests', () => {
         id: 'reservation-123',
         productId: 'product-123',
         borrowerId: 2, // Different user
-        status: 'reserved'
+        status: 'reserved',
       };
 
       LendingTransaction.findById.mockResolvedValue(mockReservation);
 
-      const response = await request(app)
-        .delete('/api/lending-transactions/reserve/reservation-123');
+      const response = await request(app).delete(
+        '/api/lending-transactions/reserve/reservation-123'
+      );
 
       expect(response.status).toBe(403);
       expect(response.body.success).toBe(false);

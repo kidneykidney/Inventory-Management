@@ -12,17 +12,14 @@ const logger = require('./utils/logger');
 const performanceMonitor = require('./utils/performanceMonitor');
 
 // Import security middleware
-const { 
-  enhancedHelmet, 
-  enhancedCors, 
-  securityLogger, 
+const {
+  enhancedHelmet,
+  enhancedCors,
+  securityLogger,
   ipBlocking,
-  generateCSRFToken 
+  generateCSRFToken,
 } = require('./middleware/security');
-const { 
-  sanitizeInput, 
-  apiRateLimit 
-} = require('./middleware/validation');
+const { sanitizeInput, apiRateLimit } = require('./middleware/validation');
 
 // Import routes
 const healthRoutes = require('./routes/health');
@@ -58,16 +55,18 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Session middleware for CSRF protection
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-session-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
 
 // Enhanced security middleware
 app.use(enhancedHelmet);
@@ -182,7 +181,10 @@ const startServer = async () => {
       await initDatabase();
       logger.info('Database connected successfully');
     } catch (dbError) {
-      logger.warn('Database connection failed, running in development mode without database:', dbError.message);
+      logger.warn(
+        'Database connection failed, running in development mode without database:',
+        dbError.message
+      );
     }
 
     // Start performance monitoring

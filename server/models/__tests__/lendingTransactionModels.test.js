@@ -271,8 +271,9 @@ describe('LendingTransaction Model', () => {
     it('should throw error for non-existent product', async () => {
       monitoredQuery.mockResolvedValueOnce([[]]); // Product not found
 
-      await expect(LendingTransaction.checkAvailability('non-existent'))
-        .rejects.toThrow('Product not found');
+      await expect(
+        LendingTransaction.checkAvailability('non-existent')
+      ).rejects.toThrow('Product not found');
     });
   });
 
@@ -329,8 +330,9 @@ describe('LendingTransaction Model', () => {
         status: 'returned',
       });
 
-      await expect(transaction.processReturn({}))
-        .rejects.toThrow('Item has already been returned');
+      await expect(transaction.processReturn({})).rejects.toThrow(
+        'Item has already been returned'
+      );
     });
 
     it('should rollback on database error', async () => {
@@ -342,8 +344,9 @@ describe('LendingTransaction Model', () => {
 
       mockConnection.execute.mockRejectedValue(new Error('Database error'));
 
-      await expect(transaction.processReturn({}))
-        .rejects.toThrow('Database error');
+      await expect(transaction.processReturn({})).rejects.toThrow(
+        'Database error'
+      );
 
       expect(mockConnection.rollback).toHaveBeenCalled();
     });

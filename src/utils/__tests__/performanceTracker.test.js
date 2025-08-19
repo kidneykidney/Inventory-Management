@@ -7,7 +7,7 @@ global.fetch = jest.fn();
 const mockPerformance = {
   getEntriesByType: jest.fn(),
   now: jest.fn(() => Date.now()),
-  getEntriesByName: jest.fn()
+  getEntriesByName: jest.fn(),
 };
 
 // Mock PerformanceObserver
@@ -22,24 +22,33 @@ describe('PerformanceTracker', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     fetch.mockClear();
-    
+
     // Reset metrics
     performanceTracker.metrics = {
       pageLoads: [],
       userInteractions: [],
       apiCalls: [],
-      coreWebVitals: {}
+      coreWebVitals: {},
     };
   });
 
   describe('init', () => {
     it('should initialize performance tracking when supported', () => {
       performanceTracker.isSupported = true;
-      
+
       const trackPageLoadSpy = jest.spyOn(performanceTracker, 'trackPageLoad');
-      const trackCoreWebVitalsSpy = jest.spyOn(performanceTracker, 'trackCoreWebVitals');
-      const setupNavigationObserverSpy = jest.spyOn(performanceTracker, 'setupNavigationObserver');
-      const setupResourceObserverSpy = jest.spyOn(performanceTracker, 'setupResourceObserver');
+      const trackCoreWebVitalsSpy = jest.spyOn(
+        performanceTracker,
+        'trackCoreWebVitals'
+      );
+      const setupNavigationObserverSpy = jest.spyOn(
+        performanceTracker,
+        'setupNavigationObserver'
+      );
+      const setupResourceObserverSpy = jest.spyOn(
+        performanceTracker,
+        'setupResourceObserver'
+      );
 
       performanceTracker.init();
 
@@ -66,7 +75,7 @@ describe('PerformanceTracker', () => {
         url: '/api/v1/test',
         duration: 150,
         size: 1024,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       performanceTracker.trackApiCall(apiMetric);
@@ -82,7 +91,7 @@ describe('PerformanceTracker', () => {
           url: `/api/v1/test${i}`,
           duration: 100,
           size: 1024,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
       }
 
@@ -91,12 +100,12 @@ describe('PerformanceTracker', () => {
 
     it('should warn about slow API calls', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-      
+
       performanceTracker.trackApiCall({
         url: '/api/v1/slow',
         duration: 4000, // Exceeds 3000ms threshold
         size: 1024,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -110,7 +119,7 @@ describe('PerformanceTracker', () => {
     it('should track user interactions', () => {
       const mockElement = {
         tagName: 'BUTTON',
-        id: 'test-button'
+        id: 'test-button',
       };
 
       performanceTracker.trackUserInteraction('click', mockElement, 50);
@@ -120,7 +129,7 @@ describe('PerformanceTracker', () => {
         action: 'click',
         element: 'BUTTON',
         elementId: 'test-button',
-        duration: 50
+        duration: 50,
       });
     });
 
@@ -137,15 +146,15 @@ describe('PerformanceTracker', () => {
 
     it('should send metrics to server', () => {
       const mockElement = { tagName: 'BUTTON', id: 'test' };
-      
+
       performanceTracker.trackUserInteraction('click', mockElement);
 
       expect(fetch).toHaveBeenCalledWith('/api/v1/performance/metrics', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: expect.stringContaining('user_interaction')
+        body: expect.stringContaining('user_interaction'),
       });
     });
   });
@@ -154,21 +163,25 @@ describe('PerformanceTracker', () => {
     it('should return metrics summary', () => {
       // Add test data
       performanceTracker.metrics.pageLoads = [
-        { url: '/test', loadTime: 1000, timestamp: new Date().toISOString() }
+        { url: '/test', loadTime: 1000, timestamp: new Date().toISOString() },
       ];
       performanceTracker.metrics.coreWebVitals = {
-        lcp: { value: 2000, rating: 'good' }
+        lcp: { value: 2000, rating: 'good' },
       };
-      performanceTracker.metrics.apiCalls = Array(15).fill().map((_, i) => ({
-        url: `/api/test${i}`,
-        duration: 100,
-        timestamp: new Date().toISOString()
-      }));
-      performanceTracker.metrics.userInteractions = Array(15).fill().map((_, i) => ({
-        action: 'click',
-        element: 'BUTTON',
-        timestamp: new Date().toISOString()
-      }));
+      performanceTracker.metrics.apiCalls = Array(15)
+        .fill()
+        .map((_, i) => ({
+          url: `/api/test${i}`,
+          duration: 100,
+          timestamp: new Date().toISOString(),
+        }));
+      performanceTracker.metrics.userInteractions = Array(15)
+        .fill()
+        .map((_, i) => ({
+          action: 'click',
+          element: 'BUTTON',
+          timestamp: new Date().toISOString(),
+        }));
 
       const summary = performanceTracker.getMetricsSummary();
 
@@ -205,10 +218,12 @@ describe('PerformanceTracker', () => {
 
   describe('checkPerformanceBudget', () => {
     it('should detect page load time violations', () => {
-      performanceTracker.metrics.pageLoads = [{
-        loadTime: 4000, // Exceeds 3000ms budget
-        timestamp: new Date().toISOString()
-      }];
+      performanceTracker.metrics.pageLoads = [
+        {
+          loadTime: 4000, // Exceeds 3000ms budget
+          timestamp: new Date().toISOString(),
+        },
+      ];
 
       const violations = performanceTracker.checkPerformanceBudget();
 
@@ -216,15 +231,15 @@ describe('PerformanceTracker', () => {
       expect(violations[0]).toMatchObject({
         metric: 'Page Load Time',
         value: 4000,
-        budget: 3000
+        budget: 3000,
       });
     });
 
     it('should detect Core Web Vitals violations', () => {
       performanceTracker.metrics.coreWebVitals = {
         lcp: { value: 3000 }, // Exceeds 2500ms budget
-        fid: { value: 150 },  // Exceeds 100ms budget
-        cls: { value: 0.2 }   // Exceeds 0.1 budget
+        fid: { value: 150 }, // Exceeds 100ms budget
+        cls: { value: 0.2 }, // Exceeds 0.1 budget
       };
 
       const violations = performanceTracker.checkPerformanceBudget();
@@ -236,14 +251,16 @@ describe('PerformanceTracker', () => {
     });
 
     it('should return empty array when no violations', () => {
-      performanceTracker.metrics.pageLoads = [{
-        loadTime: 2000, // Within budget
-        timestamp: new Date().toISOString()
-      }];
+      performanceTracker.metrics.pageLoads = [
+        {
+          loadTime: 2000, // Within budget
+          timestamp: new Date().toISOString(),
+        },
+      ];
       performanceTracker.metrics.coreWebVitals = {
         lcp: { value: 2000 }, // Within budget
-        fid: { value: 80 },   // Within budget
-        cls: { value: 0.05 }  // Within budget
+        fid: { value: 80 }, // Within budget
+        cls: { value: 0.05 }, // Within budget
       };
 
       const violations = performanceTracker.checkPerformanceBudget();
@@ -256,14 +273,16 @@ describe('PerformanceTracker', () => {
     it('should send metrics to server successfully', async () => {
       fetch.mockResolvedValueOnce({ ok: true });
 
-      await performanceTracker.sendMetricsToServer('test_metric', { value: 100 });
+      await performanceTracker.sendMetricsToServer('test_metric', {
+        value: 100,
+      });
 
       expect(fetch).toHaveBeenCalledWith('/api/v1/performance/metrics', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: expect.stringContaining('test_metric')
+        body: expect.stringContaining('test_metric'),
       });
     });
 
@@ -271,7 +290,9 @@ describe('PerformanceTracker', () => {
       fetch.mockRejectedValueOnce(new Error('Network error'));
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-      await performanceTracker.sendMetricsToServer('test_metric', { value: 100 });
+      await performanceTracker.sendMetricsToServer('test_metric', {
+        value: 100,
+      });
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'Failed to send performance metrics:',

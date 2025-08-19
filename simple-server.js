@@ -5,18 +5,20 @@ const path = require('path');
 const app = express();
 
 // Basic middleware
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Basic health check
 app.get('/api/v1/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
     message: 'Server is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -29,9 +31,9 @@ app.post('/api/v1/auth/login', (req, res) => {
       id: 1,
       name: 'Admin User',
       email: 'admin@example.com',
-      role: 'admin'
+      role: 'admin',
     },
-    token: 'mock-jwt-token'
+    token: 'mock-jwt-token',
   });
 });
 
@@ -44,7 +46,7 @@ app.get('/api/v1/products', (req, res) => {
       name: 'MacBook Pro 16"',
       category: 'Electronics',
       quantity: 3,
-      status: 'In Stock'
+      status: 'In Stock',
     },
     {
       id: 2,
@@ -52,8 +54,8 @@ app.get('/api/v1/products', (req, res) => {
       name: 'Office Chair',
       category: 'Office Supplies',
       quantity: 5,
-      status: 'In Stock'
-    }
+      status: 'In Stock',
+    },
   ]);
 });
 
@@ -67,8 +69,8 @@ app.get('/api/v1/lending', (req, res) => {
       category: 'Electronics',
       available: 3,
       location: 'Office A',
-      condition: 'good'
-    }
+      condition: 'good',
+    },
   ]);
 });
 

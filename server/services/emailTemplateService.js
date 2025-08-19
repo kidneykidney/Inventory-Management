@@ -7,7 +7,7 @@ class EmailTemplateService {
       RETURN_REMINDER: 'return_reminder',
       OVERDUE_NOTICE: 'overdue_notice',
       RETURN_CONFIRMATION: 'return_confirmation',
-      LENDING_REQUEST_APPROVAL: 'lending_request_approval'
+      LENDING_REQUEST_APPROVAL: 'lending_request_approval',
     };
   }
 
@@ -29,8 +29,15 @@ class EmailTemplateService {
   }
 
   generateLendingConfirmation(data) {
-    const { borrowerName, productName, lendDate, dueDate, productSpecs, lendingId } = data;
-    
+    const {
+      borrowerName,
+      productName,
+      lendDate,
+      dueDate,
+      productSpecs,
+      lendingId,
+    } = data;
+
     return {
       subject: `Lending Confirmation - ${productName}`,
       html: `
@@ -87,13 +94,14 @@ class EmailTemplateService {
         - Keep this confirmation for your records
         
         Thank you for using our lending system!
-      `
+      `,
     };
   }
 
   generateReturnReminder(data) {
-    const { borrowerName, productName, dueDate, daysUntilDue, lendingId } = data;
-    
+    const { borrowerName, productName, dueDate, daysUntilDue, lendingId } =
+      data;
+
     return {
       subject: `Return Reminder - ${productName} due in ${daysUntilDue} days`,
       html: `
@@ -148,13 +156,13 @@ class EmailTemplateService {
         - Contact us if you need an extension
         
         Thank you for your cooperation!
-      `
+      `,
     };
   }
 
   generateOverdueNotice(data) {
     const { borrowerName, productName, dueDate, daysOverdue, lendingId } = data;
-    
+
     return {
       subject: `OVERDUE NOTICE - ${productName} (${daysOverdue} days overdue)`,
       html: `
@@ -211,13 +219,14 @@ class EmailTemplateService {
         - Failure to return may result in replacement charges
         
         Please contact us immediately if you have any questions or concerns.
-      `
+      `,
     };
   }
 
   generateReturnConfirmation(data) {
-    const { borrowerName, productName, returnDate, condition, lendingId } = data;
-    
+    const { borrowerName, productName, returnDate, condition, lendingId } =
+      data;
+
     return {
       subject: `Return Confirmation - ${productName}`,
       html: `
@@ -266,13 +275,13 @@ class EmailTemplateService {
         Return processed successfully! The item is now available for other users.
         
         Thank you for using our lending system responsibly!
-      `
+      `,
     };
   }
 
   generateLendingRequestApproval(data) {
     const { borrowerName, productName, approverName, lendingId } = data;
-    
+
     return {
       subject: `Lending Request Approved - ${productName}`,
       html: `
@@ -325,7 +334,7 @@ class EmailTemplateService {
         - You will receive a lending confirmation once the item is collected
         
         Thank you for using our lending system!
-      `
+      `,
     };
   }
 }

@@ -10,7 +10,7 @@ class NotificationService {
       RETURN_REMINDER: 'return_reminder',
       OVERDUE_NOTICE: 'overdue_notice',
       RETURN_CONFIRMATION: 'return_confirmation',
-      LENDING_REQUEST_APPROVAL: 'lending_request_approval'
+      LENDING_REQUEST_APPROVAL: 'lending_request_approval',
     };
   }
 
@@ -22,7 +22,7 @@ class NotificationService {
         lendDate: lendingTransaction.lendDate,
         dueDate: lendingTransaction.dueDate,
         productSpecs: lendingTransaction.productSpecs,
-        lendingId: lendingTransaction.id
+        lendingId: lendingTransaction.id,
       };
 
       const emailTemplate = emailTemplateService.generateTemplate(
@@ -34,11 +34,11 @@ class NotificationService {
         to: userEmail,
         subject: emailTemplate.subject,
         html: emailTemplate.html,
-        text: emailTemplate.text
+        text: emailTemplate.text,
       };
 
       const result = await emailService.sendEmail(emailData);
-      
+
       // Log the notification
       await this.logNotification({
         type: this.notificationTypes.LENDING_CONFIRMATION,
@@ -46,7 +46,7 @@ class NotificationService {
         subject: emailTemplate.subject,
         status: result.success ? 'sent' : 'failed',
         transactionId: lendingTransaction.id,
-        errorMessage: result.error || null
+        errorMessage: result.error || null,
       });
 
       return result;
@@ -67,7 +67,7 @@ class NotificationService {
         productName: lendingTransaction.productName,
         dueDate: lendingTransaction.dueDate,
         daysUntilDue: daysUntilDue,
-        lendingId: lendingTransaction.id
+        lendingId: lendingTransaction.id,
       };
 
       const emailTemplate = emailTemplateService.generateTemplate(
@@ -79,11 +79,11 @@ class NotificationService {
         to: userEmail,
         subject: emailTemplate.subject,
         html: emailTemplate.html,
-        text: emailTemplate.text
+        text: emailTemplate.text,
       };
 
       const result = await emailService.sendEmail(emailData);
-      
+
       // Log the notification
       await this.logNotification({
         type: this.notificationTypes.RETURN_REMINDER,
@@ -91,7 +91,7 @@ class NotificationService {
         subject: emailTemplate.subject,
         status: result.success ? 'sent' : 'failed',
         transactionId: lendingTransaction.id,
-        errorMessage: result.error || null
+        errorMessage: result.error || null,
       });
 
       return result;
@@ -112,7 +112,7 @@ class NotificationService {
         productName: lendingTransaction.productName,
         dueDate: lendingTransaction.dueDate,
         daysOverdue: daysOverdue,
-        lendingId: lendingTransaction.id
+        lendingId: lendingTransaction.id,
       };
 
       const emailTemplate = emailTemplateService.generateTemplate(
@@ -124,11 +124,11 @@ class NotificationService {
         to: userEmail,
         subject: emailTemplate.subject,
         html: emailTemplate.html,
-        text: emailTemplate.text
+        text: emailTemplate.text,
       };
 
       const result = await emailService.sendEmail(emailData);
-      
+
       // Log the notification
       await this.logNotification({
         type: this.notificationTypes.OVERDUE_NOTICE,
@@ -136,7 +136,7 @@ class NotificationService {
         subject: emailTemplate.subject,
         status: result.success ? 'sent' : 'failed',
         transactionId: lendingTransaction.id,
-        errorMessage: result.error || null
+        errorMessage: result.error || null,
       });
 
       return result;
@@ -153,7 +153,7 @@ class NotificationService {
         productName: lendingTransaction.productName,
         returnDate: lendingTransaction.returnDate,
         condition: lendingTransaction.returnCondition,
-        lendingId: lendingTransaction.id
+        lendingId: lendingTransaction.id,
       };
 
       const emailTemplate = emailTemplateService.generateTemplate(
@@ -165,11 +165,11 @@ class NotificationService {
         to: userEmail,
         subject: emailTemplate.subject,
         html: emailTemplate.html,
-        text: emailTemplate.text
+        text: emailTemplate.text,
       };
 
       const result = await emailService.sendEmail(emailData);
-      
+
       // Log the notification
       await this.logNotification({
         type: this.notificationTypes.RETURN_CONFIRMATION,
@@ -177,7 +177,7 @@ class NotificationService {
         subject: emailTemplate.subject,
         status: result.success ? 'sent' : 'failed',
         transactionId: lendingTransaction.id,
-        errorMessage: result.error || null
+        errorMessage: result.error || null,
       });
 
       return result;
@@ -194,14 +194,14 @@ class NotificationService {
         (type, recipient_email, subject, status, transaction_id, error_message, sent_date)
         VALUES (?, ?, ?, ?, ?, ?, NOW())
       `;
-      
+
       await db.execute(query, [
         notificationData.type,
         notificationData.recipientEmail,
         notificationData.subject,
         notificationData.status,
         notificationData.transactionId,
-        notificationData.errorMessage
+        notificationData.errorMessage,
       ]);
     } catch (error) {
       logger.error('Failed to log notification:', error);
@@ -215,7 +215,7 @@ class NotificationService {
         WHERE transaction_id = ? 
         ORDER BY sent_date DESC
       `;
-      
+
       const [rows] = await db.execute(query, [transactionId]);
       return rows;
     } catch (error) {
@@ -232,7 +232,7 @@ class NotificationService {
         ORDER BY sent_date DESC 
         LIMIT ?
       `;
-      
+
       const [rows] = await db.execute(query, [limit]);
       return rows;
     } catch (error) {
@@ -246,34 +246,34 @@ class NotificationService {
       // Get the failed notification
       const query = `SELECT * FROM email_notifications WHERE id = ?`;
       const [rows] = await db.execute(query, [notificationId]);
-      
+
       if (rows.length === 0) {
         throw new Error('Notification not found');
       }
 
       const notification = rows[0];
-      
+
       // Retry sending the email
       const emailData = {
         to: notification.recipient_email,
         subject: notification.subject,
         html: notification.content || 'Email content not available',
-        text: notification.content || 'Email content not available'
+        text: notification.content || 'Email content not available',
       };
 
       const result = await emailService.sendEmail(emailData);
-      
+
       // Update the notification status
       const updateQuery = `
         UPDATE email_notifications 
         SET status = ?, error_message = ?, sent_date = NOW() 
         WHERE id = ?
       `;
-      
+
       await db.execute(updateQuery, [
         result.success ? 'sent' : 'failed',
         result.error || null,
-        notificationId
+        notificationId,
       ]);
 
       return result;

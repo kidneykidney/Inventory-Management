@@ -1,14 +1,34 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Alert, AlertDescription } from '../ui/alert';
-import { 
-  Download, FileText, Calendar, Filter, BarChart3, 
-  TrendingUp, Users, Package, Clock, AlertTriangle
+import {
+  Download,
+  FileText,
+  Calendar,
+  Filter,
+  BarChart3,
+  TrendingUp,
+  Users,
+  Package,
+  Clock,
+  AlertTriangle,
 } from 'lucide-react';
 
 const ExportableReports = () => {
@@ -18,7 +38,7 @@ const ExportableReports = () => {
   const [filters, setFilters] = useState({
     categoryId: '',
     userId: '',
-    status: ''
+    status: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,56 +49,56 @@ const ExportableReports = () => {
       name: 'Overview Report',
       description: 'Comprehensive lending system overview with key metrics',
       icon: BarChart3,
-      endpoint: '/api/v1/lending-analytics/report'
+      endpoint: '/api/v1/lending-analytics/report',
     },
     {
       id: 'trends',
       name: 'Lending Trends',
       description: 'Historical lending trends and patterns over time',
       icon: TrendingUp,
-      endpoint: '/api/v1/lending-analytics/trends'
+      endpoint: '/api/v1/lending-analytics/trends',
     },
     {
       id: 'popular-products',
       name: 'Popular Products',
       description: 'Most frequently borrowed items and their statistics',
       icon: Package,
-      endpoint: '/api/v1/lending-analytics/popular-products'
+      endpoint: '/api/v1/lending-analytics/popular-products',
     },
     {
       id: 'user-behavior',
       name: 'User Behavior',
       description: 'User lending patterns and engagement metrics',
       icon: Users,
-      endpoint: '/api/v1/lending-analytics/user-behavior'
+      endpoint: '/api/v1/lending-analytics/user-behavior',
     },
     {
       id: 'overdue-tracking',
       name: 'Overdue Tracking',
       description: 'Detailed overdue items with escalation information',
       icon: AlertTriangle,
-      endpoint: '/api/v1/lending-analytics/overdue-tracking'
+      endpoint: '/api/v1/lending-analytics/overdue-tracking',
     },
     {
       id: 'performance',
       name: 'Performance Metrics',
       description: 'System efficiency and performance indicators',
       icon: Clock,
-      endpoint: '/api/v1/lending-analytics/performance'
+      endpoint: '/api/v1/lending-analytics/performance',
     },
     {
       id: 'usage-statistics',
       name: 'Usage Statistics',
       description: 'Custom date range usage statistics with filters',
       icon: FileText,
-      endpoint: '/api/v1/lending-analytics/usage-statistics'
-    }
+      endpoint: '/api/v1/lending-analytics/usage-statistics',
+    },
   ];
 
   const formatOptions = [
     { value: 'json', label: 'JSON', description: 'Machine-readable format' },
     { value: 'csv', label: 'CSV', description: 'Spreadsheet compatible' },
-    { value: 'pdf', label: 'PDF', description: 'Print-friendly format' }
+    { value: 'pdf', label: 'PDF', description: 'Print-friendly format' },
   ];
 
   const generateReport = async () => {
@@ -118,8 +138,8 @@ const ExportableReports = () => {
 
       const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
 
       if (!response.ok) {
@@ -130,14 +150,22 @@ const ExportableReports = () => {
 
       // Handle different export formats
       if (format === 'json') {
-        downloadJSON(data.data, `${reportType}-report-${new Date().toISOString().split('T')[0]}`);
+        downloadJSON(
+          data.data,
+          `${reportType}-report-${new Date().toISOString().split('T')[0]}`
+        );
       } else if (format === 'csv') {
-        downloadCSV(data.data, `${reportType}-report-${new Date().toISOString().split('T')[0]}`);
+        downloadCSV(
+          data.data,
+          `${reportType}-report-${new Date().toISOString().split('T')[0]}`
+        );
       } else if (format === 'pdf') {
         // For now, we'll generate a simple text-based PDF
-        downloadPDF(data.data, `${reportType}-report-${new Date().toISOString().split('T')[0]}`);
+        downloadPDF(
+          data.data,
+          `${reportType}-report-${new Date().toISOString().split('T')[0]}`
+        );
       }
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -146,7 +174,9 @@ const ExportableReports = () => {
   };
 
   const downloadJSON = (data, filename) => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: 'application/json',
+    });
     downloadBlob(blob, `${filename}.json`);
   };
 
@@ -164,7 +194,10 @@ const ExportableReports = () => {
           const values = headers.map(header => {
             const value = row[header];
             // Escape commas and quotes in CSV
-            if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+            if (
+              typeof value === 'string' &&
+              (value.includes(',') || value.includes('"'))
+            ) {
               return `"${value.replace(/"/g, '""')}"`;
             }
             return value || '';
@@ -177,8 +210,15 @@ const ExportableReports = () => {
       const flattenObject = (obj, prefix = '') => {
         const flattened = {};
         for (const key in obj) {
-          if (obj[key] !== null && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-            Object.assign(flattened, flattenObject(obj[key], `${prefix}${key}.`));
+          if (
+            obj[key] !== null &&
+            typeof obj[key] === 'object' &&
+            !Array.isArray(obj[key])
+          ) {
+            Object.assign(
+              flattened,
+              flattenObject(obj[key], `${prefix}${key}.`)
+            );
           } else {
             flattened[`${prefix}${key}`] = obj[key];
           }
@@ -189,7 +229,8 @@ const ExportableReports = () => {
       const flattened = flattenObject(data);
       const headers = Object.keys(flattened);
       csvContent += headers.join(',') + '\n';
-      csvContent += headers.map(header => flattened[header] || '').join(',') + '\n';
+      csvContent +=
+        headers.map(header => flattened[header] || '').join(',') + '\n';
     }
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -220,22 +261,22 @@ const ExportableReports = () => {
 
   const quickReports = [
     {
-      name: 'Today\'s Activity',
+      name: "Today's Activity",
       description: 'Lending activity for today',
       action: () => {
         const today = new Date().toISOString().split('T')[0];
         setReportType('usage-statistics');
         setDateRange({ start: today, end: today });
         setFormat('json');
-      }
+      },
     },
     {
-      name: 'This Week\'s Overdue',
+      name: "This Week's Overdue",
       description: 'All overdue items this week',
       action: () => {
         setReportType('overdue-tracking');
         setFormat('csv');
-      }
+      },
     },
     {
       name: 'Monthly Summary',
@@ -244,23 +285,23 @@ const ExportableReports = () => {
         const now = new Date();
         const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
         const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        
+
         setReportType('overview');
-        setDateRange({ 
-          start: firstDay.toISOString().split('T')[0], 
-          end: lastDay.toISOString().split('T')[0] 
+        setDateRange({
+          start: firstDay.toISOString().split('T')[0],
+          end: lastDay.toISOString().split('T')[0],
         });
         setFormat('pdf');
-      }
-    }
+      },
+    },
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className='p-6 space-y-6'>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Exportable Reports</h1>
-        <p className="text-muted-foreground">
+        <h1 className='text-3xl font-bold'>Exportable Reports</h1>
+        <p className='text-muted-foreground'>
           Generate and export comprehensive lending analytics reports
         </p>
       </div>
@@ -269,19 +310,24 @@ const ExportableReports = () => {
       <Card>
         <CardHeader>
           <CardTitle>Quick Reports</CardTitle>
-          <CardDescription>Pre-configured reports for common use cases</CardDescription>
+          <CardDescription>
+            Pre-configured reports for common use cases
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             {quickReports.map((report, index) => (
-              <Card key={index} className="cursor-pointer hover:shadow-md transition-shadow">
+              <Card
+                key={index}
+                className='cursor-pointer hover:shadow-md transition-shadow'
+              >
                 <CardHeader>
-                  <CardTitle className="text-lg">{report.name}</CardTitle>
+                  <CardTitle className='text-lg'>{report.name}</CardTitle>
                   <CardDescription>{report.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button onClick={report.action} className="w-full">
-                    <Download className="h-4 w-4 mr-2" />
+                  <Button onClick={report.action} className='w-full'>
+                    <Download className='h-4 w-4 mr-2' />
                     Generate Report
                   </Button>
                 </CardContent>
@@ -295,21 +341,23 @@ const ExportableReports = () => {
       <Card>
         <CardHeader>
           <CardTitle>Custom Report Builder</CardTitle>
-          <CardDescription>Build and export custom reports with specific parameters</CardDescription>
+          <CardDescription>
+            Build and export custom reports with specific parameters
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className='space-y-6'>
           {/* Report Type Selection */}
-          <div className="space-y-2">
-            <Label htmlFor="reportType">Report Type</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='reportType'>Report Type</Label>
             <Select value={reportType} onValueChange={setReportType}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a report type" />
+                <SelectValue placeholder='Select a report type' />
               </SelectTrigger>
               <SelectContent>
-                {reportTypes.map((type) => (
+                {reportTypes.map(type => (
                   <SelectItem key={type.id} value={type.id}>
-                    <div className="flex items-center">
-                      <type.icon className="h-4 w-4 mr-2" />
+                    <div className='flex items-center'>
+                      <type.icon className='h-4 w-4 mr-2' />
                       {type.name}
                     </div>
                   </SelectItem>
@@ -317,92 +365,106 @@ const ExportableReports = () => {
               </SelectContent>
             </Select>
             {reportType && (
-              <p className="text-sm text-muted-foreground">
+              <p className='text-sm text-muted-foreground'>
                 {reportTypes.find(r => r.id === reportType)?.description}
               </p>
             )}
           </div>
 
           {/* Date Range */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='startDate'>Start Date</Label>
               <Input
-                id="startDate"
-                type="date"
+                id='startDate'
+                type='date'
                 value={dateRange.start}
-                onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                onChange={e =>
+                  setDateRange(prev => ({ ...prev, start: e.target.value }))
+                }
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='endDate'>End Date</Label>
               <Input
-                id="endDate"
-                type="date"
+                id='endDate'
+                type='date'
                 value={dateRange.end}
-                onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                onChange={e =>
+                  setDateRange(prev => ({ ...prev, end: e.target.value }))
+                }
               />
             </div>
           </div>
 
           {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="categoryFilter">Category Filter</Label>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='categoryFilter'>Category Filter</Label>
               <Input
-                id="categoryFilter"
-                placeholder="Category ID (optional)"
+                id='categoryFilter'
+                placeholder='Category ID (optional)'
                 value={filters.categoryId}
-                onChange={(e) => setFilters(prev => ({ ...prev, categoryId: e.target.value }))}
+                onChange={e =>
+                  setFilters(prev => ({ ...prev, categoryId: e.target.value }))
+                }
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="userFilter">User Filter</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='userFilter'>User Filter</Label>
               <Input
-                id="userFilter"
-                placeholder="User ID (optional)"
+                id='userFilter'
+                placeholder='User ID (optional)'
                 value={filters.userId}
-                onChange={(e) => setFilters(prev => ({ ...prev, userId: e.target.value }))}
+                onChange={e =>
+                  setFilters(prev => ({ ...prev, userId: e.target.value }))
+                }
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="statusFilter">Status Filter</Label>
-              <Select 
-                value={filters.status} 
-                onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
+            <div className='space-y-2'>
+              <Label htmlFor='statusFilter'>Status Filter</Label>
+              <Select
+                value={filters.status}
+                onValueChange={value =>
+                  setFilters(prev => ({ ...prev, status: value }))
+                }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="All statuses" />
+                  <SelectValue placeholder='All statuses' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
-                  <SelectItem value="returned">Returned</SelectItem>
-                  <SelectItem value="lost">Lost</SelectItem>
+                  <SelectItem value='all'>All Statuses</SelectItem>
+                  <SelectItem value='active'>Active</SelectItem>
+                  <SelectItem value='overdue'>Overdue</SelectItem>
+                  <SelectItem value='returned'>Returned</SelectItem>
+                  <SelectItem value='lost'>Lost</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           {/* Export Format */}
-          <div className="space-y-2">
+          <div className='space-y-2'>
             <Label>Export Format</Label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {formatOptions.map((option) => (
-                <Card 
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+              {formatOptions.map(option => (
+                <Card
                   key={option.value}
                   className={`cursor-pointer transition-colors ${
-                    format === option.value ? 'ring-2 ring-primary' : 'hover:bg-muted/50'
+                    format === option.value
+                      ? 'ring-2 ring-primary'
+                      : 'hover:bg-muted/50'
                   }`}
                   onClick={() => setFormat(option.value)}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <FileText className="h-4 w-4" />
+                  <CardContent className='p-4'>
+                    <div className='flex items-center space-x-2'>
+                      <FileText className='h-4 w-4' />
                       <div>
-                        <p className="font-medium">{option.label}</p>
-                        <p className="text-sm text-muted-foreground">{option.description}</p>
+                        <p className='font-medium'>{option.label}</p>
+                        <p className='text-sm text-muted-foreground'>
+                          {option.description}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -414,25 +476,25 @@ const ExportableReports = () => {
           {/* Error Display */}
           {error && (
             <Alert>
-              <AlertTriangle className="h-4 w-4" />
+              <AlertTriangle className='h-4 w-4' />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
           {/* Generate Button */}
-          <Button 
-            onClick={generateReport} 
+          <Button
+            onClick={generateReport}
             disabled={loading || !reportType}
-            className="w-full"
+            className='w-full'
           >
             {loading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2'></div>
                 Generating Report...
               </>
             ) : (
               <>
-                <Download className="h-4 w-4 mr-2" />
+                <Download className='h-4 w-4 mr-2' />
                 Generate & Download Report
               </>
             )}
@@ -444,23 +506,25 @@ const ExportableReports = () => {
       <Card>
         <CardHeader>
           <CardTitle>Available Report Types</CardTitle>
-          <CardDescription>Detailed information about each report type</CardDescription>
+          <CardDescription>
+            Detailed information about each report type
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {reportTypes.map((type) => (
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {reportTypes.map(type => (
               <Card key={type.id}>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <type.icon className="h-5 w-5 mr-2" />
+                  <CardTitle className='flex items-center text-lg'>
+                    <type.icon className='h-5 w-5 mr-2' />
                     {type.name}
                   </CardTitle>
                   <CardDescription>{type.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
+                  <Button
+                    variant='outline'
+                    size='sm'
                     onClick={() => setReportType(type.id)}
                   >
                     Select This Report

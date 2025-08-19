@@ -5,7 +5,7 @@ class PerformanceTracker {
       pageLoads: [],
       userInteractions: [],
       apiCalls: [],
-      coreWebVitals: {}
+      coreWebVitals: {},
     };
     this.isSupported = 'performance' in window;
   }
@@ -34,10 +34,11 @@ class PerformanceTracker {
           const metrics = {
             url: window.location.pathname,
             loadTime: navigation.loadEventEnd - navigation.fetchStart,
-            domContentLoaded: navigation.domContentLoadedEventEnd - navigation.fetchStart,
+            domContentLoaded:
+              navigation.domContentLoadedEventEnd - navigation.fetchStart,
             firstPaint: this.getFirstPaint(),
             firstContentfulPaint: this.getFirstContentfulPaint(),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           };
 
           this.metrics.pageLoads.push(metrics);
@@ -53,10 +54,10 @@ class PerformanceTracker {
 
     // Largest Contentful Paint (LCP)
     this.observeLCP();
-    
+
     // First Input Delay (FID)
     this.observeFID();
-    
+
     // Cumulative Layout Shift (CLS)
     this.observeCLS();
   }
@@ -64,20 +65,20 @@ class PerformanceTracker {
   // Observe Largest Contentful Paint
   observeLCP() {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
-        
+
         this.metrics.coreWebVitals.lcp = {
           value: lastEntry.startTime,
           rating: this.rateLCP(lastEntry.startTime),
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         this.sendMetricsToServer('core_web_vitals', {
           metric: 'LCP',
           value: lastEntry.startTime,
-          rating: this.rateLCP(lastEntry.startTime)
+          rating: this.rateLCP(lastEntry.startTime),
         });
       });
 
@@ -88,19 +89,19 @@ class PerformanceTracker {
   // Observe First Input Delay
   observeFID() {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         const entries = list.getEntries();
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
           this.metrics.coreWebVitals.fid = {
             value: entry.processingStart - entry.startTime,
             rating: this.rateFID(entry.processingStart - entry.startTime),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           };
 
           this.sendMetricsToServer('core_web_vitals', {
             metric: 'FID',
             value: entry.processingStart - entry.startTime,
-            rating: this.rateFID(entry.processingStart - entry.startTime)
+            rating: this.rateFID(entry.processingStart - entry.startTime),
           });
         });
       });
@@ -113,9 +114,9 @@ class PerformanceTracker {
   observeCLS() {
     if ('PerformanceObserver' in window) {
       let clsValue = 0;
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         const entries = list.getEntries();
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
           if (!entry.hadRecentInput) {
             clsValue += entry.value;
           }
@@ -124,13 +125,13 @@ class PerformanceTracker {
         this.metrics.coreWebVitals.cls = {
           value: clsValue,
           rating: this.rateCLS(clsValue),
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         this.sendMetricsToServer('core_web_vitals', {
           metric: 'CLS',
           value: clsValue,
-          rating: this.rateCLS(clsValue)
+          rating: this.rateCLS(clsValue),
         });
       });
 
@@ -142,34 +143,37 @@ class PerformanceTracker {
   setupNavigationObserver() {
     // Track route changes in React Router
     let currentPath = window.location.pathname;
-    
+
     const observer = new MutationObserver(() => {
       if (window.location.pathname !== currentPath) {
         const navigationTime = performance.now();
         currentPath = window.location.pathname;
-        
+
         this.trackRouteChange(currentPath, navigationTime);
       }
     });
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   }
 
   // Setup resource observer
   setupResourceObserver() {
     if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         const entries = list.getEntries();
-        entries.forEach((entry) => {
-          if (entry.initiatorType === 'fetch' || entry.initiatorType === 'xmlhttprequest') {
+        entries.forEach(entry => {
+          if (
+            entry.initiatorType === 'fetch' ||
+            entry.initiatorType === 'xmlhttprequest'
+          ) {
             this.trackApiCall({
               url: entry.name,
               duration: entry.responseEnd - entry.requestStart,
               size: entry.transferSize,
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
             });
           }
         });
@@ -184,7 +188,7 @@ class PerformanceTracker {
     const metric = {
       path,
       navigationTime,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.sendMetricsToServer('route_change', metric);
@@ -193,7 +197,7 @@ class PerformanceTracker {
   // Track API calls
   trackApiCall(apiMetric) {
     this.metrics.apiCalls.push(apiMetric);
-    
+
     // Keep only last 100 API calls
     if (this.metrics.apiCalls.length > 100) {
       this.metrics.apiCalls.shift();
@@ -201,7 +205,9 @@ class PerformanceTracker {
 
     // Alert on slow API calls
     if (apiMetric.duration > 3000) {
-      console.warn(`Slow API call detected: ${apiMetric.url} took ${apiMetric.duration}ms`);
+      console.warn(
+        `Slow API call detected: ${apiMetric.url} took ${apiMetric.duration}ms`
+      );
     }
   }
 
@@ -212,11 +218,11 @@ class PerformanceTracker {
       element: element?.tagName || 'unknown',
       elementId: element?.id || null,
       duration,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.metrics.userInteractions.push(metric);
-    
+
     // Keep only last 50 interactions
     if (this.metrics.userInteractions.length > 50) {
       this.metrics.userInteractions.shift();
@@ -231,7 +237,7 @@ class PerformanceTracker {
       pageLoads: this.metrics.pageLoads,
       coreWebVitals: this.metrics.coreWebVitals,
       apiCalls: this.metrics.apiCalls.slice(-10), // Last 10 API calls
-      userInteractions: this.metrics.userInteractions.slice(-10) // Last 10 interactions
+      userInteractions: this.metrics.userInteractions.slice(-10), // Last 10 interactions
     };
   }
 
@@ -263,7 +269,9 @@ class PerformanceTracker {
 
   getFirstContentfulPaint() {
     const paintEntries = performance.getEntriesByType('paint');
-    const firstContentfulPaint = paintEntries.find(entry => entry.name === 'first-contentful-paint');
+    const firstContentfulPaint = paintEntries.find(
+      entry => entry.name === 'first-contentful-paint'
+    );
     return firstContentfulPaint ? firstContentfulPaint.startTime : null;
   }
 
@@ -273,15 +281,15 @@ class PerformanceTracker {
       await fetch('/api/v1/performance/metrics', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           type,
           data,
           userAgent: navigator.userAgent,
           url: window.location.pathname,
-          timestamp: new Date().toISOString()
-        })
+          timestamp: new Date().toISOString(),
+        }),
       });
     } catch (error) {
       console.warn('Failed to send performance metrics:', error);
@@ -295,43 +303,53 @@ class PerformanceTracker {
       apiResponseTime: 1000,
       lcp: 2500,
       fid: 100,
-      cls: 0.1
+      cls: 0.1,
     };
 
     const violations = [];
-    
+
     // Check latest page load
-    const latestPageLoad = this.metrics.pageLoads[this.metrics.pageLoads.length - 1];
+    const latestPageLoad =
+      this.metrics.pageLoads[this.metrics.pageLoads.length - 1];
     if (latestPageLoad && latestPageLoad.loadTime > budget.pageLoadTime) {
       violations.push({
         metric: 'Page Load Time',
         value: latestPageLoad.loadTime,
-        budget: budget.pageLoadTime
+        budget: budget.pageLoadTime,
       });
     }
 
     // Check Core Web Vitals
-    if (this.metrics.coreWebVitals.lcp && this.metrics.coreWebVitals.lcp.value > budget.lcp) {
+    if (
+      this.metrics.coreWebVitals.lcp &&
+      this.metrics.coreWebVitals.lcp.value > budget.lcp
+    ) {
       violations.push({
         metric: 'LCP',
         value: this.metrics.coreWebVitals.lcp.value,
-        budget: budget.lcp
+        budget: budget.lcp,
       });
     }
 
-    if (this.metrics.coreWebVitals.fid && this.metrics.coreWebVitals.fid.value > budget.fid) {
+    if (
+      this.metrics.coreWebVitals.fid &&
+      this.metrics.coreWebVitals.fid.value > budget.fid
+    ) {
       violations.push({
         metric: 'FID',
         value: this.metrics.coreWebVitals.fid.value,
-        budget: budget.fid
+        budget: budget.fid,
       });
     }
 
-    if (this.metrics.coreWebVitals.cls && this.metrics.coreWebVitals.cls.value > budget.cls) {
+    if (
+      this.metrics.coreWebVitals.cls &&
+      this.metrics.coreWebVitals.cls.value > budget.cls
+    ) {
       violations.push({
         metric: 'CLS',
         value: this.metrics.coreWebVitals.cls.value,
-        budget: budget.cls
+        budget: budget.cls,
       });
     }
 

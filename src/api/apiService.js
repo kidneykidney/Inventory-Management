@@ -389,7 +389,7 @@ const progressAPI = {
    * @param {string} sprintId - Sprint ID
    * @returns {Promise} - API response with burnup data
    */
-  getBurnupData: async (sprintId) => {
+  getBurnupData: async sprintId => {
     try {
       const response = await apiClient.get(`/sprints/${sprintId}/burnup`);
       return response.data;
@@ -404,7 +404,7 @@ const progressAPI = {
    * @param {string} sprintId - Sprint ID
    * @returns {Promise} - API response with team capacity data
    */
-  getTeamCapacity: async (sprintId) => {
+  getTeamCapacity: async sprintId => {
     try {
       const response = await apiClient.get(`/sprints/${sprintId}/capacity`);
       return response.data;
@@ -419,12 +419,15 @@ const progressAPI = {
    * @param {string} sprintId - Sprint ID
    * @returns {Promise} - API response with progress metrics
    */
-  getProgressMetrics: async (sprintId) => {
+  getProgressMetrics: async sprintId => {
     try {
       const response = await apiClient.get(`/sprints/${sprintId}/metrics`);
       return response.data;
     } catch (error) {
-      logger.error(`Get Progress Metrics API Error (Sprint: ${sprintId}):`, error);
+      logger.error(
+        `Get Progress Metrics API Error (Sprint: ${sprintId}):`,
+        error
+      );
       throw error;
     }
   },
@@ -452,8 +455,8 @@ export const apiService = {
   profile: profileAPI,
   progress: progressAPI,
   // Direct access methods for backward compatibility
-  get: (url) => apiClient.get(url),
+  get: url => apiClient.get(url),
   post: (url, data) => apiClient.post(url, data),
   put: (url, data) => apiClient.put(url, data),
-  delete: (url) => apiClient.delete(url),
+  delete: url => apiClient.delete(url),
 };

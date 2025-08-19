@@ -325,22 +325,22 @@ const createTables = async connection => {
 const monitoredQuery = async (query, params = []) => {
   const startTime = Date.now();
   let error = null;
-  
+
   try {
     const result = await pool.execute(query, params);
     const duration = Date.now() - startTime;
-    
+
     // Track successful query
     performanceMonitor.trackDatabaseQuery(query, duration);
-    
+
     return result;
   } catch (err) {
     error = err;
     const duration = Date.now() - startTime;
-    
+
     // Track failed query
     performanceMonitor.trackDatabaseQuery(query, duration, err);
-    
+
     throw err;
   }
 };
@@ -350,15 +350,15 @@ const monitoredQuery = async (query, params = []) => {
  */
 const getMonitoredConnection = async () => {
   const connection = await pool.getConnection();
-  
+
   // Wrap the query method to add monitoring
   const originalQuery = connection.query.bind(connection);
   const originalExecute = connection.execute.bind(connection);
-  
+
   connection.query = async (sql, params) => {
     const startTime = Date.now();
     let error = null;
-    
+
     try {
       const result = await originalQuery(sql, params);
       const duration = Date.now() - startTime;
@@ -371,11 +371,11 @@ const getMonitoredConnection = async () => {
       throw err;
     }
   };
-  
+
   connection.execute = async (sql, params) => {
     const startTime = Date.now();
     let error = null;
-    
+
     try {
       const result = await originalExecute(sql, params);
       const duration = Date.now() - startTime;
@@ -388,7 +388,7 @@ const getMonitoredConnection = async () => {
       throw err;
     }
   };
-  
+
   return connection;
 };
 

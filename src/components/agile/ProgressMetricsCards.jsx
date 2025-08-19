@@ -8,17 +8,17 @@ import {
 } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Progress } from '../ui/progress';
-import { 
-  TrendingUp, 
+import {
+  TrendingUp,
   TrendingDown,
-  Target, 
-  Clock, 
-  Users, 
+  Target,
+  Clock,
+  Users,
   Activity,
   CheckCircle,
   AlertTriangle,
   BarChart3,
-  Zap
+  Zap,
 } from 'lucide-react';
 
 /**
@@ -36,7 +36,7 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
     teamUtilization,
     qualityMetrics,
     riskIndicators,
-    predictiveAnalytics
+    predictiveAnalytics,
   } = metrics;
 
   // Calculate derived metrics
@@ -57,8 +57,8 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
       bgColor: velocityChange >= 0 ? 'bg-green-50' : 'bg-red-50',
       trend: {
         value: Math.abs(velocityChange),
-        direction: velocityChange >= 0 ? 'up' : 'down'
-      }
+        direction: velocityChange >= 0 ? 'up' : 'down',
+      },
     },
     {
       title: 'Sprint Progress',
@@ -66,10 +66,25 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
       unit: '%',
       description: `${sprintProgress?.completedStories || 0}/${sprintProgress?.totalStories || 0} stories completed`,
       icon: Target,
-      color: completionRate >= 80 ? 'text-green-600' : completionRate >= 60 ? 'text-orange-600' : 'text-red-600',
-      bgColor: completionRate >= 80 ? 'bg-green-50' : completionRate >= 60 ? 'bg-orange-50' : 'bg-red-50',
+      color:
+        completionRate >= 80
+          ? 'text-green-600'
+          : completionRate >= 60
+            ? 'text-orange-600'
+            : 'text-red-600',
+      bgColor:
+        completionRate >= 80
+          ? 'bg-green-50'
+          : completionRate >= 60
+            ? 'bg-orange-50'
+            : 'bg-red-50',
       progress: completionRate,
-      progressColor: completionRate >= 80 ? 'bg-green-500' : completionRate >= 60 ? 'bg-orange-500' : 'bg-red-500'
+      progressColor:
+        completionRate >= 80
+          ? 'bg-green-500'
+          : completionRate >= 60
+            ? 'bg-orange-500'
+            : 'bg-red-500',
     },
     {
       title: 'Team Utilization',
@@ -77,22 +92,53 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
       unit: '%',
       description: `${teamUtilization?.activeMembers || 0} active team members`,
       icon: Users,
-      color: utilizationRate >= 85 && utilizationRate <= 100 ? 'text-green-600' : 'text-orange-600',
-      bgColor: utilizationRate >= 85 && utilizationRate <= 100 ? 'bg-green-50' : 'bg-orange-50',
+      color:
+        utilizationRate >= 85 && utilizationRate <= 100
+          ? 'text-green-600'
+          : 'text-orange-600',
+      bgColor:
+        utilizationRate >= 85 && utilizationRate <= 100
+          ? 'bg-green-50'
+          : 'bg-orange-50',
       progress: Math.min(utilizationRate, 100),
-      progressColor: utilizationRate > 100 ? 'bg-red-500' : utilizationRate >= 85 ? 'bg-green-500' : 'bg-orange-500'
+      progressColor:
+        utilizationRate > 100
+          ? 'bg-red-500'
+          : utilizationRate >= 85
+            ? 'bg-green-500'
+            : 'bg-orange-500',
     },
     {
       title: 'Quality Score',
       value: qualityScore,
       unit: '/10',
       description: `${qualityMetrics?.testsPass || 0}% tests passing`,
-      icon: qualityScore >= 8 ? CheckCircle : qualityScore >= 6 ? Activity : AlertTriangle,
-      color: qualityScore >= 8 ? 'text-green-600' : qualityScore >= 6 ? 'text-orange-600' : 'text-red-600',
-      bgColor: qualityScore >= 8 ? 'bg-green-50' : qualityScore >= 6 ? 'bg-orange-50' : 'bg-red-50',
+      icon:
+        qualityScore >= 8
+          ? CheckCircle
+          : qualityScore >= 6
+            ? Activity
+            : AlertTriangle,
+      color:
+        qualityScore >= 8
+          ? 'text-green-600'
+          : qualityScore >= 6
+            ? 'text-orange-600'
+            : 'text-red-600',
+      bgColor:
+        qualityScore >= 8
+          ? 'bg-green-50'
+          : qualityScore >= 6
+            ? 'bg-orange-50'
+            : 'bg-red-50',
       progress: (qualityScore / 10) * 100,
-      progressColor: qualityScore >= 8 ? 'bg-green-500' : qualityScore >= 6 ? 'bg-orange-500' : 'bg-red-500'
-    }
+      progressColor:
+        qualityScore >= 8
+          ? 'bg-green-500'
+          : qualityScore >= 6
+            ? 'bg-orange-500'
+            : 'bg-red-500',
+    },
   ];
 
   // Additional insight cards
@@ -103,12 +149,20 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
       content: (
         <div className='space-y-2'>
           <div className='flex items-center justify-between'>
-            <span className='text-sm text-muted-foreground'>Days Remaining</span>
-            <span className='font-medium'>{sprintProgress?.daysRemaining || 0}</span>
+            <span className='text-sm text-muted-foreground'>
+              Days Remaining
+            </span>
+            <span className='font-medium'>
+              {sprintProgress?.daysRemaining || 0}
+            </span>
           </div>
           <div className='flex items-center justify-between'>
-            <span className='text-sm text-muted-foreground'>Points Remaining</span>
-            <span className='font-medium'>{sprintProgress?.pointsRemaining || 0}</span>
+            <span className='text-sm text-muted-foreground'>
+              Points Remaining
+            </span>
+            <span className='font-medium'>
+              {sprintProgress?.pointsRemaining || 0}
+            </span>
           </div>
           <div className='flex items-center gap-2'>
             {sprintProgress?.onTrack ? (
@@ -124,7 +178,7 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
             )}
           </div>
         </div>
-      )
+      ),
     },
     {
       title: 'Risk Indicators',
@@ -133,10 +187,15 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
         <div className='space-y-2'>
           {riskIndicators?.map((risk, index) => (
             <div key={index} className='flex items-center gap-2'>
-              <div className={`w-2 h-2 rounded-full ${
-                risk.level === 'high' ? 'bg-red-500' : 
-                risk.level === 'medium' ? 'bg-orange-500' : 'bg-yellow-500'
-              }`} />
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  risk.level === 'high'
+                    ? 'bg-red-500'
+                    : risk.level === 'medium'
+                      ? 'bg-orange-500'
+                      : 'bg-yellow-500'
+                }`}
+              />
               <span className='text-sm'>{risk.description}</span>
             </div>
           )) || (
@@ -146,7 +205,7 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
             </div>
           )}
         </div>
-      )
+      ),
     },
     {
       title: 'Predictive Analytics',
@@ -154,8 +213,12 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
       content: (
         <div className='space-y-2'>
           <div className='flex items-center justify-between'>
-            <span className='text-sm text-muted-foreground'>Completion Forecast</span>
-            <span className='font-medium'>{predictiveAnalytics?.completionForecast || 'N/A'}</span>
+            <span className='text-sm text-muted-foreground'>
+              Completion Forecast
+            </span>
+            <span className='font-medium'>
+              {predictiveAnalytics?.completionForecast || 'N/A'}
+            </span>
           </div>
           <div className='flex items-center justify-between'>
             <span className='text-sm text-muted-foreground'>Confidence</span>
@@ -169,8 +232,8 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
             </div>
           )}
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -203,8 +266,8 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
                 {/* Progress bar for applicable metrics */}
                 {metric.progress !== undefined && (
                   <div className='mt-3'>
-                    <Progress 
-                      value={metric.progress} 
+                    <Progress
+                      value={metric.progress}
                       className='h-2'
                       indicatorClassName={metric.progressColor}
                     />
@@ -219,9 +282,13 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
                     ) : (
                       <TrendingDown className='h-3 w-3 text-red-600' />
                     )}
-                    <span className={`text-xs ${
-                      metric.trend.direction === 'up' ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                    <span
+                      className={`text-xs ${
+                        metric.trend.direction === 'up'
+                          ? 'text-green-600'
+                          : 'text-red-600'
+                      }`}
+                    >
                       {metric.trend.value}%
                     </span>
                   </div>
@@ -244,9 +311,7 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
                   {card.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                {card.content}
-              </CardContent>
+              <CardContent>{card.content}</CardContent>
             </Card>
           );
         })}
@@ -260,7 +325,7 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
               <div>
                 <CardTitle className='flex items-center gap-2'>
                   Sprint {sprint.number}
-                  <Badge 
+                  <Badge
                     className={
                       sprint.status === 'active'
                         ? 'bg-green-100 text-green-800'
@@ -277,22 +342,30 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
                 </CardDescription>
               </div>
               <div className='text-right'>
-                <div className='text-sm text-muted-foreground'>Sprint Health</div>
+                <div className='text-sm text-muted-foreground'>
+                  Sprint Health
+                </div>
                 <div className='flex items-center gap-1 mt-1'>
                   {completionRate >= 80 ? (
                     <>
                       <CheckCircle className='h-4 w-4 text-green-600' />
-                      <span className='text-sm font-medium text-green-600'>Excellent</span>
+                      <span className='text-sm font-medium text-green-600'>
+                        Excellent
+                      </span>
                     </>
                   ) : completionRate >= 60 ? (
                     <>
                       <Activity className='h-4 w-4 text-orange-600' />
-                      <span className='text-sm font-medium text-orange-600'>Good</span>
+                      <span className='text-sm font-medium text-orange-600'>
+                        Good
+                      </span>
                     </>
                   ) : (
                     <>
                       <AlertTriangle className='h-4 w-4 text-red-600' />
-                      <span className='text-sm font-medium text-red-600'>Needs Attention</span>
+                      <span className='text-sm font-medium text-red-600'>
+                        Needs Attention
+                      </span>
                     </>
                   )}
                 </div>
@@ -303,13 +376,19 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
             <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
               <div className='text-center'>
                 <div className='text-lg font-bold text-blue-600'>
-                  {new Date(sprint.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  {new Date(sprint.startDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
                 </div>
                 <div className='text-sm text-muted-foreground'>Start Date</div>
               </div>
               <div className='text-center'>
                 <div className='text-lg font-bold text-purple-600'>
-                  {new Date(sprint.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  {new Date(sprint.endDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
                 </div>
                 <div className='text-sm text-muted-foreground'>End Date</div>
               </div>
@@ -317,13 +396,17 @@ const ProgressMetricsCards = ({ metrics, sprint }) => {
                 <div className='text-lg font-bold text-green-600'>
                   {sprintProgress?.completedStories || 0}
                 </div>
-                <div className='text-sm text-muted-foreground'>Stories Done</div>
+                <div className='text-sm text-muted-foreground'>
+                  Stories Done
+                </div>
               </div>
               <div className='text-center'>
                 <div className='text-lg font-bold text-orange-600'>
                   {sprintProgress?.totalStories || 0}
                 </div>
-                <div className='text-sm text-muted-foreground'>Total Stories</div>
+                <div className='text-sm text-muted-foreground'>
+                  Total Stories
+                </div>
               </div>
             </div>
           </CardContent>

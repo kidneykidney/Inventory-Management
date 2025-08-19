@@ -13,8 +13,8 @@ import ReportingDashboard from '../ReportingDashboard';
 // Mock the toast hook
 jest.mock('../../../hooks/use-toast', () => ({
   useToast: () => ({
-    toast: jest.fn()
-  })
+    toast: jest.fn(),
+  }),
 }));
 
 // Mock fetch globally
@@ -22,29 +22,27 @@ global.fetch = jest.fn();
 
 // Mock recharts components for testing
 jest.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }) => <div data-testid="chart-container">{children}</div>,
-  BarChart: ({ children }) => <div data-testid="bar-chart">{children}</div>,
-  PieChart: ({ children }) => <div data-testid="pie-chart">{children}</div>,
-  LineChart: ({ children }) => <div data-testid="line-chart">{children}</div>,
-  AreaChart: ({ children }) => <div data-testid="area-chart">{children}</div>,
-  Bar: () => <div data-testid="bar" />,
-  Pie: () => <div data-testid="pie" />,
-  Line: () => <div data-testid="line" />,
-  Area: () => <div data-testid="area" />,
-  XAxis: () => <div data-testid="x-axis" />,
-  YAxis: () => <div data-testid="y-axis" />,
-  CartesianGrid: () => <div data-testid="grid" />,
-  Tooltip: () => <div data-testid="tooltip" />,
-  Legend: () => <div data-testid="legend" />,
-  Cell: () => <div data-testid="cell" />
+  ResponsiveContainer: ({ children }) => (
+    <div data-testid='chart-container'>{children}</div>
+  ),
+  BarChart: ({ children }) => <div data-testid='bar-chart'>{children}</div>,
+  PieChart: ({ children }) => <div data-testid='pie-chart'>{children}</div>,
+  LineChart: ({ children }) => <div data-testid='line-chart'>{children}</div>,
+  AreaChart: ({ children }) => <div data-testid='area-chart'>{children}</div>,
+  Bar: () => <div data-testid='bar' />,
+  Pie: () => <div data-testid='pie' />,
+  Line: () => <div data-testid='line' />,
+  Area: () => <div data-testid='area' />,
+  XAxis: () => <div data-testid='x-axis' />,
+  YAxis: () => <div data-testid='y-axis' />,
+  CartesianGrid: () => <div data-testid='grid' />,
+  Tooltip: () => <div data-testid='tooltip' />,
+  Legend: () => <div data-testid='legend' />,
+  Cell: () => <div data-testid='cell' />,
 }));
 
-const renderWithRouter = (component) => {
-  return render(
-    <BrowserRouter>
-      {component}
-    </BrowserRouter>
-  );
+const renderWithRouter = component => {
+  return render(<BrowserRouter>{component}</BrowserRouter>);
 };
 
 describe('ProductManagement Component', () => {
@@ -60,21 +58,23 @@ describe('ProductManagement Component', () => {
         json: async () => ({
           success: true,
           data: [],
-          pagination: { page: 1, limit: 20, total: 0, pages: 1 }
-        })
+          pagination: { page: 1, limit: 20, total: 0, pages: 1 },
+        }),
       })
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: true,
-          data: []
-        })
+          data: [],
+        }),
       });
 
     renderWithRouter(<ProductManagement />);
 
     expect(screen.getByText('Product Management')).toBeInTheDocument();
-    expect(screen.getByText('Manage your lending inventory')).toBeInTheDocument();
+    expect(
+      screen.getByText('Manage your lending inventory')
+    ).toBeInTheDocument();
     expect(screen.getByText('Add Product')).toBeInTheDocument();
     expect(screen.getByText('Bulk Import')).toBeInTheDocument();
     expect(screen.getByText('Export')).toBeInTheDocument();
@@ -90,8 +90,8 @@ describe('ProductManagement Component', () => {
         category_name: 'Electronics',
         conditionStatus: 'excellent',
         isAvailable: true,
-        location: 'Office A'
-      }
+        location: 'Office A',
+      },
     ];
 
     fetch
@@ -100,15 +100,15 @@ describe('ProductManagement Component', () => {
         json: async () => ({
           success: true,
           data: mockProducts,
-          pagination: { page: 1, limit: 20, total: 1, pages: 1 }
-        })
+          pagination: { page: 1, limit: 20, total: 1, pages: 1 },
+        }),
       })
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: true,
-          data: []
-        })
+          data: [],
+        }),
       });
 
     renderWithRouter(<ProductManagement />);
@@ -128,15 +128,15 @@ describe('ProductManagement Component', () => {
         json: async () => ({
           success: true,
           data: [],
-          pagination: { page: 1, limit: 20, total: 0, pages: 1 }
-        })
+          pagination: { page: 1, limit: 20, total: 0, pages: 1 },
+        }),
       })
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: true,
-          data: []
-        })
+          data: [],
+        }),
       });
 
     renderWithRouter(<ProductManagement />);
@@ -149,7 +149,9 @@ describe('ProductManagement Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Add New Product')).toBeInTheDocument();
-      expect(screen.getByText('Create a new product in the lending system')).toBeInTheDocument();
+      expect(
+        screen.getByText('Create a new product in the lending system')
+      ).toBeInTheDocument();
     });
   });
 
@@ -160,21 +162,23 @@ describe('ProductManagement Component', () => {
         json: async () => ({
           success: true,
           data: [],
-          pagination: { page: 1, limit: 20, total: 0, pages: 1 }
-        })
+          pagination: { page: 1, limit: 20, total: 0, pages: 1 },
+        }),
       })
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: true,
-          data: []
-        })
+          data: [],
+        }),
       });
 
     renderWithRouter(<ProductManagement />);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search products...')).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Search products...')
+      ).toBeInTheDocument();
     });
 
     const searchInput = screen.getByPlaceholderText('Search products...');
@@ -196,14 +200,16 @@ describe('UserManagement Component', () => {
       json: async () => ({
         success: true,
         data: [],
-        pagination: { page: 1, limit: 20, total: 0, pages: 1 }
-      })
+        pagination: { page: 1, limit: 20, total: 0, pages: 1 },
+      }),
     });
 
     renderWithRouter(<UserManagement />);
 
     expect(screen.getByText('User Management')).toBeInTheDocument();
-    expect(screen.getByText('Manage user accounts and permissions')).toBeInTheDocument();
+    expect(
+      screen.getByText('Manage user accounts and permissions')
+    ).toBeInTheDocument();
     expect(screen.getByText('Add User')).toBeInTheDocument();
   });
 
@@ -216,8 +222,8 @@ describe('UserManagement Component', () => {
         role: 'user',
         status: 'active',
         department: 'Engineering',
-        lastLogin: '2024-01-15T10:00:00Z'
-      }
+        lastLogin: '2024-01-15T10:00:00Z',
+      },
     ];
 
     fetch.mockResolvedValueOnce({
@@ -225,8 +231,8 @@ describe('UserManagement Component', () => {
       json: async () => ({
         success: true,
         data: mockUsers,
-        pagination: { page: 1, limit: 20, total: 1, pages: 1 }
-      })
+        pagination: { page: 1, limit: 20, total: 1, pages: 1 },
+      }),
     });
 
     renderWithRouter(<UserManagement />);
@@ -244,14 +250,16 @@ describe('UserManagement Component', () => {
       json: async () => ({
         success: true,
         data: [],
-        pagination: { page: 1, limit: 20, total: 0, pages: 1 }
-      })
+        pagination: { page: 1, limit: 20, total: 0, pages: 1 },
+      }),
     });
 
     renderWithRouter(<UserManagement />);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search users...')).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Search users...')
+      ).toBeInTheDocument();
     });
 
     const searchInput = screen.getByPlaceholderText('Search users...');
@@ -274,28 +282,30 @@ describe('ReportingDashboard Component', () => {
         active_transactions: 75,
         overdue_transactions: 5,
         returned_transactions: 920,
-        avg_lending_period: 25
+        avg_lending_period: 25,
       },
       monthlyTrends: [],
       popularProducts: [],
       productDistribution: [],
       conditionAnalysis: [],
-      overdueAnalysis: { count: 5, items: [] }
+      overdueAnalysis: { count: 5, items: [] },
     };
 
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
-        data: mockAnalytics
-      })
+        data: mockAnalytics,
+      }),
     });
 
     renderWithRouter(<ReportingDashboard />);
 
     await waitFor(() => {
       expect(screen.getByText('Reporting Dashboard')).toBeInTheDocument();
-      expect(screen.getByText('Comprehensive analytics and insights')).toBeInTheDocument();
+      expect(
+        screen.getByText('Comprehensive analytics and insights')
+      ).toBeInTheDocument();
       expect(screen.getByText('Export PDF')).toBeInTheDocument();
       expect(screen.getByText('Export Excel')).toBeInTheDocument();
     });
@@ -308,21 +318,21 @@ describe('ReportingDashboard Component', () => {
         active_transactions: 75,
         overdue_transactions: 5,
         returned_transactions: 920,
-        avg_lending_period: 25
+        avg_lending_period: 25,
       },
       monthlyTrends: [],
       popularProducts: [],
       productDistribution: [],
       conditionAnalysis: [],
-      overdueAnalysis: { count: 5, items: [] }
+      overdueAnalysis: { count: 5, items: [] },
     };
 
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
-        data: mockAnalytics
-      })
+        data: mockAnalytics,
+      }),
     });
 
     renderWithRouter(<ReportingDashboard />);
@@ -341,21 +351,21 @@ describe('ReportingDashboard Component', () => {
         active_transactions: 75,
         overdue_transactions: 5,
         returned_transactions: 920,
-        avg_lending_period: 25
+        avg_lending_period: 25,
       },
       monthlyTrends: [],
       popularProducts: [],
       productDistribution: [],
       conditionAnalysis: [],
-      overdueAnalysis: { count: 5, items: [] }
+      overdueAnalysis: { count: 5, items: [] },
     };
 
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
-        data: mockAnalytics
-      })
+        data: mockAnalytics,
+      }),
     });
 
     renderWithRouter(<ReportingDashboard />);
@@ -370,7 +380,9 @@ describe('ReportingDashboard Component', () => {
     // Test tab switching
     fireEvent.click(screen.getByText('Trends'));
     await waitFor(() => {
-      expect(screen.getByText('Monthly Transaction Trends')).toBeInTheDocument();
+      expect(
+        screen.getByText('Monthly Transaction Trends')
+      ).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByText('Products'));
@@ -386,25 +398,21 @@ describe('ReportingDashboard Component', () => {
         active_transactions: 75,
         overdue_transactions: 5,
         returned_transactions: 920,
-        avg_lending_period: 25
+        avg_lending_period: 25,
       },
-      monthlyTrends: [
-        { month: '2024-01', transactions_count: 85 }
-      ],
+      monthlyTrends: [{ month: '2024-01', transactions_count: 85 }],
       popularProducts: [],
       productDistribution: [],
-      conditionAnalysis: [
-        { condition_status: 'excellent', count: 200 }
-      ],
-      overdueAnalysis: { count: 5, items: [] }
+      conditionAnalysis: [{ condition_status: 'excellent', count: 200 }],
+      overdueAnalysis: { count: 5, items: [] },
     };
 
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
-        data: mockAnalytics
-      })
+        data: mockAnalytics,
+      }),
     });
 
     renderWithRouter(<ReportingDashboard />);

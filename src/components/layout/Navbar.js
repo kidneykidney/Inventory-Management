@@ -76,12 +76,12 @@ const Navbar = ({ onLogout }) => {
   };
 
   return (
-    <AppBar 
-      position='static' 
-      sx={{ 
+    <AppBar
+      position='static'
+      sx={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-        backdropFilter: 'blur(10px)'
+        backdropFilter: 'blur(10px)',
       }}
     >
       <Toolbar sx={{ py: 1 }}>
@@ -89,27 +89,27 @@ const Navbar = ({ onLogout }) => {
           edge='start'
           color='inherit'
           aria-label='menu'
-          sx={{ 
-            mr: 2, 
+          sx={{
+            mr: 2,
             display: { sm: 'none' },
             '&:hover': {
-              backgroundColor: 'rgba(255,255,255,0.1)'
-            }
+              backgroundColor: 'rgba(255,255,255,0.1)',
+            },
           }}
         >
           <MenuIcon />
         </IconButton>
-        <Typography 
-          variant='h6' 
-          component='div' 
-          sx={{ 
+        <Typography
+          variant='h6'
+          component='div'
+          sx={{
             flexGrow: 1,
             fontWeight: 600,
             fontSize: '1.3rem',
             background: 'linear-gradient(45deg, #ffffff 30%, #e3f2fd 90%)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
-            color: 'transparent'
+            color: 'transparent',
           }}
         >
           Inventory Management System
@@ -119,16 +119,16 @@ const Navbar = ({ onLogout }) => {
           <Tooltip
             title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            <IconButton 
-              color='inherit' 
+            <IconButton
+              color='inherit'
               onClick={handleThemeToggle}
               sx={{
                 backgroundColor: 'rgba(255,255,255,0.1)',
                 '&:hover': {
                   backgroundColor: 'rgba(255,255,255,0.2)',
-                  transform: 'scale(1.05)'
+                  transform: 'scale(1.05)',
                 },
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
             >
               {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -136,7 +136,7 @@ const Navbar = ({ onLogout }) => {
           </Tooltip>
 
           {/* Notifications */}
-          <NotificationCenter userId="current-user" />
+          <NotificationCenter userId='current-user' />
 
           {/* User menu */}
           <Tooltip title='Account'>
@@ -150,9 +150,9 @@ const Navbar = ({ onLogout }) => {
                 backgroundColor: 'rgba(255,255,255,0.1)',
                 '&:hover': {
                   backgroundColor: 'rgba(255,255,255,0.2)',
-                  transform: 'scale(1.05)'
+                  transform: 'scale(1.05)',
                 },
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
             >
               <AccountCircleIcon />
@@ -173,15 +173,15 @@ const Navbar = ({ onLogout }) => {
               borderRadius: '12px',
               minWidth: '180px',
               boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-              border: '1px solid rgba(255,255,255,0.1)'
+              border: '1px solid rgba(255,255,255,0.1)',
             },
             '& .MuiMenuItem-root': {
               borderRadius: '8px',
               margin: '4px 8px',
               '&:hover': {
-                backgroundColor: 'rgba(102, 126, 234, 0.1)'
-              }
-            }
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+              },
+            },
           }}
         >
           <MenuItem component={Link} to='/profile' onClick={handleMenuClose}>

@@ -21,8 +21,8 @@ const mockItems = [
     isAvailable: true,
     lendingPolicy: {
       maxLendingPeriod: 30,
-      requiresApproval: true
-    }
+      requiresApproval: true,
+    },
   },
   {
     id: 2,
@@ -39,9 +39,9 @@ const mockItems = [
     isAvailable: true,
     lendingPolicy: {
       maxLendingPeriod: 90,
-      requiresApproval: false
-    }
-  }
+      requiresApproval: false,
+    },
+  },
 ];
 
 const mockProps = {
@@ -49,7 +49,7 @@ const mockProps = {
   onEdit: jest.fn(),
   onLend: jest.fn(),
   onDelete: jest.fn(),
-  loading: false
+  loading: false,
 };
 
 describe('LendingTable', () => {
@@ -59,16 +59,18 @@ describe('LendingTable', () => {
 
   test('renders table with lending items', () => {
     render(<LendingTable {...mockProps} />);
-    
+
     expect(screen.getByText('MacBook Pro 16"')).toBeInTheDocument();
     expect(screen.getByText('Ergonomic Office Chair')).toBeInTheDocument();
     expect(screen.getByText('Apple MacBook Pro • ELC001')).toBeInTheDocument();
-    expect(screen.getByText('Herman Miller Aeron • OFF001')).toBeInTheDocument();
+    expect(
+      screen.getByText('Herman Miller Aeron • OFF001')
+    ).toBeInTheDocument();
   });
 
   test('displays correct availability information', () => {
     render(<LendingTable {...mockProps} />);
-    
+
     expect(screen.getByText('3 / 5')).toBeInTheDocument();
     expect(screen.getByText('6 / 8')).toBeInTheDocument();
     expect(screen.getAllByText('available')).toHaveLength(2);
@@ -76,14 +78,14 @@ describe('LendingTable', () => {
 
   test('shows correct status badges', () => {
     render(<LendingTable {...mockProps} />);
-    
+
     const availableBadges = screen.getAllByText('Available');
     expect(availableBadges).toHaveLength(2);
   });
 
   test('displays tags correctly', () => {
     render(<LendingTable {...mockProps} />);
-    
+
     expect(screen.getByText('laptop')).toBeInTheDocument();
     expect(screen.getByText('development')).toBeInTheDocument();
     expect(screen.getByText('design')).toBeInTheDocument();
@@ -95,12 +97,14 @@ describe('LendingTable', () => {
   test('calls onEdit when edit button is clicked', async () => {
     const user = userEvent.setup();
     render(<LendingTable {...mockProps} />);
-    
+
     const editButtons = screen.getAllByRole('button');
-    const editButton = editButtons.find(button => 
-      button.querySelector('svg') && button.getAttribute('aria-label') === 'Edit'
+    const editButton = editButtons.find(
+      button =>
+        button.querySelector('svg') &&
+        button.getAttribute('aria-label') === 'Edit'
     );
-    
+
     if (editButton) {
       await user.click(editButton);
       expect(mockProps.onEdit).toHaveBeenCalledWith(mockItems[0]);
@@ -110,12 +114,14 @@ describe('LendingTable', () => {
   test('calls onLend when lend button is clicked', async () => {
     const user = userEvent.setup();
     render(<LendingTable {...mockProps} />);
-    
+
     const lendButtons = screen.getAllByRole('button');
-    const lendButton = lendButtons.find(button => 
-      button.querySelector('svg') && button.getAttribute('aria-label') === 'Lend'
+    const lendButton = lendButtons.find(
+      button =>
+        button.querySelector('svg') &&
+        button.getAttribute('aria-label') === 'Lend'
     );
-    
+
     if (lendButton) {
       await user.click(lendButton);
       expect(mockProps.onLend).toHaveBeenCalledWith(mockItems[0]);
@@ -125,12 +131,14 @@ describe('LendingTable', () => {
   test('calls onDelete when delete button is clicked', async () => {
     const user = userEvent.setup();
     render(<LendingTable {...mockProps} />);
-    
+
     const deleteButtons = screen.getAllByRole('button');
-    const deleteButton = deleteButtons.find(button => 
-      button.querySelector('svg') && button.getAttribute('aria-label') === 'Delete'
+    const deleteButton = deleteButtons.find(
+      button =>
+        button.querySelector('svg') &&
+        button.getAttribute('aria-label') === 'Delete'
     );
-    
+
     if (deleteButton) {
       await user.click(deleteButton);
       expect(mockProps.onDelete).toHaveBeenCalledWith(mockItems[0].id);
@@ -142,29 +150,31 @@ describe('LendingTable', () => {
       {
         ...mockItems[0],
         available: 0,
-        isAvailable: false
-      }
+        isAvailable: false,
+      },
     ];
-    
+
     render(<LendingTable {...mockProps} items={unavailableItems} />);
-    
+
     const lendButtons = screen.getAllByRole('button');
-    const lendButton = lendButtons.find(button => 
-      button.querySelector('svg') && button.getAttribute('aria-label') === 'Lend'
+    const lendButton = lendButtons.find(
+      button =>
+        button.querySelector('svg') &&
+        button.getAttribute('aria-label') === 'Lend'
     );
-    
+
     expect(lendButton).toBeDisabled();
   });
 
   test('shows loading state', () => {
     render(<LendingTable {...mockProps} loading={true} />);
-    
+
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   test('shows empty state when no items', () => {
     render(<LendingTable {...mockProps} items={[]} />);
-    
+
     expect(screen.getByText('No items found')).toBeInTheDocument();
   });
 
@@ -173,12 +183,12 @@ describe('LendingTable', () => {
       {
         ...mockItems[0],
         available: 1,
-        isAvailable: true
-      }
+        isAvailable: true,
+      },
     ];
-    
+
     render(<LendingTable {...mockProps} items={lowStockItems} />);
-    
+
     expect(screen.getByText('Low Stock')).toBeInTheDocument();
   });
 
@@ -187,12 +197,12 @@ describe('LendingTable', () => {
       {
         ...mockItems[0],
         available: 0,
-        isAvailable: false
-      }
+        isAvailable: false,
+      },
     ];
-    
+
     render(<LendingTable {...mockProps} items={unavailableItems} />);
-    
+
     expect(screen.getByText('Unavailable')).toBeInTheDocument();
   });
 
@@ -211,14 +221,14 @@ describe('LendingTable', () => {
         isAvailable: true,
         lendingPolicy: {
           maxLendingPeriod: 30,
-          requiresApproval: false
-        }
+          requiresApproval: false,
+        },
         // Missing brand, model, subcategory
-      }
+      },
     ];
-    
+
     render(<LendingTable {...mockProps} items={itemsWithMissingFields} />);
-    
+
     expect(screen.getByText('Test Item')).toBeInTheDocument();
     expect(screen.getByText('TEST001')).toBeInTheDocument();
   });

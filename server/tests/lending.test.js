@@ -10,9 +10,7 @@ app.use('/api/lending', lendingRoutes);
 describe('Lending API Routes', () => {
   describe('GET /api/lending/items', () => {
     test('should return all lending items', async () => {
-      const response = await request(app)
-        .get('/api/lending/items')
-        .expect(200);
+      const response = await request(app).get('/api/lending/items').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toBeInstanceOf(Array);
@@ -99,7 +97,7 @@ describe('Lending API Routes', () => {
         condition: 'excellent',
         tags: ['test', 'electronics'],
         maxLendingPeriod: 30,
-        requiresApproval: false
+        requiresApproval: false,
       };
 
       const response = await request(app)
@@ -116,7 +114,7 @@ describe('Lending API Routes', () => {
 
     test('should validate required fields', async () => {
       const invalidItem = {
-        name: 'Test Item'
+        name: 'Test Item',
         // Missing required fields: sku, category, quantity
       };
 
@@ -134,7 +132,7 @@ describe('Lending API Routes', () => {
         sku: 'ELC001', // This SKU already exists
         name: 'Duplicate Item',
         category: 'Electronics',
-        quantity: 1
+        quantity: 1,
       };
 
       const response = await request(app)
@@ -151,7 +149,7 @@ describe('Lending API Routes', () => {
     test('should update existing lending item', async () => {
       const updateData = {
         name: 'Updated MacBook Pro',
-        quantity: 10
+        quantity: 10,
       };
 
       const response = await request(app)
@@ -182,7 +180,7 @@ describe('Lending API Routes', () => {
         sku: 'DELETE001',
         name: 'Item to Delete',
         category: 'Electronics',
-        quantity: 1
+        quantity: 1,
       };
 
       const createResponse = await request(app)
@@ -200,9 +198,7 @@ describe('Lending API Routes', () => {
       expect(response.body.data.id).toBe(itemId);
 
       // Verify it's deleted
-      await request(app)
-        .get(`/api/lending/items/${itemId}`)
-        .expect(404);
+      await request(app).get(`/api/lending/items/${itemId}`).expect(404);
     });
 
     test('should return 404 for non-existent item', async () => {
@@ -223,7 +219,7 @@ describe('Lending API Routes', () => {
         borrowerEmail: 'john@example.com',
         purpose: 'Development work',
         quantity: 1,
-        notes: 'Test lending'
+        notes: 'Test lending',
       };
 
       const response = await request(app)
@@ -239,7 +235,7 @@ describe('Lending API Routes', () => {
 
     test('should validate required fields for transaction', async () => {
       const invalidTransaction = {
-        itemId: 1
+        itemId: 1,
         // Missing required fields
       };
 
@@ -257,7 +253,7 @@ describe('Lending API Routes', () => {
         itemId: 1,
         borrowerName: 'Jane Doe',
         borrowerEmail: 'jane@example.com',
-        quantity: 100 // More than available
+        quantity: 100, // More than available
       };
 
       const response = await request(app)
@@ -274,7 +270,7 @@ describe('Lending API Routes', () => {
         itemId: 999,
         borrowerName: 'John Doe',
         borrowerEmail: 'john@example.com',
-        quantity: 1
+        quantity: 1,
       };
 
       const response = await request(app)
@@ -317,7 +313,7 @@ describe('Lending API Routes', () => {
       response.body.data.forEach(transaction => {
         expect(
           transaction.borrowerName.toLowerCase().includes('john') ||
-          transaction.borrowerEmail.toLowerCase().includes('john')
+            transaction.borrowerEmail.toLowerCase().includes('john')
         ).toBe(true);
       });
     });
@@ -330,7 +326,7 @@ describe('Lending API Routes', () => {
         itemId: 2,
         borrowerName: 'Return Test',
         borrowerEmail: 'return@example.com',
-        quantity: 1
+        quantity: 1,
       };
 
       const createResponse = await request(app)
@@ -342,7 +338,7 @@ describe('Lending API Routes', () => {
       // Now process return
       const returnData = {
         condition: 'good',
-        notes: 'Returned in good condition'
+        notes: 'Returned in good condition',
       };
 
       const response = await request(app)
@@ -380,9 +376,7 @@ describe('Lending API Routes', () => {
 
   describe('GET /api/lending/stats', () => {
     test('should return lending statistics', async () => {
-      const response = await request(app)
-        .get('/api/lending/stats')
-        .expect(200);
+      const response = await request(app).get('/api/lending/stats').expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toHaveProperty('totalItems');

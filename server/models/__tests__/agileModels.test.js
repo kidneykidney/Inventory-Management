@@ -1,7 +1,7 @@
 const { Epic, UserStory, Sprint } = require('../agileModels');
-const { 
-  initTestDatabase, 
-  resetDatabase, 
+const {
+  initTestDatabase,
+  resetDatabase,
   seedTestData,
   createMockEpic,
   createMockUserStory,
@@ -23,8 +23,10 @@ describe('Agile Models', () => {
       it('should create a new epic with valid data', async () => {
         const epicData = createMockEpic({
           title: 'New Test Epic',
-          description: 'Detailed description for the new test epic that meets minimum requirements',
-          business_value: 'Provides significant business value for testing purposes',
+          description:
+            'Detailed description for the new test epic that meets minimum requirements',
+          business_value:
+            'Provides significant business value for testing purposes',
         });
 
         const result = await Epic.create(epicData);
@@ -91,7 +93,8 @@ describe('Agile Models', () => {
       it('should update existing epic', async () => {
         const updateData = {
           title: 'Updated Epic Title',
-          description: 'Updated description that meets the minimum length requirements for validation',
+          description:
+            'Updated description that meets the minimum length requirements for validation',
           status: 'in-progress',
         };
 
@@ -141,7 +144,8 @@ describe('Agile Models', () => {
       it('should create a new user story with valid data', async () => {
         const storyData = createMockUserStory({
           title: 'New Test Story',
-          description: 'As a user, I want to test story creation, so that I can verify functionality',
+          description:
+            'As a user, I want to test story creation, so that I can verify functionality',
           acceptance_criteria: JSON.stringify([
             'WHEN user creates story THEN it is saved to database',
             'GIVEN valid story data WHEN user submits THEN success message is shown',
@@ -319,7 +323,9 @@ describe('Agile Models', () => {
 
         // Should be ordered by number or creation date
         for (let i = 1; i < sprints.length; i++) {
-          expect(sprints[i].number).toBeGreaterThanOrEqual(sprints[i - 1].number);
+          expect(sprints[i].number).toBeGreaterThanOrEqual(
+            sprints[i - 1].number
+          );
         }
       });
     });

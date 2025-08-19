@@ -1,4 +1,9 @@
-import { formatCurrency, parseCurrency, formatPercentage, formatNumber } from '../currencyFormatter';
+import {
+  formatCurrency,
+  parseCurrency,
+  formatPercentage,
+  formatNumber,
+} from '../currencyFormatter';
 
 describe('currencyFormatter', () => {
   describe('formatCurrency', () => {
@@ -159,13 +164,13 @@ describe('currencyFormatter', () => {
       const originalValue = 1234.56;
       const formatted = formatCurrency(originalValue);
       const parsed = parseCurrency(formatted);
-      
+
       expect(parsed).toBe(originalValue);
     });
 
     it('should handle round-trip conversions', () => {
       const testValues = [0, 0.01, 1, 1234.56, -1234.56, 999999.99];
-      
+
       testValues.forEach(value => {
         const formatted = formatCurrency(value);
         const parsed = parseCurrency(formatted);
@@ -177,10 +182,10 @@ describe('currencyFormatter', () => {
       const price = 19.99;
       const quantity = 3;
       const total = price * quantity;
-      
+
       const formattedTotal = formatCurrency(total);
       const parsedTotal = parseCurrency(formattedTotal);
-      
+
       expect(parsedTotal).toBe(59.97);
     });
   });

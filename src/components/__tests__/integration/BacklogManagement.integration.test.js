@@ -22,9 +22,7 @@ const mockFetchError = (error = 'Network error') => {
 // Test wrapper with providers
 const TestWrapper = ({ children }) => (
   <BrowserRouter>
-    <ThemeProvider>
-      {children}
-    </ThemeProvider>
+    <ThemeProvider>{children}</ThemeProvider>
   </BrowserRouter>
 );
 
@@ -33,7 +31,8 @@ const mockEpics = [
   {
     id: 'epic-1',
     title: 'User Authentication System',
-    description: 'Complete user authentication with login, registration, and password reset',
+    description:
+      'Complete user authentication with login, registration, and password reset',
     businessValue: 'Enables secure user access to the system',
     status: 'planned',
     priority: 'high',
@@ -41,21 +40,23 @@ const mockEpics = [
       {
         id: 'story-1',
         title: 'User Registration',
-        description: 'As a new user, I want to register an account, so that I can access the system',
+        description:
+          'As a new user, I want to register an account, so that I can access the system',
         storyPoints: 5,
         status: 'backlog',
-        priority: 'high'
+        priority: 'high',
       },
       {
         id: 'story-2',
         title: 'User Login',
-        description: 'As a registered user, I want to login to my account, so that I can access my data',
+        description:
+          'As a registered user, I want to login to my account, so that I can access my data',
         storyPoints: 3,
         status: 'in-progress',
-        priority: 'high'
-      }
+        priority: 'high',
+      },
     ],
-    estimatedStoryPoints: 8
+    estimatedStoryPoints: 8,
   },
   {
     id: 'epic-2',
@@ -68,20 +69,21 @@ const mockEpics = [
       {
         id: 'story-3',
         title: 'Product Creation',
-        description: 'As an admin, I want to create new products, so that I can manage inventory',
+        description:
+          'As an admin, I want to create new products, so that I can manage inventory',
         storyPoints: 8,
         status: 'backlog',
-        priority: 'medium'
-      }
+        priority: 'medium',
+      },
     ],
-    estimatedStoryPoints: 8
-  }
+    estimatedStoryPoints: 8,
+  },
 ];
 
 const mockApiResponse = (data, success = true) => ({
   success,
   data,
-  message: success ? 'Operation successful' : 'Operation failed'
+  message: success ? 'Operation successful' : 'Operation failed',
 });
 
 describe('BacklogManagement Integration Tests', () => {
@@ -106,11 +108,15 @@ describe('BacklogManagement Integration Tests', () => {
 
       // Wait for data to load
       await waitFor(() => {
-        expect(screen.getByText('User Authentication System')).toBeInTheDocument();
+        expect(
+          screen.getByText('User Authentication System')
+        ).toBeInTheDocument();
       });
 
       // Verify epics are displayed
-      expect(screen.getByText('User Authentication System')).toBeInTheDocument();
+      expect(
+        screen.getByText('User Authentication System')
+      ).toBeInTheDocument();
       expect(screen.getByText('Product Management')).toBeInTheDocument();
 
       // Verify stories are displayed
@@ -135,7 +141,9 @@ describe('BacklogManagement Integration Tests', () => {
 
       // Should show error state or empty state
       await waitFor(() => {
-        expect(screen.getByText('No stories found matching your criteria.')).toBeInTheDocument();
+        expect(
+          screen.getByText('No stories found matching your criteria.')
+        ).toBeInTheDocument();
       });
     });
 
@@ -149,7 +157,9 @@ describe('BacklogManagement Integration Tests', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText('No stories found matching your criteria.')).toBeInTheDocument();
+        expect(
+          screen.getByText('No stories found matching your criteria.')
+        ).toBeInTheDocument();
       });
 
       // Stats should show zeros
@@ -169,7 +179,9 @@ describe('BacklogManagement Integration Tests', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText('User Authentication System')).toBeInTheDocument();
+        expect(
+          screen.getByText('User Authentication System')
+        ).toBeInTheDocument();
       });
 
       // Open epic form
@@ -185,24 +197,34 @@ describe('BacklogManagement Integration Tests', () => {
       const descriptionInput = screen.getByLabelText(/description/i);
       const businessValueInput = screen.getByLabelText(/business value/i);
 
-      fireEvent.change(titleInput, { target: { value: 'New Integration Test Epic' } });
-      fireEvent.change(descriptionInput, { 
-        target: { value: 'This is a comprehensive description for the new epic created during integration testing' } 
+      fireEvent.change(titleInput, {
+        target: { value: 'New Integration Test Epic' },
       });
-      fireEvent.change(businessValueInput, { 
-        target: { value: 'Provides significant business value for testing integration workflows' } 
+      fireEvent.change(descriptionInput, {
+        target: {
+          value:
+            'This is a comprehensive description for the new epic created during integration testing',
+        },
+      });
+      fireEvent.change(businessValueInput, {
+        target: {
+          value:
+            'Provides significant business value for testing integration workflows',
+        },
       });
 
       // Mock successful creation
       const newEpic = {
         id: 'epic-3',
         title: 'New Integration Test Epic',
-        description: 'This is a comprehensive description for the new epic created during integration testing',
-        businessValue: 'Provides significant business value for testing integration workflows',
+        description:
+          'This is a comprehensive description for the new epic created during integration testing',
+        businessValue:
+          'Provides significant business value for testing integration workflows',
         status: 'planned',
         priority: 'high',
         stories: [],
-        estimatedStoryPoints: 0
+        estimatedStoryPoints: 0,
       };
 
       // Mock the create API call
@@ -226,9 +248,9 @@ describe('BacklogManagement Integration Tests', () => {
         expect.objectContaining({
           method: 'POST',
           headers: expect.objectContaining({
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           }),
-          body: expect.stringContaining('New Integration Test Epic')
+          body: expect.stringContaining('New Integration Test Epic'),
         })
       );
     });
@@ -243,7 +265,9 @@ describe('BacklogManagement Integration Tests', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText('User Authentication System')).toBeInTheDocument();
+        expect(
+          screen.getByText('User Authentication System')
+        ).toBeInTheDocument();
       });
 
       // Open epic form
@@ -255,11 +279,14 @@ describe('BacklogManagement Integration Tests', () => {
       fireEvent.change(titleInput, { target: { value: 'Bad' } }); // Too short
 
       // Mock error response
-      mockFetch({
-        success: false,
-        message: 'Validation failed',
-        errors: ['Title must be between 5 and 200 characters']
-      }, false);
+      mockFetch(
+        {
+          success: false,
+          message: 'Validation failed',
+          errors: ['Title must be between 5 and 200 characters'],
+        },
+        false
+      );
 
       const createButton = screen.getByRole('button', { name: 'Create Epic' });
       fireEvent.click(createButton);
@@ -283,7 +310,9 @@ describe('BacklogManagement Integration Tests', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText('User Authentication System')).toBeInTheDocument();
+        expect(
+          screen.getByText('User Authentication System')
+        ).toBeInTheDocument();
       });
 
       // Open story form
@@ -298,26 +327,34 @@ describe('BacklogManagement Integration Tests', () => {
       const titleInput = screen.getByLabelText(/title/i);
       const descriptionInput = screen.getByLabelText(/description/i);
 
-      fireEvent.change(titleInput, { target: { value: 'New Integration Test Story' } });
-      fireEvent.change(descriptionInput, { 
-        target: { value: 'As a developer, I want to test story creation, so that integration works correctly' } 
+      fireEvent.change(titleInput, {
+        target: { value: 'New Integration Test Story' },
+      });
+      fireEvent.change(descriptionInput, {
+        target: {
+          value:
+            'As a developer, I want to test story creation, so that integration works correctly',
+        },
       });
 
       // Add acceptance criteria
       const criteriaInputs = screen.getAllByPlaceholderText(/WHEN/);
-      fireEvent.change(criteriaInputs[0], { 
-        target: { value: 'WHEN developer creates story THEN it appears in backlog' } 
+      fireEvent.change(criteriaInputs[0], {
+        target: {
+          value: 'WHEN developer creates story THEN it appears in backlog',
+        },
       });
 
       // Mock successful creation
       const newStory = {
         id: 'story-4',
         title: 'New Integration Test Story',
-        description: 'As a developer, I want to test story creation, so that integration works correctly',
+        description:
+          'As a developer, I want to test story creation, so that integration works correctly',
         storyPoints: 5,
         status: 'backlog',
         priority: 'medium',
-        epicId: null
+        epicId: null,
       };
 
       mockFetch(mockApiResponse(newStory));
@@ -327,7 +364,9 @@ describe('BacklogManagement Integration Tests', () => {
 
       // Form should close
       await waitFor(() => {
-        expect(screen.queryByText('Create New User Story')).not.toBeInTheDocument();
+        expect(
+          screen.queryByText('Create New User Story')
+        ).not.toBeInTheDocument();
       });
 
       // Verify API was called
@@ -336,9 +375,9 @@ describe('BacklogManagement Integration Tests', () => {
         expect.objectContaining({
           method: 'POST',
           headers: expect.objectContaining({
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           }),
-          body: expect.stringContaining('New Integration Test Story')
+          body: expect.stringContaining('New Integration Test Story'),
         })
       );
     });
@@ -384,11 +423,15 @@ describe('BacklogManagement Integration Tests', () => {
 
       // Filter by epic
       const epicSelect = screen.getByDisplayValue('All Epics');
-      fireEvent.change(epicSelect, { target: { value: 'User Authentication System' } });
+      fireEvent.change(epicSelect, {
+        target: { value: 'User Authentication System' },
+      });
 
       // Should show filter badge
       await waitFor(() => {
-        expect(screen.getByText('Filtered by: User Authentication System')).toBeInTheDocument();
+        expect(
+          screen.getByText('Filtered by: User Authentication System')
+        ).toBeInTheDocument();
       });
     });
 
@@ -432,7 +475,9 @@ describe('BacklogManagement Integration Tests', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText('User Authentication System')).toBeInTheDocument();
+        expect(
+          screen.getByText('User Authentication System')
+        ).toBeInTheDocument();
       });
 
       // Simulate multiple rapid actions
@@ -464,7 +509,7 @@ describe('BacklogManagement Integration Tests', () => {
           status: 'planned',
           priority: 'medium',
           stories: [],
-          estimatedStoryPoints: 0
+          estimatedStoryPoints: 0,
         });
       }
 

@@ -33,7 +33,7 @@ const cleanupTestDatabase = async () => {
 // Reset database to clean state
 const resetDatabase = async () => {
   const pool = await initTestDatabase();
-  
+
   // Drop all tables
   const dropTables = `
     SET FOREIGN_KEY_CHECKS = 0;
@@ -44,13 +44,13 @@ const resetDatabase = async () => {
     DROP TABLE IF EXISTS users;
     SET FOREIGN_KEY_CHECKS = 1;
   `;
-  
+
   await pool.execute(dropTables);
-  
+
   // Run migrations
   const migrationsDir = path.join(__dirname, '../migrations');
   const migrationFiles = await fs.readdir(migrationsDir);
-  
+
   for (const file of migrationFiles.sort()) {
     if (file.endsWith('.sql')) {
       const migrationPath = path.join(migrationsDir, file);
@@ -63,7 +63,7 @@ const resetDatabase = async () => {
 // Seed test data
 const seedTestData = async () => {
   const pool = await initTestDatabase();
-  
+
   // Insert test epics
   await pool.execute(`
     INSERT INTO epics (id, title, description, business_value, status, priority, created_at, updated_at)
@@ -71,7 +71,7 @@ const seedTestData = async () => {
     ('epic-1', 'User Authentication System', 'Complete user authentication with login, registration, and password reset', 'Enables secure user access to the system', 'planned', 'high', NOW(), NOW()),
     ('epic-2', 'Product Management', 'Comprehensive product catalog and management system', 'Allows efficient product management and organization', 'in-progress', 'medium', NOW(), NOW())
   `);
-  
+
   // Insert test user stories
   await pool.execute(`
     INSERT INTO user_stories (id, title, description, acceptance_criteria, story_points, priority, status, epic_id, created_at, updated_at)
@@ -80,7 +80,7 @@ const seedTestData = async () => {
     ('story-2', 'User Login', 'As a registered user, I want to login to my account, so that I can access my data', '["WHEN user provides correct credentials THEN they are logged in", "WHEN user provides incorrect credentials THEN error is shown"]', 3, 'high', 'in-progress', 'epic-1', NOW(), NOW()),
     ('story-3', 'Product Creation', 'As an admin, I want to create new products, so that I can manage inventory', '["WHEN admin provides valid product data THEN product is created", "WHEN admin provides invalid data THEN validation errors are shown"]', 8, 'medium', 'backlog', 'epic-2', NOW(), NOW())
   `);
-  
+
   // Insert test sprints
   await pool.execute(`
     INSERT INTO sprints (id, number, start_date, end_date, goal, status, capacity, velocity, created_at, updated_at)
@@ -88,7 +88,7 @@ const seedTestData = async () => {
     ('sprint-1', 1, '2024-01-01', '2024-01-14', 'Complete user authentication foundation', 'completed', 40, 35, NOW(), NOW()),
     ('sprint-2', 2, '2024-01-15', '2024-01-28', 'Implement product management basics', 'active', 40, 0, NOW(), NOW())
   `);
-  
+
   // Insert test users
   await pool.execute(`
     INSERT INTO users (id, username, email, password_hash, role, created_at, updated_at)
@@ -102,8 +102,10 @@ const seedTestData = async () => {
 const createMockEpic = (overrides = {}) => ({
   id: 'epic-test',
   title: 'Test Epic',
-  description: 'Test epic description that meets minimum length requirements for validation',
-  business_value: 'Provides significant business value to users and stakeholders',
+  description:
+    'Test epic description that meets minimum length requirements for validation',
+  business_value:
+    'Provides significant business value to users and stakeholders',
   status: 'planned',
   priority: 'high',
   created_at: new Date().toISOString(),
@@ -114,7 +116,8 @@ const createMockEpic = (overrides = {}) => ({
 const createMockUserStory = (overrides = {}) => ({
   id: 'story-test',
   title: 'Test User Story',
-  description: 'As a user, I want to test functionality, so that I can verify it works correctly',
+  description:
+    'As a user, I want to test functionality, so that I can verify it works correctly',
   acceptance_criteria: JSON.stringify([
     'WHEN user performs action THEN system responds correctly',
     'GIVEN valid input WHEN user submits THEN data is saved successfully',
@@ -164,9 +167,11 @@ const executeQuery = async (query, params = []) => {
 const insertTestData = async (table, data) => {
   const pool = await initTestDatabase();
   const columns = Object.keys(data).join(', ');
-  const placeholders = Object.keys(data).map(() => '?').join(', ');
+  const placeholders = Object.keys(data)
+    .map(() => '?')
+    .join(', ');
   const values = Object.values(data);
-  
+
   const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`;
   const [result] = await pool.execute(query, values);
   return result;
@@ -176,7 +181,7 @@ const findTestData = async (table, conditions = {}) => {
   const pool = await initTestDatabase();
   let query = `SELECT * FROM ${table}`;
   const params = [];
-  
+
   if (Object.keys(conditions).length > 0) {
     const whereClause = Object.keys(conditions)
       .map(key => `${key} = ?`)
@@ -184,7 +189,7 @@ const findTestData = async (table, conditions = {}) => {
     query += ` WHERE ${whereClause}`;
     params.push(...Object.values(conditions));
   }
-  
+
   const [rows] = await pool.execute(query, params);
   return rows;
 };
@@ -193,7 +198,7 @@ const deleteTestData = async (table, conditions = {}) => {
   const pool = await initTestDatabase();
   let query = `DELETE FROM ${table}`;
   const params = [];
-  
+
   if (Object.keys(conditions).length > 0) {
     const whereClause = Object.keys(conditions)
       .map(key => `${key} = ?`)
@@ -201,7 +206,7 @@ const deleteTestData = async (table, conditions = {}) => {
     query += ` WHERE ${whereClause}`;
     params.push(...Object.values(conditions));
   }
-  
+
   const [result] = await pool.execute(query, params);
   return result;
 };
@@ -221,23 +226,23 @@ module.exports = {
   cleanupTestDatabase,
   resetDatabase,
   seedTestData,
-  
+
   // Mock data factories
   createMockEpic,
   createMockUserStory,
   createMockSprint,
   createMockUser,
-  
+
   // Database helpers
   executeQuery,
   insertTestData,
   findTestData,
   deleteTestData,
-  
+
   // Environment helpers
   isTestEnvironment,
   requireTestEnvironment,
-  
+
   // Test configuration
   testDbConfig,
 };

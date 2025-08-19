@@ -6,10 +6,21 @@
 const request = require('supertest');
 const express = require('express');
 const { User } = require('../models/userModels');
-const { LendingProduct, LendingTransaction } = require('../models/lendingModels');
-const { SystemConfiguration, AdminActivityLog, BulkOperation } = require('../models/adminModels');
+const {
+  LendingProduct,
+  LendingTransaction,
+} = require('../models/lendingModels');
+const {
+  SystemConfiguration,
+  AdminActivityLog,
+  BulkOperation,
+} = require('../models/adminModels');
 const adminRoutes = require('../routes/admin');
-const { generateToken, authenticateToken, requireAdmin } = require('../middleware/auth');
+const {
+  generateToken,
+  authenticateToken,
+  requireAdmin,
+} = require('../middleware/auth');
 
 // Mock dependencies
 jest.mock('../models/userModels');
@@ -44,8 +55,8 @@ describe('Admin Panel API', () => {
         email: 'admin@test.com',
         name: 'Admin User',
         role: 'admin',
-        status: 'active'
-      })
+        status: 'active',
+      }),
     };
 
     // Mock regular user
@@ -60,8 +71,8 @@ describe('Admin Panel API', () => {
         email: 'user@test.com',
         name: 'Regular User',
         role: 'user',
-        status: 'active'
-      })
+        status: 'active',
+      }),
     };
 
     adminToken = 'mock-admin-token';
@@ -71,9 +82,11 @@ describe('Admin Panel API', () => {
     authenticateToken.mockImplementation((req, res, next) => {
       const authHeader = req.headers['authorization'];
       if (!authHeader) {
-        return res.status(401).json({ success: false, message: 'Access token required' });
+        return res
+          .status(401)
+          .json({ success: false, message: 'Access token required' });
       }
-      
+
       const token = authHeader.split(' ')[1];
       if (token === 'mock-admin-token') {
         req.user = mockAdmin;
@@ -82,7 +95,9 @@ describe('Admin Panel API', () => {
         req.user = mockUser;
         req.token = token;
       } else {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
+        return res
+          .status(401)
+          .json({ success: false, message: 'Invalid token' });
       }
       next();
     });
@@ -90,13 +105,15 @@ describe('Admin Panel API', () => {
     // Mock admin role requirement
     requireAdmin.mockImplementation((req, res, next) => {
       if (!req.user || req.user.role !== 'admin') {
-        return res.status(403).json({ success: false, message: 'Insufficient permissions' });
+        return res
+          .status(403)
+          .json({ success: false, message: 'Insufficient permissions' });
       }
       next();
     });
 
     // Mock User.findById for authentication
-    User.findById.mockImplementation((id) => {
+    User.findById.mockImplementation(id => {
       if (id === 'admin-123') return Promise.resolve(mockAdmin);
       if (id === 'user-123') return Promise.resolve(mockUser);
       return Promise.resolve(null);
@@ -109,7 +126,7 @@ describe('Admin Panel API', () => {
         total: 100,
         active: 95,
         admins: 5,
-        recentRegistrations: 10
+        recentRegistrations: 10,
       };
 
       const mockProductStats = {
@@ -118,10 +135,10 @@ describe('Admin Panel API', () => {
           available_products: 450,
           unavailable_products: 50,
           total_categories: 10,
-          total_brands: 25
+          total_brands: 25,
         },
         byCategory: [],
-        byCondition: []
+        byCondition: [],
       };
 
       const mockLendingStats = {
@@ -130,10 +147,10 @@ describe('Admin Panel API', () => {
           active_transactions: 150,
           overdue_transactions: 10,
           returned_transactions: 840,
-          avg_lending_period: 25
+          avg_lending_period: 25,
         },
         monthly: [],
-        popularProducts: []
+        popularProducts: [],
       };
 
       User.getStats.mockResolvedValue(mockUserStats);
@@ -166,8 +183,7 @@ describe('Admin Panel API', () => {
     });
 
     it('should require authentication', async () => {
-      const response = await request(app)
-        .get('/api/v1/admin/dashboard');
+      const response = await request(app).get('/api/v1/admin/dashboard');
 
       expect(response.status).toBe(401);
       expect(response.body.success).toBe(false);
@@ -178,7 +194,7 @@ describe('Admin Panel API', () => {
     it('should return paginated users list', async () => {
       const mockUsers = [
         { id: '1', name: 'User 1', email: 'user1@test.com', role: 'user' },
-        { id: '2', name: 'User 2', email: 'user2@test.com', role: 'user' }
+        { id: '2', name: 'User 2', email: 'user2@test.com', role: 'user' },
       ];
 
       const mockResult = {
@@ -187,8 +203,8 @@ describe('Admin Panel API', () => {
           page: 1,
           limit: 20,
           total: 2,
-          pages: 1
-        }
+          pages: 1,
+        },
       };
 
       User.findAll.mockResolvedValue(mockResult);
@@ -206,7 +222,7 @@ describe('Admin Panel API', () => {
         limit: 20,
         role: undefined,
         status: undefined,
-        search: undefined
+        search: undefined,
       });
     });
 
@@ -214,7 +230,9 @@ describe('Admin Panel API', () => {
       User.findAll.mockResolvedValue({ users: [], pagination: {} });
 
       await request(app)
-        .get('/api/v1/admin/users?role=admin&status=active&search=test&page=2&limit=10')
+        .get(
+          '/api/v1/admin/users?role=admin&status=active&search=test&page=2&limit=10'
+        )
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(User.findAll).toHaveBeenCalledWith({
@@ -222,7 +240,7 @@ describe('Admin Panel API', () => {
         limit: 10,
         role: 'admin',
         status: 'active',
-        search: 'test'
+        search: 'test',
       });
     });
 
@@ -242,13 +260,13 @@ describe('Admin Panel API', () => {
       const updateData = {
         name: 'Updated Name',
         role: 'admin',
-        status: 'active'
+        status: 'active',
       };
 
       const updatedUser = {
         ...mockUser,
         ...updateData,
-        toJSON: () => ({ ...mockUser, ...updateData })
+        toJSON: () => ({ ...mockUser, ...updateData }),
       };
 
       User.findByEmail.mockResolvedValue(null);
@@ -297,7 +315,7 @@ describe('Admin Panel API', () => {
         .send({
           name: 'A', // Too short
           email: 'invalid-email',
-          role: 'invalid-role'
+          role: 'invalid-role',
         });
 
       expect(response.status).toBe(400);
@@ -341,7 +359,9 @@ describe('Admin Panel API', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Cannot delete user with active lending transactions');
+      expect(response.body.message).toBe(
+        'Cannot delete user with active lending transactions'
+      );
     });
   });
 
@@ -349,10 +369,11 @@ describe('Admin Panel API', () => {
     it('should return paginated products list', async () => {
       const mockProducts = [
         { id: '1', name: 'Product 1', brand: 'Brand A' },
-        { id: '2', name: 'Product 2', brand: 'Brand B' }
+        { id: '2', name: 'Product 2', brand: 'Brand B' },
       ];
 
-      LendingProduct.findAll.mockResolvedValueOnce(mockProducts)
+      LendingProduct.findAll
+        .mockResolvedValueOnce(mockProducts)
         .mockResolvedValueOnce(mockProducts); // For total count
 
       const response = await request(app)
@@ -369,7 +390,9 @@ describe('Admin Panel API', () => {
       LendingProduct.findAll.mockResolvedValue([]);
 
       const response = await request(app)
-        .get('/api/v1/admin/products?categoryId=550e8400-e29b-41d4-a716-446655440000&brand=Apple&condition=excellent&isAvailable=true')
+        .get(
+          '/api/v1/admin/products?categoryId=550e8400-e29b-41d4-a716-446655440000&brand=Apple&condition=excellent&isAvailable=true'
+        )
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(200);
@@ -384,17 +407,19 @@ describe('Admin Panel API', () => {
         description: 'Product description',
         categoryId: '550e8400-e29b-41d4-a716-446655440000', // Valid UUID
         brand: 'Apple',
-        model: 'MacBook Pro'
+        model: 'MacBook Pro',
       };
 
       const mockProduct = {
         id: 'product-123',
         ...productData,
-        save: jest.fn().mockResolvedValue(true)
+        save: jest.fn().mockResolvedValue(true),
       };
 
       // Mock the LendingProduct constructor
-      jest.spyOn(LendingProduct.prototype, 'save').mockResolvedValue(mockProduct);
+      jest
+        .spyOn(LendingProduct.prototype, 'save')
+        .mockResolvedValue(mockProduct);
 
       const response = await request(app)
         .post('/api/v1/admin/products')
@@ -411,7 +436,7 @@ describe('Admin Panel API', () => {
         .post('/api/v1/admin/products')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          description: 'Missing name and categoryId'
+          description: 'Missing name and categoryId',
         });
 
       expect(response.status).toBe(400);
@@ -423,8 +448,14 @@ describe('Admin Panel API', () => {
   describe('POST /api/v1/admin/products/bulk-import', () => {
     it('should handle bulk import successfully', async () => {
       const productsData = [
-        { name: 'Product 1', categoryId: '550e8400-e29b-41d4-a716-446655440000' },
-        { name: 'Product 2', categoryId: '550e8400-e29b-41d4-a716-446655440000' }
+        {
+          name: 'Product 1',
+          categoryId: '550e8400-e29b-41d4-a716-446655440000',
+        },
+        {
+          name: 'Product 2',
+          categoryId: '550e8400-e29b-41d4-a716-446655440000',
+        },
       ];
 
       // Mock successful saves
@@ -443,12 +474,19 @@ describe('Admin Panel API', () => {
 
     it('should handle partial failures in bulk import', async () => {
       const productsData = [
-        { name: 'Product 1', categoryId: '550e8400-e29b-41d4-a716-446655440000' },
-        { name: 'Product 2', categoryId: '550e8400-e29b-41d4-a716-446655440000' }
+        {
+          name: 'Product 1',
+          categoryId: '550e8400-e29b-41d4-a716-446655440000',
+        },
+        {
+          name: 'Product 2',
+          categoryId: '550e8400-e29b-41d4-a716-446655440000',
+        },
       ];
 
       // Mock one success, one failure
-      jest.spyOn(LendingProduct.prototype, 'save')
+      jest
+        .spyOn(LendingProduct.prototype, 'save')
         .mockResolvedValueOnce(true)
         .mockRejectedValueOnce(new Error('Validation failed'));
 
@@ -468,9 +506,7 @@ describe('Admin Panel API', () => {
         .post('/api/v1/admin/products/bulk-import')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
-          products: [
-            { description: 'Missing name and categoryId' }
-          ]
+          products: [{ description: 'Missing name and categoryId' }],
         });
 
       expect(response.status).toBe(400);
@@ -484,12 +520,12 @@ describe('Admin Panel API', () => {
       const mockLendingStats = {
         overview: { total_transactions: 1000 },
         monthly: [],
-        popularProducts: []
+        popularProducts: [],
       };
 
       const mockProductStats = {
         byCategory: [],
-        byCondition: []
+        byCondition: [],
       };
 
       LendingTransaction.getStatistics.mockResolvedValue(mockLendingStats);
@@ -540,7 +576,11 @@ describe('Admin Panel API', () => {
 describe('Admin Models', () => {
   // Import the actual models for testing (not mocked)
   const actualAdminModels = jest.requireActual('../models/adminModels');
-  const { SystemConfiguration: ActualSystemConfiguration, AdminActivityLog: ActualAdminActivityLog, BulkOperation: ActualBulkOperation } = actualAdminModels;
+  const {
+    SystemConfiguration: ActualSystemConfiguration,
+    AdminActivityLog: ActualAdminActivityLog,
+    BulkOperation: ActualBulkOperation,
+  } = actualAdminModels;
 
   describe('SystemConfiguration', () => {
     beforeEach(() => {
@@ -549,18 +589,36 @@ describe('Admin Models', () => {
 
     it('should parse values correctly based on data type', () => {
       expect(ActualSystemConfiguration.parseValue('123', 'number')).toBe(123);
-      expect(ActualSystemConfiguration.parseValue('true', 'boolean')).toBe(true);
-      expect(ActualSystemConfiguration.parseValue('false', 'boolean')).toBe(false);
-      expect(ActualSystemConfiguration.parseValue('{"key": "value"}', 'json')).toEqual({ key: 'value' });
-      expect(ActualSystemConfiguration.parseValue('string value', 'string')).toBe('string value');
+      expect(ActualSystemConfiguration.parseValue('true', 'boolean')).toBe(
+        true
+      );
+      expect(ActualSystemConfiguration.parseValue('false', 'boolean')).toBe(
+        false
+      );
+      expect(
+        ActualSystemConfiguration.parseValue('{"key": "value"}', 'json')
+      ).toEqual({ key: 'value' });
+      expect(
+        ActualSystemConfiguration.parseValue('string value', 'string')
+      ).toBe('string value');
     });
 
     it('should serialize values correctly based on data type', () => {
-      expect(ActualSystemConfiguration.serializeValue(123, 'number')).toBe('123');
-      expect(ActualSystemConfiguration.serializeValue(true, 'boolean')).toBe('true');
-      expect(ActualSystemConfiguration.serializeValue(false, 'boolean')).toBe('false');
-      expect(ActualSystemConfiguration.serializeValue({ key: 'value' }, 'json')).toBe('{"key":"value"}');
-      expect(ActualSystemConfiguration.serializeValue('string value', 'string')).toBe('string value');
+      expect(ActualSystemConfiguration.serializeValue(123, 'number')).toBe(
+        '123'
+      );
+      expect(ActualSystemConfiguration.serializeValue(true, 'boolean')).toBe(
+        'true'
+      );
+      expect(ActualSystemConfiguration.serializeValue(false, 'boolean')).toBe(
+        'false'
+      );
+      expect(
+        ActualSystemConfiguration.serializeValue({ key: 'value' }, 'json')
+      ).toBe('{"key":"value"}');
+      expect(
+        ActualSystemConfiguration.serializeValue('string value', 'string')
+      ).toBe('string value');
     });
   });
 
@@ -573,7 +631,7 @@ describe('Admin Models', () => {
         resourceId: 'product-123',
         details: { name: 'Test Product' },
         ipAddress: '192.168.1.1',
-        userAgent: 'Mozilla/5.0'
+        userAgent: 'Mozilla/5.0',
       };
 
       const log = new ActualAdminActivityLog(logData);
@@ -593,7 +651,7 @@ describe('Admin Models', () => {
     it('should calculate progress percentage correctly', () => {
       const operation = new ActualBulkOperation({
         totalItems: 100,
-        processedItems: 25
+        processedItems: 25,
       });
 
       expect(operation.getProgressPercentage()).toBe(25);
@@ -602,16 +660,20 @@ describe('Admin Models', () => {
     it('should handle zero total items', () => {
       const operation = new ActualBulkOperation({
         totalItems: 0,
-        processedItems: 0
+        processedItems: 0,
       });
 
       expect(operation.getProgressPercentage()).toBe(0);
     });
 
     it('should identify complete operations', () => {
-      const completedOperation = new ActualBulkOperation({ status: 'completed' });
+      const completedOperation = new ActualBulkOperation({
+        status: 'completed',
+      });
       const failedOperation = new ActualBulkOperation({ status: 'failed' });
-      const processingOperation = new ActualBulkOperation({ status: 'processing' });
+      const processingOperation = new ActualBulkOperation({
+        status: 'processing',
+      });
 
       expect(completedOperation.isComplete()).toBe(true);
       expect(failedOperation.isComplete()).toBe(true);

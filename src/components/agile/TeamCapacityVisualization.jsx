@@ -9,13 +9,13 @@ import {
 import { Badge } from '../ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Progress } from '../ui/progress';
-import { 
-  Users, 
-  Clock, 
+import {
+  Users,
+  Clock,
   Target,
   AlertCircle,
   CheckCircle,
-  User
+  User,
 } from 'lucide-react';
 
 /**
@@ -31,7 +31,9 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
             <Users className='h-5 w-5' />
             Team Capacity
           </CardTitle>
-          <CardDescription>Team workload and capacity visualization</CardDescription>
+          <CardDescription>
+            Team workload and capacity visualization
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className='flex items-center justify-center h-32 text-muted-foreground'>
@@ -47,7 +49,8 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
   // Calculate team statistics
   const availableCapacity = totalCapacity - totalAllocated;
   const isOverAllocated = totalAllocated > totalCapacity;
-  const utilizationPercentage = totalCapacity > 0 ? (totalAllocated / totalCapacity) * 100 : 0;
+  const utilizationPercentage =
+    totalCapacity > 0 ? (totalAllocated / totalCapacity) * 100 : 0;
 
   // Get utilization status
   const getUtilizationStatus = () => {
@@ -120,7 +123,9 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
               Sprint {sprint?.number} team workload and capacity visualization
             </CardDescription>
           </div>
-          <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${utilizationStatus.bgColor}`}>
+          <div
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg ${utilizationStatus.bgColor}`}
+          >
             <StatusIcon className={`h-4 w-4 ${utilizationStatus.color}`} />
             <div className='text-sm'>
               <div className={`font-medium ${utilizationStatus.color}`}>
@@ -138,30 +143,34 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
         <div className='space-y-4'>
           <div className='flex justify-between items-center'>
             <h3 className='text-lg font-semibold'>Overall Team Capacity</h3>
-            <Badge 
+            <Badge
               className={
-                isOverAllocated 
-                  ? 'bg-red-100 text-red-800' 
+                isOverAllocated
+                  ? 'bg-red-100 text-red-800'
                   : 'bg-green-100 text-green-800'
               }
             >
               {totalAllocated}/{totalCapacity} hours
             </Badge>
           </div>
-          
+
           <div className='space-y-2'>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Capacity Utilization</span>
-              <span className='font-medium'>{Math.round(utilizationPercentage)}%</span>
+              <span className='text-muted-foreground'>
+                Capacity Utilization
+              </span>
+              <span className='font-medium'>
+                {Math.round(utilizationPercentage)}%
+              </span>
             </div>
-            <Progress 
-              value={Math.min(utilizationPercentage, 100)} 
+            <Progress
+              value={Math.min(utilizationPercentage, 100)}
               className='h-3'
               indicatorClassName={
-                isOverAllocated 
-                  ? 'bg-red-500' 
-                  : utilizationPercentage >= 85 
-                    ? 'bg-green-500' 
+                isOverAllocated
+                  ? 'bg-red-500'
+                  : utilizationPercentage >= 85
+                    ? 'bg-green-500'
                     : 'bg-blue-500'
               }
             />
@@ -175,15 +184,23 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
 
           <div className='grid grid-cols-3 gap-4 pt-2'>
             <div className='text-center'>
-              <div className='text-2xl font-bold text-blue-600'>{totalCapacity}</div>
-              <div className='text-sm text-muted-foreground'>Total Capacity</div>
+              <div className='text-2xl font-bold text-blue-600'>
+                {totalCapacity}
+              </div>
+              <div className='text-sm text-muted-foreground'>
+                Total Capacity
+              </div>
             </div>
             <div className='text-center'>
-              <div className='text-2xl font-bold text-green-600'>{totalAllocated}</div>
+              <div className='text-2xl font-bold text-green-600'>
+                {totalAllocated}
+              </div>
               <div className='text-sm text-muted-foreground'>Allocated</div>
             </div>
             <div className='text-center'>
-              <div className={`text-2xl font-bold ${isOverAllocated ? 'text-red-600' : 'text-orange-600'}`}>
+              <div
+                className={`text-2xl font-bold ${isOverAllocated ? 'text-red-600' : 'text-orange-600'}`}
+              >
                 {isOverAllocated ? 0 : availableCapacity}
               </div>
               <div className='text-sm text-muted-foreground'>Available</div>
@@ -194,7 +211,7 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
         {/* Team Members */}
         <div className='space-y-4'>
           <h3 className='text-lg font-semibold'>Team Members</h3>
-          
+
           {/* Avatar Group Overview */}
           <div className='flex items-center gap-4 p-4 bg-gray-50 rounded-lg'>
             <div className='flex -space-x-2'>
@@ -202,7 +219,11 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
                 <Avatar key={member.id} className='border-2 border-white'>
                   <AvatarImage src={member.avatar} alt={member.name} />
                   <AvatarFallback className='text-xs'>
-                    {member.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {member.name
+                      .split(' ')
+                      .map(n => n[0])
+                      .join('')
+                      .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               ))}
@@ -213,7 +234,9 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
               )}
             </div>
             <div>
-              <div className='font-medium'>{teamMembers.length} Team Members</div>
+              <div className='font-medium'>
+                {teamMembers.length} Team Members
+              </div>
               <div className='text-sm text-muted-foreground'>
                 Average utilization: {Math.round(utilizationPercentage)}%
               </div>
@@ -222,29 +245,39 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
 
           {/* Individual Member Capacity */}
           <div className='space-y-3'>
-            {teamMembers.map((member) => {
-              const memberUtilization = member.capacity > 0 
-                ? (member.allocated / member.capacity) * 100 
-                : 0;
+            {teamMembers.map(member => {
+              const memberUtilization =
+                member.capacity > 0
+                  ? (member.allocated / member.capacity) * 100
+                  : 0;
               const isOverAllocatedMember = member.allocated > member.capacity;
-              
+
               return (
-                <div key={member.id} className='p-4 border rounded-lg space-y-3'>
+                <div
+                  key={member.id}
+                  className='p-4 border rounded-lg space-y-3'
+                >
                   <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-3'>
                       <Avatar>
                         <AvatarImage src={member.avatar} alt={member.name} />
                         <AvatarFallback>
-                          {member.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          {member.name
+                            .split(' ')
+                            .map(n => n[0])
+                            .join('')
+                            .toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <div className='font-medium'>{member.name}</div>
-                        <div className='text-sm text-muted-foreground'>{member.role}</div>
+                        <div className='text-sm text-muted-foreground'>
+                          {member.role}
+                        </div>
                       </div>
                     </div>
                     <div className='text-right'>
-                      <Badge 
+                      <Badge
                         className={
                           isOverAllocatedMember
                             ? 'bg-red-100 text-red-800'
@@ -264,44 +297,55 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
                   <div className='space-y-2'>
                     <div className='flex justify-between text-sm'>
                       <span className='text-muted-foreground'>Capacity</span>
-                      <span className='font-medium'>{Math.round(memberUtilization)}%</span>
+                      <span className='font-medium'>
+                        {Math.round(memberUtilization)}%
+                      </span>
                     </div>
-                    <Progress 
-                      value={Math.min(memberUtilization, 100)} 
+                    <Progress
+                      value={Math.min(memberUtilization, 100)}
                       className='h-2'
-                      indicatorClassName={getMemberUtilizationColor(member.allocated, member.capacity)}
+                      indicatorClassName={getMemberUtilizationColor(
+                        member.allocated,
+                        member.capacity
+                      )}
                     />
                     {isOverAllocatedMember && (
                       <div className='text-xs text-red-600 flex items-center gap-1'>
                         <AlertCircle className='h-3 w-3' />
-                        Over-allocated by {member.allocated - member.capacity} hours
+                        Over-allocated by {member.allocated -
+                          member.capacity}{' '}
+                        hours
                       </div>
                     )}
                   </div>
 
                   {/* Member's assigned stories */}
-                  {member.assignedStories && member.assignedStories.length > 0 && (
-                    <div className='pt-2 border-t'>
-                      <div className='text-sm font-medium mb-2'>
-                        Assigned Stories ({member.assignedStories.length})
+                  {member.assignedStories &&
+                    member.assignedStories.length > 0 && (
+                      <div className='pt-2 border-t'>
+                        <div className='text-sm font-medium mb-2'>
+                          Assigned Stories ({member.assignedStories.length})
+                        </div>
+                        <div className='flex flex-wrap gap-1'>
+                          {member.assignedStories.slice(0, 3).map(story => (
+                            <Badge
+                              key={story.id}
+                              variant='outline'
+                              className='text-xs'
+                            >
+                              {story.title.length > 20
+                                ? `${story.title.substring(0, 20)}...`
+                                : story.title}
+                            </Badge>
+                          ))}
+                          {member.assignedStories.length > 3 && (
+                            <Badge variant='outline' className='text-xs'>
+                              +{member.assignedStories.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                      <div className='flex flex-wrap gap-1'>
-                        {member.assignedStories.slice(0, 3).map((story) => (
-                          <Badge key={story.id} variant='outline' className='text-xs'>
-                            {story.title.length > 20 
-                              ? `${story.title.substring(0, 20)}...` 
-                              : story.title
-                            }
-                          </Badge>
-                        ))}
-                        {member.assignedStories.length > 3 && (
-                          <Badge variant='outline' className='text-xs'>
-                            +{member.assignedStories.length - 3} more
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               );
             })}
@@ -310,12 +354,16 @@ const TeamCapacityVisualization = ({ data, sprint }) => {
 
         {/* Capacity Planning Insights */}
         <div className='p-4 bg-blue-50 rounded-lg'>
-          <h4 className='font-medium text-blue-900 mb-2'>Capacity Planning Insights</h4>
+          <h4 className='font-medium text-blue-900 mb-2'>
+            Capacity Planning Insights
+          </h4>
           <div className='space-y-1 text-sm text-blue-800'>
             {isOverAllocated && (
               <div className='flex items-center gap-2'>
                 <AlertCircle className='h-4 w-4 text-red-600' />
-                <span>Consider redistributing work or extending sprint timeline</span>
+                <span>
+                  Consider redistributing work or extending sprint timeline
+                </span>
               </div>
             )}
             {utilizationPercentage < 70 && (

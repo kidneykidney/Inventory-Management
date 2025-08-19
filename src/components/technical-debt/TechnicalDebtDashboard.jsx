@@ -1,11 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, Code, Clock, TrendingUp, TrendingDown, Plus } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import {
+  AlertTriangle,
+  Code,
+  Clock,
+  TrendingUp,
+  TrendingDown,
+  Plus,
+} from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
 /**
  * Technical Debt Dashboard component for tracking and managing technical debt
@@ -15,7 +41,8 @@ const TechnicalDebtDashboard = () => {
     {
       id: 1,
       title: 'Migrate Material-UI to Shadcn UI',
-      description: 'Replace remaining Material-UI components with modern Shadcn UI components',
+      description:
+        'Replace remaining Material-UI components with modern Shadcn UI components',
       category: 'UI Framework',
       priority: 'high',
       effort: 8,
@@ -28,13 +55,14 @@ const TechnicalDebtDashboard = () => {
       relatedFiles: [
         'src/pages/InventoryPage.js',
         'src/components/layout/Navbar.js',
-        'src/components/layout/Sidebar.js'
-      ]
+        'src/components/layout/Sidebar.js',
+      ],
     },
     {
       id: 2,
       title: 'Implement proper error handling in API routes',
-      description: 'Add comprehensive error handling and logging to all API endpoints',
+      description:
+        'Add comprehensive error handling and logging to all API endpoints',
       category: 'Backend',
       priority: 'medium',
       effort: 5,
@@ -47,13 +75,14 @@ const TechnicalDebtDashboard = () => {
       relatedFiles: [
         'server/routes/inventory.js',
         'server/routes/products.js',
-        'server/routes/orders.js'
-      ]
+        'server/routes/orders.js',
+      ],
     },
     {
       id: 3,
       title: 'Add comprehensive unit tests for utility functions',
-      description: 'Increase test coverage for utility functions to meet 80% threshold',
+      description:
+        'Increase test coverage for utility functions to meet 80% threshold',
       category: 'Testing',
       priority: 'medium',
       effort: 6,
@@ -66,13 +95,14 @@ const TechnicalDebtDashboard = () => {
       relatedFiles: [
         'src/utils/currencyFormatter.js',
         'src/utils/logger.js',
-        'src/utils/performanceTracker.js'
-      ]
+        'src/utils/performanceTracker.js',
+      ],
     },
     {
       id: 4,
       title: 'Optimize database queries for better performance',
-      description: 'Review and optimize slow database queries identified in performance monitoring',
+      description:
+        'Review and optimize slow database queries identified in performance monitoring',
       category: 'Performance',
       priority: 'high',
       effort: 4,
@@ -84,9 +114,9 @@ const TechnicalDebtDashboard = () => {
       tags: ['performance', 'database', 'optimization'],
       relatedFiles: [
         'server/models/agileModels.js',
-        'server/models/userModels.js'
-      ]
-    }
+        'server/models/userModels.js',
+      ],
+    },
   ]);
 
   const [filterCategory, setFilterCategory] = useState('');
@@ -96,156 +126,192 @@ const TechnicalDebtDashboard = () => {
   // Calculate metrics
   const metrics = {
     totalItems: technicalDebtItems.length,
-    highPriorityItems: technicalDebtItems.filter(item => item.priority === 'high').length,
-    inProgressItems: technicalDebtItems.filter(item => item.status === 'in-progress').length,
-    completedItems: technicalDebtItems.filter(item => item.status === 'completed').length,
+    highPriorityItems: technicalDebtItems.filter(
+      item => item.priority === 'high'
+    ).length,
+    inProgressItems: technicalDebtItems.filter(
+      item => item.status === 'in-progress'
+    ).length,
+    completedItems: technicalDebtItems.filter(
+      item => item.status === 'completed'
+    ).length,
     totalEffort: technicalDebtItems.reduce((sum, item) => sum + item.effort, 0),
     averageAge: Math.round(
       technicalDebtItems.reduce((sum, item) => {
-        const age = Math.floor((new Date() - new Date(item.createdDate)) / (1000 * 60 * 60 * 24));
+        const age = Math.floor(
+          (new Date() - new Date(item.createdDate)) / (1000 * 60 * 60 * 24)
+        );
         return sum + age;
       }, 0) / technicalDebtItems.length
-    )
+    ),
   };
 
   // Filter items
   const filteredItems = technicalDebtItems.filter(item => {
-    const matchesCategory = filterCategory === '' || item.category === filterCategory;
-    const matchesPriority = filterPriority === '' || item.priority === filterPriority;
+    const matchesCategory =
+      filterCategory === '' || item.category === filterCategory;
+    const matchesPriority =
+      filterPriority === '' || item.priority === filterPriority;
     const matchesStatus = filterStatus === '' || item.status === filterStatus;
     return matchesCategory && matchesPriority && matchesStatus;
   });
 
   // Get unique categories
-  const categories = [...new Set(technicalDebtItems.map(item => item.category))];
+  const categories = [
+    ...new Set(technicalDebtItems.map(item => item.category)),
+  ];
 
   // Priority colors
-  const getPriorityColor = (priority) => {
+  const getPriorityColor = priority => {
     switch (priority) {
-      case 'high': return 'destructive';
-      case 'medium': return 'secondary';
-      case 'low': return 'outline';
-      default: return 'outline';
+      case 'high':
+        return 'destructive';
+      case 'medium':
+        return 'secondary';
+      case 'low':
+        return 'outline';
+      default:
+        return 'outline';
     }
   };
 
   // Status colors
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status) {
-      case 'completed': return 'default';
-      case 'in-progress': return 'secondary';
-      case 'todo': return 'outline';
-      default: return 'outline';
+      case 'completed':
+        return 'default';
+      case 'in-progress':
+        return 'secondary';
+      case 'todo':
+        return 'outline';
+      default:
+        return 'outline';
     }
   };
 
   // Calculate completion percentage
-  const completionPercentage = Math.round((metrics.completedItems / metrics.totalItems) * 100);
+  const completionPercentage = Math.round(
+    (metrics.completedItems / metrics.totalItems) * 100
+  );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className='p-6 space-y-6'>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className='flex justify-between items-center'>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Technical Debt Management</h1>
-          <p className="text-muted-foreground">Track and manage technical debt across the codebase</p>
+          <h1 className='text-3xl font-bold tracking-tight'>
+            Technical Debt Management
+          </h1>
+          <p className='text-muted-foreground'>
+            Track and manage technical debt across the codebase
+          </p>
         </div>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className='mr-2 h-4 w-4' />
           Add Technical Debt
         </Button>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Items</CardTitle>
-            <Code className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>Total Items</CardTitle>
+            <Code className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics.totalItems}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className='text-2xl font-bold'>{metrics.totalItems}</div>
+            <p className='text-xs text-muted-foreground'>
               {metrics.totalEffort} story points total
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">High Priority</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-destructive" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>High Priority</CardTitle>
+            <AlertTriangle className='h-4 w-4 text-destructive' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">{metrics.highPriorityItems}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className='text-2xl font-bold text-destructive'>
+              {metrics.highPriorityItems}
+            </div>
+            <p className='text-xs text-muted-foreground'>
               Requires immediate attention
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">In Progress</CardTitle>
-            <Clock className="h-4 w-4 text-blue-600" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>In Progress</CardTitle>
+            <Clock className='h-4 w-4 text-blue-600' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{metrics.inProgressItems}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className='text-2xl font-bold text-blue-600'>
+              {metrics.inProgressItems}
+            </div>
+            <p className='text-xs text-muted-foreground'>
               Currently being addressed
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-600" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>
+              Completion Rate
+            </CardTitle>
+            <TrendingUp className='h-4 w-4 text-green-600' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{completionPercentage}%</div>
-            <Progress value={completionPercentage} className="mt-2" />
+            <div className='text-2xl font-bold text-green-600'>
+              {completionPercentage}%
+            </div>
+            <Progress value={completionPercentage} className='mt-2' />
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-wrap gap-4">
+        <CardContent className='pt-6'>
+          <div className='flex flex-wrap gap-4'>
             <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="All Categories" />
+              <SelectTrigger className='w-[180px]'>
+                <SelectValue placeholder='All Categories' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value='all'>All Categories</SelectItem>
                 {categories.map(category => (
-                  <SelectItem key={category} value={category}>{category}</SelectItem>
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
             <Select value={filterPriority} onValueChange={setFilterPriority}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="All Priorities" />
+              <SelectTrigger className='w-[180px]'>
+                <SelectValue placeholder='All Priorities' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Priorities</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value='all'>All Priorities</SelectItem>
+                <SelectItem value='high'>High</SelectItem>
+                <SelectItem value='medium'>Medium</SelectItem>
+                <SelectItem value='low'>Low</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="All Statuses" />
+              <SelectTrigger className='w-[180px]'>
+                <SelectValue placeholder='All Statuses' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="todo">To Do</SelectItem>
-                <SelectItem value="in-progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value='all'>All Statuses</SelectItem>
+                <SelectItem value='todo'>To Do</SelectItem>
+                <SelectItem value='in-progress'>In Progress</SelectItem>
+                <SelectItem value='completed'>Completed</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -256,9 +322,7 @@ const TechnicalDebtDashboard = () => {
       <Card>
         <CardHeader>
           <CardTitle>Technical Debt Items</CardTitle>
-          <CardDescription>
-            {filteredItems.length} items found
-          </CardDescription>
+          <CardDescription>{filteredItems.length} items found</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -274,17 +338,21 @@ const TechnicalDebtDashboard = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredItems.map((item) => (
+              {filteredItems.map(item => (
                 <TableRow key={item.id}>
                   <TableCell>
-                    <div className="space-y-1">
-                      <div className="font-medium">{item.title}</div>
-                      <div className="text-sm text-muted-foreground line-clamp-2">
+                    <div className='space-y-1'>
+                      <div className='font-medium'>{item.title}</div>
+                      <div className='text-sm text-muted-foreground line-clamp-2'>
                         {item.description}
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className='flex flex-wrap gap-1'>
                         {item.tags.map(tag => (
-                          <Badge key={tag} variant="outline" className="text-xs">
+                          <Badge
+                            key={tag}
+                            variant='outline'
+                            className='text-xs'
+                          >
                             {tag}
                           </Badge>
                         ))}
@@ -298,9 +366,9 @@ const TechnicalDebtDashboard = () => {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
+                    <div className='flex items-center gap-2'>
                       <span>{item.effort}</span>
-                      <span className="text-xs text-muted-foreground">SP</span>
+                      <span className='text-xs text-muted-foreground'>SP</span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -310,7 +378,7 @@ const TechnicalDebtDashboard = () => {
                   </TableCell>
                   <TableCell>{item.assignee}</TableCell>
                   <TableCell>
-                    <div className="text-sm">
+                    <div className='text-sm'>
                       {new Date(item.dueDate).toLocaleDateString()}
                     </div>
                   </TableCell>
@@ -322,23 +390,31 @@ const TechnicalDebtDashboard = () => {
       </Card>
 
       {/* Category Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         <Card>
           <CardHeader>
             <CardTitle>Debt by Category</CardTitle>
-            <CardDescription>Distribution of technical debt across categories</CardDescription>
+            <CardDescription>
+              Distribution of technical debt across categories
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {categories.map(category => {
-                const categoryItems = technicalDebtItems.filter(item => item.category === category);
-                const percentage = Math.round((categoryItems.length / technicalDebtItems.length) * 100);
-                
+                const categoryItems = technicalDebtItems.filter(
+                  item => item.category === category
+                );
+                const percentage = Math.round(
+                  (categoryItems.length / technicalDebtItems.length) * 100
+                );
+
                 return (
-                  <div key={category} className="space-y-2">
-                    <div className="flex justify-between text-sm">
+                  <div key={category} className='space-y-2'>
+                    <div className='flex justify-between text-sm'>
                       <span>{category}</span>
-                      <span>{categoryItems.length} items ({percentage}%)</span>
+                      <span>
+                        {categoryItems.length} items ({percentage}%)
+                      </span>
                     </div>
                     <Progress value={percentage} />
                   </div>
@@ -351,23 +427,37 @@ const TechnicalDebtDashboard = () => {
         <Card>
           <CardHeader>
             <CardTitle>Priority Distribution</CardTitle>
-            <CardDescription>Technical debt items by priority level</CardDescription>
+            <CardDescription>
+              Technical debt items by priority level
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {['high', 'medium', 'low'].map(priority => {
-                const priorityItems = technicalDebtItems.filter(item => item.priority === priority);
-                const percentage = Math.round((priorityItems.length / technicalDebtItems.length) * 100);
-                
+                const priorityItems = technicalDebtItems.filter(
+                  item => item.priority === priority
+                );
+                const percentage = Math.round(
+                  (priorityItems.length / technicalDebtItems.length) * 100
+                );
+
                 return (
-                  <div key={priority} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="capitalize">{priority} Priority</span>
-                      <span>{priorityItems.length} items ({percentage}%)</span>
+                  <div key={priority} className='space-y-2'>
+                    <div className='flex justify-between text-sm'>
+                      <span className='capitalize'>{priority} Priority</span>
+                      <span>
+                        {priorityItems.length} items ({percentage}%)
+                      </span>
                     </div>
-                    <Progress 
-                      value={percentage} 
-                      className={priority === 'high' ? 'bg-red-100' : priority === 'medium' ? 'bg-yellow-100' : 'bg-green-100'}
+                    <Progress
+                      value={percentage}
+                      className={
+                        priority === 'high'
+                          ? 'bg-red-100'
+                          : priority === 'medium'
+                            ? 'bg-yellow-100'
+                            : 'bg-green-100'
+                      }
                     />
                   </div>
                 );

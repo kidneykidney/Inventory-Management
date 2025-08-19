@@ -5,21 +5,23 @@ import LendingAnalyticsDashboard from '../LendingAnalyticsDashboard';
 
 // Mock recharts components
 jest.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }) => <div data-testid="responsive-container">{children}</div>,
-  AreaChart: ({ children }) => <div data-testid="area-chart">{children}</div>,
-  BarChart: ({ children }) => <div data-testid="bar-chart">{children}</div>,
-  LineChart: ({ children }) => <div data-testid="line-chart">{children}</div>,
-  PieChart: ({ children }) => <div data-testid="pie-chart">{children}</div>,
-  CartesianGrid: () => <div data-testid="cartesian-grid" />,
-  XAxis: () => <div data-testid="x-axis" />,
-  YAxis: () => <div data-testid="y-axis" />,
-  Tooltip: () => <div data-testid="tooltip" />,
-  Legend: () => <div data-testid="legend" />,
-  Area: () => <div data-testid="area" />,
-  Bar: () => <div data-testid="bar" />,
-  Line: () => <div data-testid="line" />,
-  Pie: () => <div data-testid="pie" />,
-  Cell: () => <div data-testid="cell" />
+  ResponsiveContainer: ({ children }) => (
+    <div data-testid='responsive-container'>{children}</div>
+  ),
+  AreaChart: ({ children }) => <div data-testid='area-chart'>{children}</div>,
+  BarChart: ({ children }) => <div data-testid='bar-chart'>{children}</div>,
+  LineChart: ({ children }) => <div data-testid='line-chart'>{children}</div>,
+  PieChart: ({ children }) => <div data-testid='pie-chart'>{children}</div>,
+  CartesianGrid: () => <div data-testid='cartesian-grid' />,
+  XAxis: () => <div data-testid='x-axis' />,
+  YAxis: () => <div data-testid='y-axis' />,
+  Tooltip: () => <div data-testid='tooltip' />,
+  Legend: () => <div data-testid='legend' />,
+  Area: () => <div data-testid='area' />,
+  Bar: () => <div data-testid='bar' />,
+  Line: () => <div data-testid='line' />,
+  Pie: () => <div data-testid='pie' />,
+  Cell: () => <div data-testid='cell' />,
 }));
 
 // Mock fetch
@@ -36,17 +38,17 @@ const mockAnalyticsData = {
       lost_transactions: 5,
       avg_lending_period: 15.5,
       unique_borrowers: 25,
-      products_lent: 40
+      products_lent: 40,
     },
     products: {
       total_products: 50,
       available_products: 30,
       unavailable_products: 20,
-      total_categories: 8
+      total_categories: 8,
     },
     utilization: {
-      utilization_rate: 80.00
-    }
+      utilization_rate: 80.0,
+    },
   },
   trends: [
     {
@@ -56,8 +58,8 @@ const mockAnalyticsData = {
       unique_products: 12,
       returned_count: 12,
       overdue_count: 2,
-      avg_lending_period: 14.5
-    }
+      avg_lending_period: 14.5,
+    },
   ],
   popularProducts: [
     {
@@ -69,8 +71,8 @@ const mockAnalyticsData = {
       lending_count: 25,
       avg_lending_period: 14.5,
       overdue_count: 2,
-      return_rate: 92.00
-    }
+      return_rate: 92.0,
+    },
   ],
   categoryAnalytics: [
     {
@@ -81,8 +83,8 @@ const mockAnalyticsData = {
       active_lendings: 10,
       overdue_lendings: 2,
       avg_lending_period: 16.5,
-      avg_lendings_per_product: 6.00
-    }
+      avg_lendings_per_product: 6.0,
+    },
   ],
   userBehavior: {
     topBorrowers: [
@@ -94,20 +96,20 @@ const mockAnalyticsData = {
         overdue_count: 1,
         returned_count: 14,
         avg_lending_period: 13.5,
-        return_rate: 93.33
-      }
+        return_rate: 93.33,
+      },
     ],
     borrowingPatterns: [
-      { day_of_week: 'Monday', lending_count: 25, avg_lending_period: 14.2 }
+      { day_of_week: 'Monday', lending_count: 25, avg_lending_period: 14.2 },
     ],
     monthlyEngagement: [
       {
         month: '2024-01',
         active_users: 15,
         total_lendings: 45,
-        avg_lendings_per_user: 3.00
-      }
-    ]
+        avg_lendings_per_user: 3.0,
+      },
+    ],
   },
   overdueAnalytics: {
     overview: {
@@ -115,14 +117,14 @@ const mockAnalyticsData = {
       avg_days_overdue: 5.5,
       max_days_overdue: 15,
       unique_overdue_borrowers: 6,
-      unique_overdue_products: 7
+      unique_overdue_products: 7,
     },
     byCategory: [
       {
         category_name: 'Electronics',
         overdue_count: 5,
-        avg_days_overdue: 6.2
-      }
+        avg_days_overdue: 6.2,
+      },
     ],
     byUser: [
       {
@@ -130,9 +132,9 @@ const mockAnalyticsData = {
         email: 'late@example.com',
         overdue_count: 3,
         avg_days_overdue: 8.5,
-        max_days_overdue: 15
-      }
-    ]
+        max_days_overdue: 15,
+      },
+    ],
   },
   predictiveAnalytics: {
     trendingProducts: [
@@ -144,16 +146,16 @@ const mockAnalyticsData = {
         category_name: 'Electronics',
         recent_lendings: 8,
         historical_lendings: 5,
-        growth_rate: 60.00
-      }
+        growth_rate: 60.0,
+      },
     ],
     peakPeriods: [
       {
         hour_of_day: 9,
         lending_count: 25,
         avg_hourly_lendings: 15.5,
-        relative_activity: 161.29
-      }
+        relative_activity: 161.29,
+      },
     ],
     overdueRiskProducts: [
       {
@@ -163,16 +165,16 @@ const mockAnalyticsData = {
         model: 'EOS R5',
         total_lendings: 10,
         overdue_count: 3,
-        overdue_rate: 30.00,
-        avg_lending_period: 25.5
-      }
-    ]
+        overdue_rate: 30.0,
+        avg_lending_period: 25.5,
+      },
+    ],
   },
   performance: {
     system: {
-      return_rate: 92.5
-    }
-  }
+      return_rate: 92.5,
+    },
+  },
 };
 
 describe('LendingAnalyticsDashboard', () => {
@@ -196,13 +198,15 @@ describe('LendingAnalyticsDashboard', () => {
   it('renders analytics dashboard with data', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ success: true, data: mockAnalyticsData })
+      json: async () => ({ success: true, data: mockAnalyticsData }),
     });
 
     render(<LendingAnalyticsDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText('Lending Analytics Dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByText('Lending Analytics Dashboard')
+      ).toBeInTheDocument();
     });
 
     // Check overview cards
@@ -227,13 +231,15 @@ describe('LendingAnalyticsDashboard', () => {
   it('refreshes data when refresh button is clicked', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, data: mockAnalyticsData })
+      json: async () => ({ success: true, data: mockAnalyticsData }),
     });
 
     render(<LendingAnalyticsDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText('Lending Analytics Dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByText('Lending Analytics Dashboard')
+      ).toBeInTheDocument();
     });
 
     const refreshButton = screen.getByText('Refresh');
@@ -247,18 +253,18 @@ describe('LendingAnalyticsDashboard', () => {
   it('exports report when export button is clicked', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, data: mockAnalyticsData })
+      json: async () => ({ success: true, data: mockAnalyticsData }),
     });
 
     // Mock URL.createObjectURL and related functions
     global.URL.createObjectURL = jest.fn(() => 'mock-url');
     global.URL.revokeObjectURL = jest.fn();
-    
+
     // Mock document.createElement and appendChild
     const mockAnchor = {
       href: '',
       download: '',
-      click: jest.fn()
+      click: jest.fn(),
     };
     jest.spyOn(document, 'createElement').mockReturnValue(mockAnchor);
     jest.spyOn(document.body, 'appendChild').mockImplementation(() => {});
@@ -267,7 +273,9 @@ describe('LendingAnalyticsDashboard', () => {
     render(<LendingAnalyticsDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText('Lending Analytics Dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByText('Lending Analytics Dashboard')
+      ).toBeInTheDocument();
     });
 
     const exportButton = screen.getByText('Export Report');
@@ -281,13 +289,15 @@ describe('LendingAnalyticsDashboard', () => {
   it('switches between different tabs', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, data: mockAnalyticsData })
+      json: async () => ({ success: true, data: mockAnalyticsData }),
     });
 
     render(<LendingAnalyticsDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText('Lending Analytics Dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByText('Lending Analytics Dashboard')
+      ).toBeInTheDocument();
     });
 
     // Click on Popular Products tab
@@ -327,13 +337,15 @@ describe('LendingAnalyticsDashboard', () => {
   it('displays charts correctly', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, data: mockAnalyticsData })
+      json: async () => ({ success: true, data: mockAnalyticsData }),
     });
 
     render(<LendingAnalyticsDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText('Lending Analytics Dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByText('Lending Analytics Dashboard')
+      ).toBeInTheDocument();
     });
 
     // Check that charts are rendered
@@ -349,19 +361,21 @@ describe('LendingAnalyticsDashboard', () => {
       userBehavior: {
         topBorrowers: [],
         borrowingPatterns: [],
-        monthlyEngagement: []
-      }
+        monthlyEngagement: [],
+      },
     };
 
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, data: emptyData })
+      json: async () => ({ success: true, data: emptyData }),
     });
 
     render(<LendingAnalyticsDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText('Lending Analytics Dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByText('Lending Analytics Dashboard')
+      ).toBeInTheDocument();
     });
 
     // Should still render without errors
@@ -371,18 +385,20 @@ describe('LendingAnalyticsDashboard', () => {
   it('formats dates and numbers correctly', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, data: mockAnalyticsData })
+      json: async () => ({ success: true, data: mockAnalyticsData }),
     });
 
     render(<LendingAnalyticsDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText('Lending Analytics Dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByText('Lending Analytics Dashboard')
+      ).toBeInTheDocument();
     });
 
     // Check that the generated date is displayed
     expect(screen.getByText(/Generated on/)).toBeInTheDocument();
-    
+
     // Check that percentages are formatted correctly
     expect(screen.getByText('80%')).toBeInTheDocument();
   });

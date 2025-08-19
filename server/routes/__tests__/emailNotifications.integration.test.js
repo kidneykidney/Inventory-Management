@@ -19,7 +19,7 @@ app.use('/api/email-notifications', emailNotificationRoutes);
 describe('Email Notifications API Integration Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Mock auth middleware to always authenticate as admin
     auth.mockImplementation((req, res, next) => {
       req.user = { id: 1, role: 'admin' };
@@ -36,8 +36,8 @@ describe('Email Notifications API Integration Tests', () => {
           recipient_email: 'user@example.com',
           subject: 'Lending Confirmation',
           status: 'sent',
-          sent_date: new Date()
-        }
+          sent_date: new Date(),
+        },
       ];
 
       notificationService.getNotificationHistory.mockResolvedValue(mockHistory);
@@ -48,7 +48,9 @@ describe('Email Notifications API Integration Tests', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual(mockHistory);
-      expect(notificationService.getNotificationHistory).toHaveBeenCalledWith('123');
+      expect(notificationService.getNotificationHistory).toHaveBeenCalledWith(
+        '123'
+      );
     });
 
     it('should handle invalid transaction ID', async () => {
@@ -68,11 +70,13 @@ describe('Email Notifications API Integration Tests', () => {
           type: 'return_reminder',
           recipient_email: 'user@example.com',
           status: 'failed',
-          error_message: 'SMTP connection failed'
-        }
+          error_message: 'SMTP connection failed',
+        },
       ];
 
-      notificationService.getFailedNotifications.mockResolvedValue(mockFailedNotifications);
+      notificationService.getFailedNotifications.mockResolvedValue(
+        mockFailedNotifications
+      );
 
       const response = await request(app)
         .get('/api/email-notifications/failed?limit=50')
@@ -80,7 +84,9 @@ describe('Email Notifications API Integration Tests', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual(mockFailedNotifications);
-      expect(notificationService.getFailedNotifications).toHaveBeenCalledWith(50);
+      expect(notificationService.getFailedNotifications).toHaveBeenCalledWith(
+        50
+      );
     });
 
     it('should deny access for non-admin users', async () => {
@@ -102,7 +108,7 @@ describe('Email Notifications API Integration Tests', () => {
     it('should retry failed notification for admin', async () => {
       notificationService.retryFailedNotification.mockResolvedValue({
         success: true,
-        messageId: 'retry-message-id'
+        messageId: 'retry-message-id',
       });
 
       const response = await request(app)
@@ -111,13 +117,15 @@ describe('Email Notifications API Integration Tests', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.message).toContain('successfully');
-      expect(notificationService.retryFailedNotification).toHaveBeenCalledWith('123');
+      expect(notificationService.retryFailedNotification).toHaveBeenCalledWith(
+        '123'
+      );
     });
 
     it('should handle retry failure', async () => {
       notificationService.retryFailedNotification.mockResolvedValue({
         success: false,
-        error: 'SMTP still unavailable'
+        error: 'SMTP still unavailable',
       });
 
       const response = await request(app)
@@ -139,7 +147,9 @@ describe('Email Notifications API Integration Tests', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.message).toContain('successfully');
-      expect(reminderScheduler.processImmediateReminder).toHaveBeenCalledWith('123');
+      expect(reminderScheduler.processImmediateReminder).toHaveBeenCalledWith(
+        '123'
+      );
     });
 
     it('should handle reminder failure', async () => {
@@ -159,15 +169,25 @@ describe('Email Notifications API Integration Tests', () => {
   describe('GET /api/email-notifications/stats', () => {
     it('should get notification statistics for admin', async () => {
       const mockStats = [
-        { type: 'lending_confirmation', status: 'sent', count: 10, date: '2024-01-15' },
-        { type: 'return_reminder', status: 'sent', count: 5, date: '2024-01-15' }
+        {
+          type: 'lending_confirmation',
+          status: 'sent',
+          count: 10,
+          date: '2024-01-15',
+        },
+        {
+          type: 'return_reminder',
+          status: 'sent',
+          count: 5,
+          date: '2024-01-15',
+        },
       ];
 
       const mockSummary = {
         total_notifications: 15,
         sent_count: 15,
         failed_count: 0,
-        success_rate: 100
+        success_rate: 100,
       };
 
       db.execute
@@ -184,13 +204,9 @@ describe('Email Notifications API Integration Tests', () => {
     });
 
     it('should use default period when not specified', async () => {
-      db.execute
-        .mockResolvedValueOnce([[]])
-        .mockResolvedValueOnce([{}]);
+      db.execute.mockResolvedValueOnce([[]]).mockResolvedValueOnce([{}]);
 
-      await request(app)
-        .get('/api/email-notifications/stats')
-        .expect(200);
+      await request(app).get('/api/email-notifications/stats').expect(200);
 
       expect(db.execute).toHaveBeenCalledWith(
         expect.stringContaining('INTERVAL ? DAY'),
@@ -205,7 +221,7 @@ describe('Email Notifications API Integration Tests', () => {
         isRunning: true,
         activeJobs: ['reminders', 'overdue'],
         nextReminderRun: new Date().toISOString(),
-        nextOverdueRun: new Date().toISOString()
+        nextOverdueRun: new Date().toISOString(),
       };
 
       reminderScheduler.getStatus.mockReturnValue(mockStatus);
@@ -262,7 +278,7 @@ describe('Email Notifications API Integration Tests', () => {
         reminder_enabled: true,
         overdue_enabled: true,
         confirmation_enabled: true,
-        reminder_days_before: 3
+        reminder_days_before: 3,
       };
 
       db.execute.mockResolvedValue([[mockPreferences]]);
@@ -282,17 +298,22 @@ describe('Email Notifications API Integration Tests', () => {
 
     it('should create default preferences if none exist', async () => {
       db.execute
-        .mockResolvedValueOnce([[]])  // No existing preferences
-        .mockResolvedValueOnce([])    // Insert new preferences
-        .mockResolvedValueOnce([[{    // Fetch newly created preferences
-          id: 1,
-          user_id: 1,
-          email_enabled: true,
-          reminder_enabled: true,
-          overdue_enabled: true,
-          confirmation_enabled: true,
-          reminder_days_before: 3
-        }]]);
+        .mockResolvedValueOnce([[]]) // No existing preferences
+        .mockResolvedValueOnce([]) // Insert new preferences
+        .mockResolvedValueOnce([
+          [
+            {
+              // Fetch newly created preferences
+              id: 1,
+              user_id: 1,
+              email_enabled: true,
+              reminder_enabled: true,
+              overdue_enabled: true,
+              confirmation_enabled: true,
+              reminder_days_before: 3,
+            },
+          ],
+        ]);
 
       auth.mockImplementation((req, res, next) => {
         req.user = { id: 1, role: 'user' };
@@ -323,7 +344,7 @@ describe('Email Notifications API Integration Tests', () => {
       const updateData = {
         email_enabled: false,
         reminder_enabled: false,
-        reminder_days_before: 5
+        reminder_days_before: 5,
       };
 
       const response = await request(app)
@@ -347,7 +368,7 @@ describe('Email Notifications API Integration Tests', () => {
 
       const invalidData = {
         email_enabled: 'invalid',
-        reminder_days_before: 50
+        reminder_days_before: 50,
       };
 
       const response = await request(app)

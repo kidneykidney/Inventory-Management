@@ -1,16 +1,20 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 class NotificationService {
   // Email notification methods
   async sendSprintNotification(sprintId, type, recipients) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/notifications/sprint`, {
-        sprintId,
-        type, // 'start', 'end', 'review', 'retrospective'
-        recipients
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/notifications/sprint`,
+        {
+          sprintId,
+          type, // 'start', 'end', 'review', 'retrospective'
+          recipients,
+        }
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to send sprint notification:', error);
@@ -23,7 +27,7 @@ class NotificationService {
       const response = await axios.post(`${API_BASE_URL}/notifications/story`, {
         storyId,
         type, // 'assigned', 'completed', 'blocked'
-        recipients
+        recipients,
       });
       return response.data;
     } catch (error) {
@@ -35,7 +39,9 @@ class NotificationService {
   // In-app notification methods
   async getNotifications(userId) {
     try {
-      const response = await axios.get(`${API_BASE_URL}/notifications/user/${userId}`);
+      const response = await axios.get(
+        `${API_BASE_URL}/notifications/user/${userId}`
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
@@ -45,7 +51,9 @@ class NotificationService {
 
   async markNotificationAsRead(notificationId) {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/notifications/${notificationId}/read`);
+      const response = await axios.patch(
+        `${API_BASE_URL}/notifications/${notificationId}/read`
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
@@ -55,7 +63,9 @@ class NotificationService {
 
   async markAllNotificationsAsRead(userId) {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/notifications/user/${userId}/read-all`);
+      const response = await axios.patch(
+        `${API_BASE_URL}/notifications/user/${userId}/read-all`
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to mark all notifications as read:', error);
@@ -66,7 +76,10 @@ class NotificationService {
   // Feedback collection methods
   async submitFeedback(feedbackData) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/feedback`, feedbackData);
+      const response = await axios.post(
+        `${API_BASE_URL}/feedback`,
+        feedbackData
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to submit feedback:', error);
@@ -76,7 +89,9 @@ class NotificationService {
 
   async getFeedback(sprintId) {
     try {
-      const response = await axios.get(`${API_BASE_URL}/feedback/sprint/${sprintId}`);
+      const response = await axios.get(
+        `${API_BASE_URL}/feedback/sprint/${sprintId}`
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to fetch feedback:', error);

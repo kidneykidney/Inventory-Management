@@ -21,15 +21,15 @@ import TeamCapacityVisualization from './TeamCapacityVisualization';
 import ProgressMetricsCards from './ProgressMetricsCards';
 import { apiService } from '../../api/apiService';
 import { logger } from '../../utils/logger';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Activity, 
+import {
+  TrendingUp,
+  TrendingDown,
+  Activity,
   Target,
   Clock,
   Users,
   BarChart3,
-  Calendar
+  Calendar,
 } from 'lucide-react';
 
 /**
@@ -51,7 +51,7 @@ const ProgressTrackingDashboard = () => {
   // Load initial data
   useEffect(() => {
     loadDashboardData();
-    
+
     // Set up auto-refresh every 30 seconds for real-time updates
     const interval = setInterval(loadDashboardData, 30000);
     setRefreshInterval(interval);
@@ -83,14 +83,14 @@ const ProgressTrackingDashboard = () => {
       const activeSprint = sprintsData.find(
         sprint => sprint.status === 'active'
       );
-      
+
       if (activeSprint) {
         setCurrentSprint(activeSprint);
         setSelectedSprintId(activeSprint.id);
       } else if (sprintsData.length > 0) {
         // If no active sprint, select the most recent one
-        const mostRecent = sprintsData.sort((a, b) => 
-          new Date(b.startDate) - new Date(a.startDate)
+        const mostRecent = sprintsData.sort(
+          (a, b) => new Date(b.startDate) - new Date(a.startDate)
         )[0];
         setCurrentSprint(mostRecent);
         setSelectedSprintId(mostRecent.id);
@@ -109,7 +109,7 @@ const ProgressTrackingDashboard = () => {
     }
   };
 
-  const loadSprintSpecificData = async (sprintId) => {
+  const loadSprintSpecificData = async sprintId => {
     try {
       // Load burnup data
       const burnupResponse = await apiService.get(
@@ -136,7 +136,7 @@ const ProgressTrackingDashboard = () => {
     }
   };
 
-  const handleSprintChange = (sprintId) => {
+  const handleSprintChange = sprintId => {
     const sprint = sprints.find(s => s.id === sprintId);
     setCurrentSprint(sprint);
     setSelectedSprintId(sprintId);
@@ -168,9 +168,12 @@ const ProgressTrackingDashboard = () => {
       {/* Header */}
       <div className='flex justify-between items-center'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Progress Tracking</h1>
+          <h1 className='text-3xl font-bold tracking-tight'>
+            Progress Tracking
+          </h1>
           <p className='text-muted-foreground'>
-            Real-time sprint progress, velocity tracking, and team capacity visualization
+            Real-time sprint progress, velocity tracking, and team capacity
+            visualization
           </p>
         </div>
         <div className='flex items-center gap-4'>
@@ -184,8 +187,10 @@ const ProgressTrackingDashboard = () => {
                 <SelectItem key={sprint.id} value={sprint.id}>
                   <div className='flex items-center gap-2'>
                     <span>Sprint {sprint.number}</span>
-                    <Badge 
-                      variant={sprint.status === 'active' ? 'default' : 'secondary'}
+                    <Badge
+                      variant={
+                        sprint.status === 'active' ? 'default' : 'secondary'
+                      }
                       className='text-xs'
                     >
                       {sprint.status}
@@ -197,11 +202,7 @@ const ProgressTrackingDashboard = () => {
           </Select>
 
           {/* Refresh Button */}
-          <Button 
-            variant='outline' 
-            onClick={handleRefresh}
-            disabled={loading}
-          >
+          <Button variant='outline' onClick={handleRefresh} disabled={loading}>
             <Activity className='h-4 w-4 mr-2' />
             Refresh
           </Button>
@@ -210,7 +211,7 @@ const ProgressTrackingDashboard = () => {
 
       {/* Progress Metrics Cards */}
       {progressMetrics && (
-        <ProgressMetricsCards 
+        <ProgressMetricsCards
           metrics={progressMetrics}
           sprint={currentSprint}
         />
@@ -220,19 +221,13 @@ const ProgressTrackingDashboard = () => {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         {/* Velocity Chart */}
         <div className='lg:col-span-1'>
-          <VelocityChart 
-            data={velocityData}
-            currentSprint={currentSprint}
-          />
+          <VelocityChart data={velocityData} currentSprint={currentSprint} />
         </div>
 
         {/* Burnup Chart */}
         <div className='lg:col-span-1'>
           {burnupData ? (
-            <BurnupChart 
-              data={burnupData}
-              sprint={currentSprint}
-            />
+            <BurnupChart data={burnupData} sprint={currentSprint} />
           ) : (
             <Card>
               <CardHeader>
@@ -240,11 +235,15 @@ const ProgressTrackingDashboard = () => {
                   <BarChart3 className='h-5 w-5' />
                   Burnup Chart
                 </CardTitle>
-                <CardDescription>Sprint scope and completion tracking</CardDescription>
+                <CardDescription>
+                  Sprint scope and completion tracking
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className='flex items-center justify-center h-64 text-muted-foreground'>
-                  {loading ? 'Loading burnup data...' : 'No burnup data available'}
+                  {loading
+                    ? 'Loading burnup data...'
+                    : 'No burnup data available'}
                 </div>
               </CardContent>
             </Card>
@@ -254,10 +253,7 @@ const ProgressTrackingDashboard = () => {
 
       {/* Team Capacity Visualization */}
       {teamCapacity && (
-        <TeamCapacityVisualization 
-          data={teamCapacity}
-          sprint={currentSprint}
-        />
+        <TeamCapacityVisualization data={teamCapacity} sprint={currentSprint} />
       )}
 
       {/* Real-time Status Indicators */}
@@ -267,9 +263,7 @@ const ProgressTrackingDashboard = () => {
             <Activity className='h-5 w-5' />
             Real-time Status
           </CardTitle>
-          <CardDescription>
-            Live updates and system status
-          </CardDescription>
+          <CardDescription>Live updates and system status</CardDescription>
         </CardHeader>
         <CardContent>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
@@ -277,10 +271,12 @@ const ProgressTrackingDashboard = () => {
               <div className='w-3 h-3 bg-green-500 rounded-full animate-pulse' />
               <div>
                 <div className='font-medium text-green-800'>System Online</div>
-                <div className='text-sm text-green-600'>Last updated: {new Date().toLocaleTimeString()}</div>
+                <div className='text-sm text-green-600'>
+                  Last updated: {new Date().toLocaleTimeString()}
+                </div>
               </div>
             </div>
-            
+
             <div className='flex items-center gap-3 p-3 bg-blue-50 rounded-lg'>
               <Clock className='h-4 w-4 text-blue-600' />
               <div>

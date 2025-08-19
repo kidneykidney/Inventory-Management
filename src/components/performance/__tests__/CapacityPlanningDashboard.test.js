@@ -12,23 +12,23 @@ const mockCapacityData = {
     current: 45,
     average: 38,
     peak: 67,
-    trend: 'stable'
+    trend: 'stable',
   },
   memory: {
     current: 62,
     average: 55,
     peak: 78,
-    trend: 'increasing'
+    trend: 'increasing',
   },
   users: {
     current: 25,
     capacity: 100,
-    trend: 'increasing'
+    trend: 'increasing',
   },
   responseTime: {
     current: 320,
     p95: 480,
-    trend: 'stable'
+    trend: 'stable',
   },
   alerts: [
     {
@@ -37,8 +37,8 @@ const mockCapacityData = {
       description: 'Memory usage has increased 15% over the past week',
       metric: 'memory',
       value: 62,
-      threshold: 60
-    }
+      threshold: 60,
+    },
   ],
   recommendations: [
     {
@@ -48,10 +48,10 @@ const mockCapacityData = {
       actions: [
         'Implement memory profiling',
         'Review memory-intensive operations',
-        'Consider memory optimization'
+        'Consider memory optimization',
       ],
-      estimatedImpact: '10-20% memory reduction'
-    }
+      estimatedImpact: '10-20% memory reduction',
+    },
   ],
   forecast: [
     {
@@ -59,38 +59,38 @@ const mockCapacityData = {
       timeframe: '7d',
       current: '45%',
       projected: '54%',
-      recommended: '70%'
+      recommended: '70%',
     },
     {
       resource: 'Memory',
       timeframe: '7d',
       current: '512MB',
       projected: '614MB',
-      recommended: '800MB'
-    }
+      recommended: '800MB',
+    },
   ],
   optimization: {
     database: [
       {
         suggestion: 'Add indexes for frequently queried columns',
-        impact: 'High'
+        impact: 'High',
       },
       {
         suggestion: 'Implement query result caching',
-        impact: 'Medium'
-      }
+        impact: 'Medium',
+      },
     ],
     infrastructure: [
       {
         suggestion: 'Implement CDN for static assets',
-        impact: 'Medium'
+        impact: 'Medium',
       },
       {
         suggestion: 'Enable gzip compression for API responses',
-        impact: 'Low'
-      }
-    ]
-  }
+        impact: 'Low',
+      },
+    ],
+  },
 };
 
 describe('CapacityPlanningDashboard', () => {
@@ -104,8 +104,10 @@ describe('CapacityPlanningDashboard', () => {
     render(<CapacityPlanningDashboard />);
 
     expect(screen.getByText('Capacity Planning')).toBeInTheDocument();
-    expect(screen.getByText('Monitor system capacity and plan for scaling')).toBeInTheDocument();
-    
+    expect(
+      screen.getByText('Monitor system capacity and plan for scaling')
+    ).toBeInTheDocument();
+
     // Should show loading skeletons
     const skeletons = document.querySelectorAll('.animate-pulse');
     expect(skeletons.length).toBeGreaterThan(0);
@@ -114,7 +116,7 @@ describe('CapacityPlanningDashboard', () => {
   it('renders capacity data correctly', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCapacityData
+      json: async () => mockCapacityData,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -125,24 +127,26 @@ describe('CapacityPlanningDashboard', () => {
 
     // CPU metrics
     expect(screen.getByText('Peak: 67% | Avg: 38%')).toBeInTheDocument();
-    
+
     // Memory metrics
     expect(screen.getByText('62%')).toBeInTheDocument();
     expect(screen.getByText('Peak: 78% | Avg: 55%')).toBeInTheDocument();
-    
+
     // Users metrics
     expect(screen.getByText('25')).toBeInTheDocument();
     expect(screen.getByText('Capacity: 100 users')).toBeInTheDocument();
-    
+
     // Response time metrics
     expect(screen.getByText('320ms')).toBeInTheDocument();
-    expect(screen.getByText('Target: <1000ms | P95: 480ms')).toBeInTheDocument();
+    expect(
+      screen.getByText('Target: <1000ms | P95: 480ms')
+    ).toBeInTheDocument();
   });
 
   it('displays capacity alerts', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCapacityData
+      json: async () => mockCapacityData,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -152,14 +156,16 @@ describe('CapacityPlanningDashboard', () => {
     });
 
     expect(screen.getByText('Memory Usage Trending Up')).toBeInTheDocument();
-    expect(screen.getByText('Memory usage has increased 15% over the past week')).toBeInTheDocument();
+    expect(
+      screen.getByText('Memory usage has increased 15% over the past week')
+    ).toBeInTheDocument();
     expect(screen.getByText('warning')).toBeInTheDocument();
   });
 
   it('displays scaling recommendations', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCapacityData
+      json: async () => mockCapacityData,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -169,16 +175,20 @@ describe('CapacityPlanningDashboard', () => {
     });
 
     expect(screen.getByText('Monitor Memory Growth')).toBeInTheDocument();
-    expect(screen.getByText('Memory usage is trending upward')).toBeInTheDocument();
+    expect(
+      screen.getByText('Memory usage is trending upward')
+    ).toBeInTheDocument();
     expect(screen.getByText('medium')).toBeInTheDocument();
     expect(screen.getByText('Implement memory profiling')).toBeInTheDocument();
-    expect(screen.getByText('Estimated impact: 10-20% memory reduction')).toBeInTheDocument();
+    expect(
+      screen.getByText('Estimated impact: 10-20% memory reduction')
+    ).toBeInTheDocument();
   });
 
   it('displays capacity forecast', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCapacityData
+      json: async () => mockCapacityData,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -196,7 +206,7 @@ describe('CapacityPlanningDashboard', () => {
   it('displays performance optimization suggestions', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCapacityData
+      json: async () => mockCapacityData,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -207,14 +217,18 @@ describe('CapacityPlanningDashboard', () => {
 
     expect(screen.getByText('Database Optimization')).toBeInTheDocument();
     expect(screen.getByText('Infrastructure Optimization')).toBeInTheDocument();
-    expect(screen.getByText('Add indexes for frequently queried columns')).toBeInTheDocument();
-    expect(screen.getByText('Implement CDN for static assets')).toBeInTheDocument();
+    expect(
+      screen.getByText('Add indexes for frequently queried columns')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Implement CDN for static assets')
+    ).toBeInTheDocument();
   });
 
   it('handles timeframe selection', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => mockCapacityData
+      json: async () => mockCapacityData,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -229,7 +243,9 @@ describe('CapacityPlanningDashboard', () => {
 
     // Should call API with new timeframe
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith('/api/v1/performance/capacity-planning?timeframe=30d');
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/v1/performance/capacity-planning?timeframe=30d'
+      );
     });
   });
 
@@ -239,7 +255,9 @@ describe('CapacityPlanningDashboard', () => {
     render(<CapacityPlanningDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Failed to load capacity planning data/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Failed to load capacity planning data/)
+      ).toBeInTheDocument();
     });
   });
 
@@ -247,12 +265,12 @@ describe('CapacityPlanningDashboard', () => {
     const dataWithTrends = {
       ...mockCapacityData,
       cpu: { ...mockCapacityData.cpu, trend: 'increasing' },
-      memory: { ...mockCapacityData.memory, trend: 'decreasing' }
+      memory: { ...mockCapacityData.memory, trend: 'decreasing' },
     };
 
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => dataWithTrends
+      json: async () => dataWithTrends,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -269,7 +287,7 @@ describe('CapacityPlanningDashboard', () => {
   it('calculates progress bars correctly', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCapacityData
+      json: async () => mockCapacityData,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -286,12 +304,12 @@ describe('CapacityPlanningDashboard', () => {
   it('handles no alerts scenario', async () => {
     const dataWithoutAlerts = {
       ...mockCapacityData,
-      alerts: []
+      alerts: [],
     };
 
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => dataWithoutAlerts
+      json: async () => dataWithoutAlerts,
     });
 
     render(<CapacityPlanningDashboard />);
@@ -314,14 +332,14 @@ describe('CapacityPlanningDashboard', () => {
           description: 'System is at capacity',
           metric: 'cpu',
           value: 95,
-          threshold: 80
-        }
-      ]
+          threshold: 80,
+        },
+      ],
     };
 
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => dataWithCriticalAlert
+      json: async () => dataWithCriticalAlert,
     });
 
     render(<CapacityPlanningDashboard />);

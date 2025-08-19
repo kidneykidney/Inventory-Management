@@ -34,7 +34,7 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
     title: '',
     description: '',
     priority: 'medium',
-    anonymous: false
+    anonymous: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -45,7 +45,7 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
     { value: 'process_improvement', label: 'Process Improvement' },
     { value: 'feature_request', label: 'Feature Request' },
     { value: 'bug_report', label: 'Bug Report' },
-    { value: 'general', label: 'General Feedback' }
+    { value: 'general', label: 'General Feedback' },
   ];
 
   const categories = [
@@ -54,57 +54,61 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
     { value: 'tools_process', label: 'Tools & Process' },
     { value: 'planning', label: 'Sprint Planning' },
     { value: 'delivery', label: 'Delivery Quality' },
-    { value: 'collaboration', label: 'Collaboration' }
+    { value: 'collaboration', label: 'Collaboration' },
   ];
 
   const priorities = [
     { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800' },
-    { value: 'medium', label: 'Medium', color: 'bg-yellow-100 text-yellow-800' },
-    { value: 'high', label: 'High', color: 'bg-red-100 text-red-800' }
+    {
+      value: 'medium',
+      label: 'Medium',
+      color: 'bg-yellow-100 text-yellow-800',
+    },
+    { value: 'high', label: 'High', color: 'bg-red-100 text-red-800' },
   ];
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  const handleRatingChange = (rating) => {
+  const handleRatingChange = rating => {
     setFormData(prev => ({
       ...prev,
-      rating
+      rating,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!formData.type || !formData.title || !formData.description) {
       toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields",
-        variant: "destructive"
+        title: 'Validation Error',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
       });
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       const feedbackData = {
         ...formData,
         sprintId,
-        submittedAt: new Date().toISOString()
+        submittedAt: new Date().toISOString(),
       };
-      
+
       await notificationService.submitFeedback(feedbackData);
-      
+
       toast({
-        title: "Success",
-        description: "Feedback submitted successfully",
+        title: 'Success',
+        description: 'Feedback submitted successfully',
       });
-      
+
       // Reset form
       setFormData({
         type: '',
@@ -113,19 +117,19 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
         title: '',
         description: '',
         priority: 'medium',
-        anonymous: false
+        anonymous: false,
       });
-      
+
       setIsOpen(false);
-      
+
       if (onFeedbackSubmitted) {
         onFeedbackSubmitted();
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to submit feedback. Please try again.",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Failed to submit feedback. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsSubmitting(false);
@@ -134,11 +138,11 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
 
   const StarRating = ({ rating, onRatingChange, readonly = false }) => {
     return (
-      <div className="flex space-x-1">
-        {[1, 2, 3, 4, 5].map((star) => (
+      <div className='flex space-x-1'>
+        {[1, 2, 3, 4, 5].map(star => (
           <button
             key={star}
-            type="button"
+            type='button'
             onClick={() => !readonly && onRatingChange(star)}
             className={`${
               readonly ? 'cursor-default' : 'cursor-pointer hover:scale-110'
@@ -161,32 +165,36 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center space-x-2">
-          <MessageSquare className="h-4 w-4" />
+        <Button className='flex items-center space-x-2'>
+          <MessageSquare className='h-4 w-4' />
           <span>Provide Feedback</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <MessageSquare className="h-5 w-5" />
+          <DialogTitle className='flex items-center space-x-2'>
+            <MessageSquare className='h-5 w-5' />
             <span>Submit Feedback</span>
           </DialogTitle>
           <DialogDescription>
-            Help us improve by sharing your thoughts and suggestions about the current sprint or overall process.
+            Help us improve by sharing your thoughts and suggestions about the
+            current sprint or overall process.
           </DialogDescription>
         </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="type">Feedback Type *</Label>
-              <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
+
+        <form onSubmit={handleSubmit} className='space-y-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='type'>Feedback Type *</Label>
+              <Select
+                value={formData.type}
+                onValueChange={value => handleInputChange('type', value)}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select feedback type" />
+                  <SelectValue placeholder='Select feedback type' />
                 </SelectTrigger>
                 <SelectContent>
-                  {feedbackTypes.map((type) => (
+                  {feedbackTypes.map(type => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
@@ -194,15 +202,18 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
                 </SelectContent>
               </Select>
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+
+            <div className='space-y-2'>
+              <Label htmlFor='category'>Category</Label>
+              <Select
+                value={formData.category}
+                onValueChange={value => handleInputChange('category', value)}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder='Select category' />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
+                  {categories.map(category => (
                     <SelectItem key={category.value} value={category.value}>
                       {category.label}
                     </SelectItem>
@@ -212,50 +223,56 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className='space-y-2'>
             <Label>Overall Rating</Label>
-            <div className="flex items-center space-x-3">
-              <StarRating rating={formData.rating} onRatingChange={handleRatingChange} />
-              <span className="text-sm text-muted-foreground">
+            <div className='flex items-center space-x-3'>
+              <StarRating
+                rating={formData.rating}
+                onRatingChange={handleRatingChange}
+              />
+              <span className='text-sm text-muted-foreground'>
                 {formData.rating > 0 ? `${formData.rating}/5` : 'No rating'}
               </span>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="title">Title *</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='title'>Title *</Label>
             <Input
-              id="title"
+              id='title'
               value={formData.title}
-              onChange={(e) => handleInputChange('title', e.target.value)}
-              placeholder="Brief summary of your feedback"
+              onChange={e => handleInputChange('title', e.target.value)}
+              placeholder='Brief summary of your feedback'
               required
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Description *</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='description'>Description *</Label>
             <Textarea
-              id="description"
+              id='description'
               value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="Provide detailed feedback, suggestions, or concerns..."
+              onChange={e => handleInputChange('description', e.target.value)}
+              placeholder='Provide detailed feedback, suggestions, or concerns...'
               rows={4}
               required
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="priority">Priority</Label>
-              <Select value={formData.priority} onValueChange={(value) => handleInputChange('priority', value)}>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='priority'>Priority</Label>
+              <Select
+                value={formData.priority}
+                onValueChange={value => handleInputChange('priority', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {priorities.map((priority) => (
+                  {priorities.map(priority => (
                     <SelectItem key={priority.value} value={priority.value}>
-                      <div className="flex items-center space-x-2">
+                      <div className='flex items-center space-x-2'>
                         <Badge className={priority.color}>
                           {priority.label}
                         </Badge>
@@ -265,16 +282,16 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
                 </SelectContent>
               </Select>
             </div>
-            
-            <div className="flex items-center space-x-2 pt-6">
+
+            <div className='flex items-center space-x-2 pt-6'>
               <input
-                type="checkbox"
-                id="anonymous"
+                type='checkbox'
+                id='anonymous'
                 checked={formData.anonymous}
-                onChange={(e) => handleInputChange('anonymous', e.target.checked)}
-                className="rounded border-gray-300"
+                onChange={e => handleInputChange('anonymous', e.target.checked)}
+                className='rounded border-gray-300'
               />
-              <Label htmlFor="anonymous" className="text-sm">
+              <Label htmlFor='anonymous' className='text-sm'>
                 Submit anonymously
               </Label>
             </div>
@@ -282,22 +299,22 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
 
           <DialogFooter>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               onClick={() => setIsOpen(false)}
               disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type='submit' disabled={isSubmitting}>
               {isSubmitting ? (
-                <div className="flex items-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <div className='flex items-center space-x-2'>
+                  <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
                   <span>Submitting...</span>
                 </div>
               ) : (
-                <div className="flex items-center space-x-2">
-                  <Send className="h-4 w-4" />
+                <div className='flex items-center space-x-2'>
+                  <Send className='h-4 w-4' />
                   <span>Submit Feedback</span>
                 </div>
               )}

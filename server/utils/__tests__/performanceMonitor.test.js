@@ -11,17 +11,17 @@ describe('PerformanceMonitor', () => {
   });
 
   describe('trackRequest', () => {
-    it('should track HTTP request metrics', (done) => {
+    it('should track HTTP request metrics', done => {
       const mockReq = {
         method: 'GET',
         url: '/api/v1/test',
         get: jest.fn().mockReturnValue('test-agent'),
-        ip: '127.0.0.1'
+        ip: '127.0.0.1',
       };
 
       const mockRes = {
         statusCode: 200,
-        send: jest.fn()
+        send: jest.fn(),
       };
 
       const mockNext = jest.fn();
@@ -36,7 +36,7 @@ describe('PerformanceMonitor', () => {
         // Check if metrics were recorded
         const key = `${mockReq.method}:${mockReq.url}`;
         expect(performanceMonitor.metrics.requests.has(key)).toBe(true);
-        
+
         const metrics = performanceMonitor.metrics.requests.get(key);
         expect(metrics).toHaveLength(1);
         expect(metrics[0]).toMatchObject({
@@ -44,7 +44,7 @@ describe('PerformanceMonitor', () => {
           url: '/api/v1/test',
           statusCode: 200,
           userAgent: 'test-agent',
-          ip: '127.0.0.1'
+          ip: '127.0.0.1',
         });
         expect(metrics[0].duration).toBeGreaterThan(0);
 
@@ -53,7 +53,12 @@ describe('PerformanceMonitor', () => {
     });
 
     it('should call next middleware', () => {
-      const mockReq = { method: 'GET', url: '/test', get: jest.fn(), ip: '127.0.0.1' };
+      const mockReq = {
+        method: 'GET',
+        url: '/test',
+        get: jest.fn(),
+        ip: '127.0.0.1',
+      };
       const mockRes = { send: jest.fn() };
       const mockNext = jest.fn();
 
@@ -72,14 +77,14 @@ describe('PerformanceMonitor', () => {
         duration: 150,
         timestamp: new Date(),
         userAgent: 'test-agent',
-        ip: '127.0.0.1'
+        ip: '127.0.0.1',
       };
 
       performanceMonitor.recordRequestMetric(metric);
 
       const key = `${metric.method}:${metric.url}`;
       expect(performanceMonitor.metrics.requests.has(key)).toBe(true);
-      
+
       const metrics = performanceMonitor.metrics.requests.get(key);
       expect(metrics).toHaveLength(1);
       expect(metrics[0]).toEqual(metric);
@@ -93,14 +98,14 @@ describe('PerformanceMonitor', () => {
         duration: 100,
         timestamp: new Date(),
         userAgent: 'test-agent',
-        ip: '127.0.0.1'
+        ip: '127.0.0.1',
       };
 
       // Add 1001 metrics
       for (let i = 0; i < 1001; i++) {
         performanceMonitor.recordRequestMetric({
           ...metric,
-          timestamp: new Date(Date.now() + i)
+          timestamp: new Date(Date.now() + i),
         });
       }
 
@@ -122,7 +127,7 @@ describe('PerformanceMonitor', () => {
       expect(queries[0]).toMatchObject({
         query: query.substring(0, 100),
         duration,
-        error: null
+        error: null,
       });
     });
 
@@ -138,7 +143,7 @@ describe('PerformanceMonitor', () => {
       expect(queries[0]).toMatchObject({
         query: query.substring(0, 100),
         duration,
-        error: error.message
+        error: error.message,
       });
     });
 
@@ -194,7 +199,7 @@ describe('PerformanceMonitor', () => {
         duration: 150,
         timestamp: new Date(),
         userAgent: 'test-agent',
-        ip: '127.0.0.1'
+        ip: '127.0.0.1',
       });
 
       performanceMonitor.recordSystemMetrics();
@@ -231,19 +236,19 @@ describe('PerformanceMonitor', () => {
       expect(baseline.LCP).toMatchObject({
         threshold: 2500,
         good: 2500,
-        poor: 4000
+        poor: 4000,
       });
 
       expect(baseline.FID).toMatchObject({
         threshold: 100,
         good: 100,
-        poor: 300
+        poor: 300,
       });
 
       expect(baseline.CLS).toMatchObject({
         threshold: 0.1,
         good: 0.1,
-        poor: 0.25
+        poor: 0.25,
       });
     });
   });
@@ -258,7 +263,7 @@ describe('PerformanceMonitor', () => {
         duration: 2000, // Exceeds threshold of 1000ms
         timestamp: new Date(),
         userAgent: 'test-agent',
-        ip: '127.0.0.1'
+        ip: '127.0.0.1',
       });
 
       const alerts = performanceMonitor.checkPerformanceRegression();
@@ -268,7 +273,7 @@ describe('PerformanceMonitor', () => {
         type: 'slow_response',
         endpoint: 'GET:/api/v1/slow',
         value: 2000,
-        threshold: 1000
+        threshold: 1000,
       });
     });
 
@@ -282,7 +287,7 @@ describe('PerformanceMonitor', () => {
           duration: 100,
           timestamp: new Date(),
           userAgent: 'test-agent',
-          ip: '127.0.0.1'
+          ip: '127.0.0.1',
         });
       }
 
@@ -300,7 +305,7 @@ describe('PerformanceMonitor', () => {
         duration: 100,
         timestamp: new Date(),
         userAgent: 'test-agent',
-        ip: '127.0.0.1'
+        ip: '127.0.0.1',
       });
 
       const alerts = performanceMonitor.checkPerformanceRegression();

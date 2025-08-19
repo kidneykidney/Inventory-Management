@@ -27,9 +27,9 @@ const mockProducts = [
     specifications: {
       cpu: 'M2 Pro',
       ram: '16GB',
-      storage: '512GB SSD'
+      storage: '512GB SSD',
     },
-    createdAt: '2023-01-15T00:00:00Z'
+    createdAt: '2023-01-15T00:00:00Z',
   },
   {
     id: 'product-2',
@@ -48,9 +48,9 @@ const mockProducts = [
     specifications: {
       resolution: '4K',
       size: '27 inch',
-      panel: 'IPS'
+      panel: 'IPS',
     },
-    createdAt: '2023-02-01T00:00:00Z'
+    createdAt: '2023-02-01T00:00:00Z',
   },
   {
     id: 'product-3',
@@ -69,17 +69,17 @@ const mockProducts = [
     specifications: {
       connectivity: 'Bluetooth',
       battery: 'Rechargeable',
-      dpi: '4000'
+      dpi: '4000',
     },
-    createdAt: '2023-01-20T00:00:00Z'
-  }
+    createdAt: '2023-01-20T00:00:00Z',
+  },
 ];
 
 describe('SearchService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorageMock.getItem.mockReturnValue(null);
-    
+
     // Reset search service state
     searchService.searchHistory = [];
     searchService.popularSearches.clear();
@@ -147,7 +147,10 @@ describe('SearchService', () => {
     });
 
     it('handles multiple search terms', () => {
-      const results = searchService.searchProducts(mockProducts, 'Apple laptop');
+      const results = searchService.searchProducts(
+        mockProducts,
+        'Apple laptop'
+      );
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe('product-1');
     });
@@ -159,17 +162,15 @@ describe('SearchService', () => {
       // Results should be ordered by relevance score
       for (let i = 1; i < results.length; i++) {
         // This is a basic check - in practice, we'd need to verify actual scoring
-        expect(results[i-1]).toBeDefined();
+        expect(results[i - 1]).toBeDefined();
         expect(results[i]).toBeDefined();
       }
     });
 
     it('boosts available products when option is set', () => {
-      const results = searchService.searchProducts(
-        mockProducts, 
-        'monitor', 
-        { boostAvailable: true }
-      );
+      const results = searchService.searchProducts(mockProducts, 'monitor', {
+        boostAvailable: true,
+      });
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe('product-2');
     });
@@ -228,7 +229,7 @@ describe('SearchService', () => {
   describe('applyAdvancedFilters', () => {
     it('filters by category', () => {
       const filtered = searchService.applyAdvancedFilters(mockProducts, {
-        categoryId: '1'
+        categoryId: '1',
       });
       expect(filtered).toHaveLength(1);
       expect(filtered[0].id).toBe('product-1');
@@ -236,13 +237,13 @@ describe('SearchService', () => {
 
     it('filters by availability', () => {
       const availableOnly = searchService.applyAdvancedFilters(mockProducts, {
-        availability: 'available'
+        availability: 'available',
       });
       expect(availableOnly).toHaveLength(2);
       expect(availableOnly.every(p => p.isAvailable)).toBe(true);
 
       const unavailableOnly = searchService.applyAdvancedFilters(mockProducts, {
-        availability: 'unavailable'
+        availability: 'unavailable',
       });
       expect(unavailableOnly).toHaveLength(1);
       expect(unavailableOnly[0].isAvailable).toBe(false);
@@ -250,7 +251,7 @@ describe('SearchService', () => {
 
     it('filters by condition', () => {
       const excellentOnly = searchService.applyAdvancedFilters(mockProducts, {
-        condition: 'excellent'
+        condition: 'excellent',
       });
       expect(excellentOnly).toHaveLength(1);
       expect(excellentOnly[0].conditionStatus).toBe('excellent');
@@ -258,7 +259,7 @@ describe('SearchService', () => {
 
     it('filters by brand', () => {
       const appleOnly = searchService.applyAdvancedFilters(mockProducts, {
-        brand: ['Apple']
+        brand: ['Apple'],
       });
       expect(appleOnly).toHaveLength(1);
       expect(appleOnly[0].brand).toBe('Apple');
@@ -266,7 +267,7 @@ describe('SearchService', () => {
 
     it('filters by location', () => {
       const officeA = searchService.applyAdvancedFilters(mockProducts, {
-        location: 'Office A'
+        location: 'Office A',
       });
       expect(officeA).toHaveLength(2);
       expect(officeA.every(p => p.location.includes('Office A'))).toBe(true);
@@ -274,7 +275,7 @@ describe('SearchService', () => {
 
     it('filters by tags', () => {
       const laptopTagged = searchService.applyAdvancedFilters(mockProducts, {
-        tags: ['laptop']
+        tags: ['laptop'],
       });
       expect(laptopTagged).toHaveLength(1);
       expect(laptopTagged[0].tags).toContain('laptop');
@@ -282,7 +283,7 @@ describe('SearchService', () => {
 
     it('filters by max lending period', () => {
       const shortTerm = searchService.applyAdvancedFilters(mockProducts, {
-        maxLendingPeriod: 15
+        maxLendingPeriod: 15,
       });
       expect(shortTerm).toHaveLength(2);
       expect(shortTerm.every(p => p.maxLendingPeriod <= 15)).toBe(true);
@@ -292,7 +293,7 @@ describe('SearchService', () => {
       const filtered = searchService.applyAdvancedFilters(mockProducts, {
         availability: 'available',
         condition: 'excellent',
-        brand: ['Apple']
+        brand: ['Apple'],
       });
       expect(filtered).toHaveLength(1);
       expect(filtered[0].id).toBe('product-1');
@@ -339,7 +340,7 @@ describe('SearchService', () => {
     it('tracks search history', () => {
       searchService.searchProducts(mockProducts, 'MacBook');
       searchService.searchProducts(mockProducts, 'Dell');
-      
+
       const analytics = searchService.getSearchAnalytics();
       expect(analytics.recentSearches).toContain('macbook');
       expect(analytics.recentSearches).toContain('dell');
@@ -350,7 +351,7 @@ describe('SearchService', () => {
       searchService.searchProducts(mockProducts, 'MacBook');
       searchService.searchProducts(mockProducts, 'MacBook');
       searchService.searchProducts(mockProducts, 'Dell');
-      
+
       const analytics = searchService.getSearchAnalytics();
       expect(analytics.popularSearches[0].query).toBe('macbook');
       expect(analytics.popularSearches[0].count).toBe(2);
@@ -361,14 +362,14 @@ describe('SearchService', () => {
       for (let i = 0; i < 60; i++) {
         searchService.searchProducts(mockProducts, `query${i}`);
       }
-      
+
       expect(searchService.searchHistory).toHaveLength(50);
     });
 
     it('clears search history', () => {
       searchService.searchProducts(mockProducts, 'MacBook');
       expect(searchService.searchHistory).toHaveLength(1);
-      
+
       searchService.clearSearchHistory();
       expect(searchService.searchHistory).toHaveLength(0);
       expect(searchService.popularSearches.size).toBe(0);
@@ -386,10 +387,10 @@ describe('SearchService', () => {
 
     it('loads search history from localStorage', () => {
       const mockHistory = JSON.stringify([
-        { query: 'saved search', timestamp: '2023-01-01T00:00:00Z' }
+        { query: 'saved search', timestamp: '2023-01-01T00:00:00Z' },
       ]);
       localStorageMock.getItem.mockReturnValue(mockHistory);
-      
+
       const history = searchService.loadSearchHistory();
       expect(history).toHaveLength(1);
       expect(history[0].query).toBe('saved search');
@@ -399,7 +400,7 @@ describe('SearchService', () => {
       localStorageMock.getItem.mockImplementation(() => {
         throw new Error('localStorage error');
       });
-      
+
       const history = searchService.loadSearchHistory();
       expect(history).toEqual([]);
     });

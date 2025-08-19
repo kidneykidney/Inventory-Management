@@ -19,7 +19,12 @@ class SystemConfiguration {
     this.category = data.category;
     this.description = data.description;
     this.dataType = data.data_type || data.dataType || 'string';
-    this.isEditable = data.is_editable !== undefined ? data.is_editable : data.isEditable !== undefined ? data.isEditable : true;
+    this.isEditable =
+      data.is_editable !== undefined
+        ? data.is_editable
+        : data.isEditable !== undefined
+          ? data.isEditable
+          : true;
     this.createdAt = data.created_at || data.createdAt;
     this.updatedAt = data.updated_at || data.updatedAt;
   }
@@ -57,9 +62,18 @@ class SystemConfiguration {
    * @param {string} dataType Data type (string, number, boolean, json)
    * @returns {Promise<SystemConfiguration>} Updated configuration
    */
-  static async setValue(key, value, category = 'general', description = '', dataType = 'string') {
+  static async setValue(
+    key,
+    value,
+    category = 'general',
+    description = '',
+    dataType = 'string'
+  ) {
     try {
-      const serializedValue = SystemConfiguration.serializeValue(value, dataType);
+      const serializedValue = SystemConfiguration.serializeValue(
+        value,
+        dataType
+      );
 
       const [existing] = await monitoredQuery(
         'SELECT id FROM system_configurations WHERE key = ?',
@@ -158,64 +172,64 @@ class SystemConfiguration {
           value: '30',
           category: 'lending',
           description: 'Default lending period in days',
-          dataType: 'number'
+          dataType: 'number',
         },
         {
           key: 'lending.max_period_days',
           value: '90',
           category: 'lending',
           description: 'Maximum lending period in days',
-          dataType: 'number'
+          dataType: 'number',
         },
         {
           key: 'lending.reminder_days',
           value: '[3, 1]',
           category: 'lending',
           description: 'Days before due date to send reminders',
-          dataType: 'json'
+          dataType: 'json',
         },
         {
           key: 'lending.auto_approval_enabled',
           value: 'false',
           category: 'lending',
           description: 'Enable automatic approval for lending requests',
-          dataType: 'boolean'
+          dataType: 'boolean',
         },
         {
           key: 'lending.require_approval_high_value',
           value: 'true',
           category: 'lending',
           description: 'Require approval for high-value items',
-          dataType: 'boolean'
+          dataType: 'boolean',
         },
         {
           key: 'lending.high_value_threshold',
           value: '1000',
           category: 'lending',
           description: 'Threshold amount for high-value items',
-          dataType: 'number'
+          dataType: 'number',
         },
         {
           key: 'email.reminder_enabled',
           value: 'true',
           category: 'email',
           description: 'Enable email reminders',
-          dataType: 'boolean'
+          dataType: 'boolean',
         },
         {
           key: 'email.daily_overdue_enabled',
           value: 'true',
           category: 'email',
           description: 'Enable daily overdue email notifications',
-          dataType: 'boolean'
+          dataType: 'boolean',
         },
         {
           key: 'system.maintenance_mode',
           value: 'false',
           category: 'system',
           description: 'Enable maintenance mode',
-          dataType: 'boolean'
-        }
+          dataType: 'boolean',
+        },
       ];
 
       for (const config of defaults) {
@@ -326,11 +340,13 @@ class AdminActivityLog {
           logEntry.resourceId,
           JSON.stringify(logEntry.details),
           logEntry.ipAddress,
-          logEntry.userAgent
+          logEntry.userAgent,
         ]
       );
 
-      logger.info(`Admin activity logged: ${logEntry.action} by ${logEntry.adminId}`);
+      logger.info(
+        `Admin activity logged: ${logEntry.action} by ${logEntry.adminId}`
+      );
       return logEntry;
     } catch (error) {
       logger.error('Error logging admin activity:', error);
@@ -350,7 +366,7 @@ class AdminActivityLog {
         FROM admin_activity_logs aal
         JOIN users u ON aal.admin_id = u.id
       `;
-      
+
       const conditions = [];
       const params = [];
 
@@ -388,7 +404,7 @@ class AdminActivityLog {
       if (filters.limit) {
         query += ' LIMIT ?';
         params.push(parseInt(filters.limit));
-        
+
         if (filters.offset) {
           query += ' OFFSET ?';
           params.push(parseInt(filters.offset));
@@ -452,7 +468,7 @@ class AdminActivityLog {
         totalActivities: totalRows[0].total,
         topActions: actionStats,
         topAdmins: adminStats,
-        dailyActivity: dailyStats
+        dailyActivity: dailyStats,
       };
     } catch (error) {
       logger.error('Error getting admin activity statistics:', error);
@@ -501,7 +517,7 @@ class BulkOperation {
           operation.operationType,
           operation.resourceType,
           operation.status,
-          operation.totalItems
+          operation.totalItems,
         ]
       );
 
@@ -535,7 +551,7 @@ class BulkOperation {
           JSON.stringify(this.errors),
           JSON.stringify(this.results),
           this.completedAt,
-          this.id
+          this.id,
         ]
       );
 
@@ -635,5 +651,5 @@ class BulkOperation {
 module.exports = {
   SystemConfiguration,
   AdminActivityLog,
-  BulkOperation
+  BulkOperation,
 };

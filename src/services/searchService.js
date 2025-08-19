@@ -28,7 +28,7 @@ class SearchService {
     const results = products
       .map(product => ({
         product,
-        score: this.calculateRelevanceScore(product, searchTerms, options)
+        score: this.calculateRelevanceScore(product, searchTerms, options),
       }))
       .filter(result => result.score > 0)
       .sort((a, b) => b.score - a.score)
@@ -45,7 +45,7 @@ class SearchService {
   extractSearchTerms(query) {
     // Split by spaces and filter out empty strings
     const terms = query.split(/\s+/).filter(term => term.length > 0);
-    
+
     // Add the full query as a term for exact phrase matching
     if (terms.length > 1) {
       terms.push(query);
@@ -72,7 +72,7 @@ class SearchService {
       description: 4,
       serialNumber: 3,
       location: 2,
-      specifications: 2
+      specifications: 2,
     };
 
     // Search in different fields
@@ -107,28 +107,39 @@ class SearchService {
 
       // Description matching
       if (product.description && this.matchesField(product.description, term)) {
-        score += weights.description * this.getMatchQuality(product.description, term);
+        score +=
+          weights.description * this.getMatchQuality(product.description, term);
         hasMatch = true;
       }
 
       // Serial number matching
-      if (product.serialNumber && this.matchesField(product.serialNumber, term)) {
-        score += weights.serialNumber * this.getMatchQuality(product.serialNumber, term);
+      if (
+        product.serialNumber &&
+        this.matchesField(product.serialNumber, term)
+      ) {
+        score +=
+          weights.serialNumber *
+          this.getMatchQuality(product.serialNumber, term);
         hasMatch = true;
       }
 
       // Location matching
       if (product.location && this.matchesField(product.location, term)) {
-        score += weights.location * this.getMatchQuality(product.location, term);
+        score +=
+          weights.location * this.getMatchQuality(product.location, term);
         hasMatch = true;
       }
 
       // Specifications matching
-      if (product.specifications && typeof product.specifications === 'object') {
+      if (
+        product.specifications &&
+        typeof product.specifications === 'object'
+      ) {
         Object.entries(product.specifications).forEach(([key, value]) => {
           const specText = `${key} ${value}`.toLowerCase();
           if (this.matchesField(specText, term)) {
-            score += weights.specifications * this.getMatchQuality(specText, term);
+            score +=
+              weights.specifications * this.getMatchQuality(specText, term);
             hasMatch = true;
           }
         });
@@ -150,7 +161,7 @@ class SearchService {
       excellent: 4,
       good: 3,
       fair: 2,
-      needs_repair: 1
+      needs_repair: 1,
     };
     score += conditionBoost[product.conditionStatus] || 0;
 
@@ -165,7 +176,7 @@ class SearchService {
    */
   matchesField(field, term) {
     if (!field || !term) return false;
-    
+
     const normalizedField = field.toLowerCase();
     const normalizedTerm = term.toLowerCase();
 
@@ -221,12 +232,12 @@ class SearchService {
   fuzzyMatch(field, term) {
     // Split field into words and check each word
     const words = field.split(/\s+/);
-    
+
     return words.some(word => {
       const distance = this.levenshteinDistance(word, term);
       const maxLength = Math.max(word.length, term.length);
-      const similarity = 1 - (distance / maxLength);
-      
+      const similarity = 1 - distance / maxLength;
+
       // Allow up to 20% difference for fuzzy matching
       return similarity >= 0.8;
     });
@@ -256,8 +267,8 @@ class SearchService {
         } else {
           matrix[i][j] = Math.min(
             matrix[i - 1][j - 1] + 1, // substitution
-            matrix[i][j - 1] + 1,     // insertion
-            matrix[i - 1][j] + 1      // deletion
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1 // deletion
           );
         }
       }
@@ -279,7 +290,7 @@ class SearchService {
         products: [],
         brands: [],
         tags: [],
-        categories: []
+        categories: [],
       };
     }
 
@@ -288,23 +299,29 @@ class SearchService {
       products: [],
       brands: new Set(),
       tags: new Set(),
-      categories: new Set()
+      categories: new Set(),
     };
 
     products.forEach(product => {
       // Product name suggestions
-      if (product.name && product.name.toLowerCase().includes(normalizedQuery)) {
+      if (
+        product.name &&
+        product.name.toLowerCase().includes(normalizedQuery)
+      ) {
         if (suggestions.products.length < limit) {
           suggestions.products.push({
             id: product.id,
             name: product.name,
-            type: 'product'
+            type: 'product',
           });
         }
       }
 
       // Brand suggestions
-      if (product.brand && product.brand.toLowerCase().includes(normalizedQuery)) {
+      if (
+        product.brand &&
+        product.brand.toLowerCase().includes(normalizedQuery)
+      ) {
         suggestions.brands.add(product.brand);
       }
 
@@ -318,7 +335,10 @@ class SearchService {
       }
 
       // Category suggestions (if category name is available)
-      if (product.categoryName && product.categoryName.toLowerCase().includes(normalizedQuery)) {
+      if (
+        product.categoryName &&
+        product.categoryName.toLowerCase().includes(normalizedQuery)
+      ) {
         suggestions.categories.add(product.categoryName);
       }
     });
@@ -327,7 +347,7 @@ class SearchService {
       products: suggestions.products,
       brands: Array.from(suggestions.brands).slice(0, limit),
       tags: Array.from(suggestions.tags).slice(0, limit),
-      categories: Array.from(suggestions.categories).slice(0, limit)
+      categories: Array.from(suggestions.categories).slice(0, limit),
     };
   }
 
@@ -339,7 +359,7 @@ class SearchService {
     // Update search history
     this.searchHistory.unshift({
       query,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // Keep only last 50 searches
@@ -368,7 +388,7 @@ class SearchService {
     return {
       popularSearches,
       recentSearches,
-      totalSearches: this.searchHistory.length
+      totalSearches: this.searchHistory.length,
     };
   }
 
@@ -400,7 +420,10 @@ class SearchService {
    */
   saveSearchHistory() {
     try {
-      localStorage.setItem('productSearchHistory', JSON.stringify(this.searchHistory));
+      localStorage.setItem(
+        'productSearchHistory',
+        JSON.stringify(this.searchHistory)
+      );
     } catch (error) {
       console.warn('Failed to save search history:', error);
     }
@@ -447,14 +470,22 @@ class SearchService {
 
       // Location filter
       if (filters.location && filters.location.trim()) {
-        if (!product.location || !product.location.toLowerCase().includes(filters.location.toLowerCase())) {
+        if (
+          !product.location ||
+          !product.location
+            .toLowerCase()
+            .includes(filters.location.toLowerCase())
+        ) {
           return false;
         }
       }
 
       // Tags filter (product must have at least one of the specified tags)
       if (filters.tags && filters.tags.length > 0) {
-        if (!product.tags || !product.tags.some(tag => filters.tags.includes(tag))) {
+        if (
+          !product.tags ||
+          !product.tags.some(tag => filters.tags.includes(tag))
+        ) {
           return false;
         }
       }
@@ -462,10 +493,16 @@ class SearchService {
       // Date range filter
       if (filters.dateRange) {
         const productDate = new Date(product.createdAt || product.purchaseDate);
-        if (filters.dateRange.start && productDate < new Date(filters.dateRange.start)) {
+        if (
+          filters.dateRange.start &&
+          productDate < new Date(filters.dateRange.start)
+        ) {
           return false;
         }
-        if (filters.dateRange.end && productDate > new Date(filters.dateRange.end)) {
+        if (
+          filters.dateRange.end &&
+          productDate > new Date(filters.dateRange.end)
+        ) {
           return false;
         }
       }
@@ -492,15 +529,17 @@ class SearchService {
       locations: new Set(),
       tags: new Set(),
       conditions: new Set(),
-      lendingPeriods: new Set()
+      lendingPeriods: new Set(),
     };
 
     products.forEach(product => {
       if (product.brand) suggestions.brands.add(product.brand);
       if (product.location) suggestions.locations.add(product.location);
-      if (product.conditionStatus) suggestions.conditions.add(product.conditionStatus);
-      if (product.maxLendingPeriod) suggestions.lendingPeriods.add(product.maxLendingPeriod);
-      
+      if (product.conditionStatus)
+        suggestions.conditions.add(product.conditionStatus);
+      if (product.maxLendingPeriod)
+        suggestions.lendingPeriods.add(product.maxLendingPeriod);
+
       if (product.tags && Array.isArray(product.tags)) {
         product.tags.forEach(tag => suggestions.tags.add(tag));
       }
@@ -511,7 +550,9 @@ class SearchService {
       locations: Array.from(suggestions.locations).sort(),
       tags: Array.from(suggestions.tags).sort(),
       conditions: Array.from(suggestions.conditions).sort(),
-      lendingPeriods: Array.from(suggestions.lendingPeriods).sort((a, b) => a - b)
+      lendingPeriods: Array.from(suggestions.lendingPeriods).sort(
+        (a, b) => a - b
+      ),
     };
   }
 }

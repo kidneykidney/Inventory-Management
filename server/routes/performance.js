@@ -8,7 +8,7 @@ const frontendMetrics = {
   pageLoads: [],
   coreWebVitals: [],
   userInteractions: [],
-  routeChanges: []
+  routeChanges: [],
 };
 
 // POST /api/v1/performance/metrics - Receive frontend metrics
@@ -21,7 +21,7 @@ router.post('/metrics', (req, res) => {
       userAgent,
       url,
       timestamp: new Date(timestamp),
-      ip: req.ip
+      ip: req.ip,
     };
 
     switch (type) {
@@ -72,10 +72,10 @@ router.post('/metrics', (req, res) => {
 router.get('/summary', (req, res) => {
   try {
     const backendSummary = performanceMonitor.getPerformanceSummary();
-    
+
     // Calculate frontend metrics summary
     const now = Date.now();
-    const oneHourAgo = now - (60 * 60 * 1000);
+    const oneHourAgo = now - 60 * 60 * 1000;
 
     const recentPageLoads = frontendMetrics.pageLoads.filter(
       p => p.timestamp.getTime() > oneHourAgo
@@ -88,36 +88,52 @@ router.get('/summary', (req, res) => {
     const frontendSummary = {
       pageLoads: {
         count: recentPageLoads.length,
-        avgLoadTime: recentPageLoads.length > 0 
-          ? Math.round(recentPageLoads.reduce((sum, p) => sum + p.loadTime, 0) / recentPageLoads.length)
-          : 0,
-        avgFirstContentfulPaint: recentPageLoads.length > 0
-          ? Math.round(recentPageLoads.reduce((sum, p) => sum + (p.firstContentfulPaint || 0), 0) / recentPageLoads.length)
-          : 0
+        avgLoadTime:
+          recentPageLoads.length > 0
+            ? Math.round(
+                recentPageLoads.reduce((sum, p) => sum + p.loadTime, 0) /
+                  recentPageLoads.length
+              )
+            : 0,
+        avgFirstContentfulPaint:
+          recentPageLoads.length > 0
+            ? Math.round(
+                recentPageLoads.reduce(
+                  (sum, p) => sum + (p.firstContentfulPaint || 0),
+                  0
+                ) / recentPageLoads.length
+              )
+            : 0,
       },
       coreWebVitals: {
         lcp: {
           count: recentCoreWebVitals.filter(c => c.metric === 'LCP').length,
           avgValue: this.calculateAvgCoreWebVital(recentCoreWebVitals, 'LCP'),
-          goodCount: recentCoreWebVitals.filter(c => c.metric === 'LCP' && c.rating === 'good').length
+          goodCount: recentCoreWebVitals.filter(
+            c => c.metric === 'LCP' && c.rating === 'good'
+          ).length,
         },
         fid: {
           count: recentCoreWebVitals.filter(c => c.metric === 'FID').length,
           avgValue: this.calculateAvgCoreWebVital(recentCoreWebVitals, 'FID'),
-          goodCount: recentCoreWebVitals.filter(c => c.metric === 'FID' && c.rating === 'good').length
+          goodCount: recentCoreWebVitals.filter(
+            c => c.metric === 'FID' && c.rating === 'good'
+          ).length,
         },
         cls: {
           count: recentCoreWebVitals.filter(c => c.metric === 'CLS').length,
           avgValue: this.calculateAvgCoreWebVital(recentCoreWebVitals, 'CLS'),
-          goodCount: recentCoreWebVitals.filter(c => c.metric === 'CLS' && c.rating === 'good').length
-        }
-      }
+          goodCount: recentCoreWebVitals.filter(
+            c => c.metric === 'CLS' && c.rating === 'good'
+          ).length,
+        },
+      },
     };
 
     res.json({
       backend: backendSummary,
       frontend: frontendSummary,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (error) {
     logger.error('Error getting performance summary:', error);
@@ -134,7 +150,7 @@ router.get('/alerts', (req, res) => {
     res.json({
       backend: backendAlerts,
       frontend: frontendAlerts,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (error) {
     logger.error('Error getting performance alerts:', error);
@@ -149,9 +165,9 @@ router.get('/baseline', (req, res) => {
       backend: {
         responseTime: 500, // ms
         memoryUsage: 512, // MB
-        errorRate: 1 // percentage
+        errorRate: 1, // percentage
       },
-      frontend: performanceMonitor.getCoreWebVitalsBaseline()
+      frontend: performanceMonitor.getCoreWebVitalsBaseline(),
     };
 
     res.json(baseline);
@@ -165,7 +181,7 @@ router.get('/baseline', (req, res) => {
 router.get('/trends', (req, res) => {
   try {
     const { period = '24h' } = req.query;
-    
+
     let timeRange;
     switch (period) {
       case '1h':
@@ -187,7 +203,7 @@ router.get('/trends', (req, res) => {
     const trends = {
       pageLoadTrend: calculatePageLoadTrend(startTime),
       coreWebVitalsTrend: calculateCoreWebVitalsTrend(startTime),
-      apiResponseTrend: calculateApiResponseTrend(startTime)
+      apiResponseTrend: calculateApiResponseTrend(startTime),
     };
 
     res.json(trends);
@@ -201,13 +217,13 @@ router.get('/trends', (req, res) => {
 router.get('/capacity-planning', (req, res) => {
   try {
     const { timeframe = '7d' } = req.query;
-    
+
     // Get current system metrics
     const summary = performanceMonitor.getPerformanceSummary();
-    
+
     // Generate capacity planning data
     const capacityData = generateCapacityPlanningData(summary, timeframe);
-    
+
     res.json(capacityData);
   } catch (error) {
     logger.error('Error getting capacity planning data:', error);
@@ -219,7 +235,7 @@ router.get('/capacity-planning', (req, res) => {
 router.post('/load-test', async (req, res) => {
   try {
     const { scenarios, baseUrl } = req.body;
-    
+
     // This would typically trigger an async load test
     // For now, return a mock response
     const loadTestResult = {
@@ -227,9 +243,9 @@ router.post('/load-test', async (req, res) => {
       status: 'started',
       scenarios: scenarios || ['default'],
       baseUrl: baseUrl || 'http://localhost:5000',
-      startTime: new Date().toISOString()
+      startTime: new Date().toISOString(),
     };
-    
+
     res.json(loadTestResult);
   } catch (error) {
     logger.error('Error starting load test:', error);
@@ -241,7 +257,7 @@ router.post('/load-test', async (req, res) => {
 router.get('/load-test/:id', (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // Mock load test results
     const mockResults = {
       id,
@@ -251,31 +267,31 @@ router.get('/load-test/:id', (req, res) => {
         successfulRequests: 985,
         failedRequests: 15,
         averageResponseTime: 245,
-        throughput: 42.3
+        throughput: 42.3,
       },
       scenarios: [
         {
           name: 'API Health Check',
           requests: 500,
           averageResponseTime: 120,
-          successRate: 99.2
+          successRate: 99.2,
         },
         {
           name: 'Get Epics',
           requests: 300,
           averageResponseTime: 340,
-          successRate: 97.8
+          successRate: 97.8,
         },
         {
           name: 'Get User Stories',
           requests: 200,
           averageResponseTime: 380,
-          successRate: 96.5
-        }
+          successRate: 96.5,
+        },
       ],
-      completedAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
     };
-    
+
     res.json(mockResults);
   } catch (error) {
     logger.error('Error getting load test results:', error);
@@ -287,14 +303,16 @@ router.get('/load-test/:id', (req, res) => {
 function calculateAvgCoreWebVital(metrics, metricType) {
   const filtered = metrics.filter(m => m.metric === metricType);
   if (filtered.length === 0) return 0;
-  
-  return Math.round(filtered.reduce((sum, m) => sum + m.value, 0) / filtered.length);
+
+  return Math.round(
+    filtered.reduce((sum, m) => sum + m.value, 0) / filtered.length
+  );
 }
 
 function checkFrontendPerformanceAlerts() {
   const alerts = [];
   const now = Date.now();
-  const oneHourAgo = now - (60 * 60 * 1000);
+  const oneHourAgo = now - 60 * 60 * 1000;
 
   // Check recent page loads
   const recentPageLoads = frontendMetrics.pageLoads.filter(
@@ -302,13 +320,15 @@ function checkFrontendPerformanceAlerts() {
   );
 
   if (recentPageLoads.length > 0) {
-    const avgLoadTime = recentPageLoads.reduce((sum, p) => sum + p.loadTime, 0) / recentPageLoads.length;
+    const avgLoadTime =
+      recentPageLoads.reduce((sum, p) => sum + p.loadTime, 0) /
+      recentPageLoads.length;
     if (avgLoadTime > 3000) {
       alerts.push({
         type: 'slow_page_load',
         value: Math.round(avgLoadTime),
         threshold: 3000,
-        count: recentPageLoads.length
+        count: recentPageLoads.length,
       });
     }
   }
@@ -318,30 +338,36 @@ function checkFrontendPerformanceAlerts() {
     c => c.timestamp.getTime() > oneHourAgo
   );
 
-  const poorLCP = recentCoreWebVitals.filter(c => c.metric === 'LCP' && c.rating === 'poor');
+  const poorLCP = recentCoreWebVitals.filter(
+    c => c.metric === 'LCP' && c.rating === 'poor'
+  );
   if (poorLCP.length > 0) {
     alerts.push({
       type: 'poor_lcp',
       count: poorLCP.length,
-      threshold: 4000
+      threshold: 4000,
     });
   }
 
-  const poorFID = recentCoreWebVitals.filter(c => c.metric === 'FID' && c.rating === 'poor');
+  const poorFID = recentCoreWebVitals.filter(
+    c => c.metric === 'FID' && c.rating === 'poor'
+  );
   if (poorFID.length > 0) {
     alerts.push({
       type: 'poor_fid',
       count: poorFID.length,
-      threshold: 300
+      threshold: 300,
     });
   }
 
-  const poorCLS = recentCoreWebVitals.filter(c => c.metric === 'CLS' && c.rating === 'poor');
+  const poorCLS = recentCoreWebVitals.filter(
+    c => c.metric === 'CLS' && c.rating === 'poor'
+  );
   if (poorCLS.length > 0) {
     alerts.push({
       type: 'poor_cls',
       count: poorCLS.length,
-      threshold: 0.25
+      threshold: 0.25,
     });
   }
 
@@ -367,8 +393,10 @@ function calculatePageLoadTrend(startTime) {
 
   return Object.entries(hourlyData).map(([hour, loadTimes]) => ({
     hour: parseInt(hour),
-    avgLoadTime: Math.round(loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length),
-    count: loadTimes.length
+    avgLoadTime: Math.round(
+      loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length
+    ),
+    count: loadTimes.length,
   }));
 }
 
@@ -380,13 +408,13 @@ function calculateCoreWebVitalsTrend(startTime) {
   const trends = {
     lcp: [],
     fid: [],
-    cls: []
+    cls: [],
   };
 
   ['LCP', 'FID', 'CLS'].forEach(metric => {
     const metricData = relevantMetrics.filter(m => m.metric === metric);
     const hourlyData = {};
-    
+
     metricData.forEach(data => {
       const hour = new Date(data.timestamp).getHours();
       if (!hourlyData[hour]) {
@@ -398,8 +426,11 @@ function calculateCoreWebVitalsTrend(startTime) {
     const trendKey = metric.toLowerCase();
     trends[trendKey] = Object.entries(hourlyData).map(([hour, values]) => ({
       hour: parseInt(hour),
-      avgValue: Math.round(values.reduce((sum, val) => sum + val, 0) / values.length * 100) / 100,
-      count: values.length
+      avgValue:
+        Math.round(
+          (values.reduce((sum, val) => sum + val, 0) / values.length) * 100
+        ) / 100,
+      count: values.length,
     }));
   });
 
@@ -416,42 +447,54 @@ function generateCapacityPlanningData(summary, timeframe) {
   // Mock capacity planning data based on current metrics
   const baseMemory = summary.system.memoryUsage || 256;
   const baseResponseTime = summary.requests.avgResponseTime || 200;
-  
+
   return {
     timestamp: new Date().toISOString(),
     timeframe,
     cpu: {
-      current: Math.min(Math.round((baseResponseTime / 10) + Math.random() * 20), 100),
-      average: Math.min(Math.round((baseResponseTime / 12) + Math.random() * 15), 100),
-      peak: Math.min(Math.round((baseResponseTime / 8) + Math.random() * 25), 100),
-      trend: baseResponseTime > 500 ? 'increasing' : 'stable'
+      current: Math.min(
+        Math.round(baseResponseTime / 10 + Math.random() * 20),
+        100
+      ),
+      average: Math.min(
+        Math.round(baseResponseTime / 12 + Math.random() * 15),
+        100
+      ),
+      peak: Math.min(
+        Math.round(baseResponseTime / 8 + Math.random() * 25),
+        100
+      ),
+      trend: baseResponseTime > 500 ? 'increasing' : 'stable',
     },
     memory: {
-      current: Math.min(Math.round((baseMemory / 10) + Math.random() * 20), 100),
-      average: Math.min(Math.round((baseMemory / 12) + Math.random() * 15), 100),
-      peak: Math.min(Math.round((baseMemory / 8) + Math.random() * 25), 100),
-      trend: baseMemory > 512 ? 'increasing' : 'stable'
+      current: Math.min(Math.round(baseMemory / 10 + Math.random() * 20), 100),
+      average: Math.min(Math.round(baseMemory / 12 + Math.random() * 15), 100),
+      peak: Math.min(Math.round(baseMemory / 8 + Math.random() * 25), 100),
+      trend: baseMemory > 512 ? 'increasing' : 'stable',
     },
     users: {
       current: Math.round(Math.random() * 50 + 10),
       capacity: 100,
-      trend: 'increasing'
+      trend: 'increasing',
     },
     responseTime: {
       current: baseResponseTime,
       p95: Math.round(baseResponseTime * 1.5),
-      trend: baseResponseTime > 1000 ? 'increasing' : 'stable'
+      trend: baseResponseTime > 1000 ? 'increasing' : 'stable',
     },
     alerts: generateCapacityAlerts(baseMemory, baseResponseTime),
-    recommendations: generateScalingRecommendations(baseMemory, baseResponseTime),
+    recommendations: generateScalingRecommendations(
+      baseMemory,
+      baseResponseTime
+    ),
     forecast: generateCapacityForecast(baseMemory, baseResponseTime, timeframe),
-    optimization: generateOptimizationSuggestions(baseMemory, baseResponseTime)
+    optimization: generateOptimizationSuggestions(baseMemory, baseResponseTime),
   };
 }
 
 function generateCapacityAlerts(memoryUsage, responseTime) {
   const alerts = [];
-  
+
   if (responseTime > 1000) {
     alerts.push({
       severity: responseTime > 2000 ? 'critical' : 'warning',
@@ -459,10 +502,10 @@ function generateCapacityAlerts(memoryUsage, responseTime) {
       description: `Average response time of ${responseTime}ms exceeds recommended threshold`,
       metric: 'responseTime',
       value: responseTime,
-      threshold: 1000
+      threshold: 1000,
     });
   }
-  
+
   if (memoryUsage > 512) {
     alerts.push({
       severity: memoryUsage > 1024 ? 'critical' : 'warning',
@@ -470,16 +513,16 @@ function generateCapacityAlerts(memoryUsage, responseTime) {
       description: `Memory usage of ${memoryUsage}MB is approaching capacity limits`,
       metric: 'memory',
       value: memoryUsage,
-      threshold: 512
+      threshold: 512,
     });
   }
-  
+
   return alerts;
 }
 
 function generateScalingRecommendations(memoryUsage, responseTime) {
   const recommendations = [];
-  
+
   if (responseTime > 1000) {
     recommendations.push({
       title: 'Scale Application Instances',
@@ -488,12 +531,12 @@ function generateScalingRecommendations(memoryUsage, responseTime) {
       actions: [
         'Add additional application server instances',
         'Implement load balancing across instances',
-        'Consider auto-scaling based on response time metrics'
+        'Consider auto-scaling based on response time metrics',
       ],
-      estimatedImpact: '30-50% response time improvement'
+      estimatedImpact: '30-50% response time improvement',
     });
   }
-  
+
   if (memoryUsage > 512) {
     recommendations.push({
       title: 'Optimize Memory Usage',
@@ -502,12 +545,12 @@ function generateScalingRecommendations(memoryUsage, responseTime) {
       actions: [
         'Implement memory caching strategies',
         'Optimize database query patterns',
-        'Consider memory profiling and optimization'
+        'Consider memory profiling and optimization',
       ],
-      estimatedImpact: '20-40% memory reduction'
+      estimatedImpact: '20-40% memory reduction',
     });
   }
-  
+
   if (recommendations.length === 0) {
     recommendations.push({
       title: 'Monitor and Maintain',
@@ -516,47 +559,47 @@ function generateScalingRecommendations(memoryUsage, responseTime) {
       actions: [
         'Continue monitoring capacity trends',
         'Plan for future growth scenarios',
-        'Maintain regular performance testing'
+        'Maintain regular performance testing',
       ],
-      estimatedImpact: 'Proactive capacity management'
+      estimatedImpact: 'Proactive capacity management',
     });
   }
-  
+
   return recommendations;
 }
 
 function generateCapacityForecast(memoryUsage, responseTime, timeframe) {
   const multiplier = timeframe === '30d' ? 1.5 : timeframe === '7d' ? 1.2 : 1.1;
-  
+
   return [
     {
       resource: 'CPU',
       timeframe,
       current: '45%',
       projected: `${Math.round(45 * multiplier)}%`,
-      recommended: `${Math.round(45 * multiplier * 1.3)}%`
+      recommended: `${Math.round(45 * multiplier * 1.3)}%`,
     },
     {
       resource: 'Memory',
       timeframe,
       current: `${memoryUsage}MB`,
       projected: `${Math.round(memoryUsage * multiplier)}MB`,
-      recommended: `${Math.round(memoryUsage * multiplier * 1.3)}MB`
+      recommended: `${Math.round(memoryUsage * multiplier * 1.3)}MB`,
     },
     {
       resource: 'Storage',
       timeframe,
       current: '2.1GB',
       projected: `${(2.1 * multiplier).toFixed(1)}GB`,
-      recommended: `${(2.1 * multiplier * 1.3).toFixed(1)}GB`
+      recommended: `${(2.1 * multiplier * 1.3).toFixed(1)}GB`,
     },
     {
       resource: 'Network',
       timeframe,
       current: '15Mbps',
       projected: `${Math.round(15 * multiplier)}Mbps`,
-      recommended: `${Math.round(15 * multiplier * 1.3)}Mbps`
-    }
+      recommended: `${Math.round(15 * multiplier * 1.3)}Mbps`,
+    },
   ];
 }
 
@@ -565,39 +608,42 @@ function generateOptimizationSuggestions(memoryUsage, responseTime) {
     database: [
       {
         suggestion: 'Add indexes for frequently queried columns',
-        impact: 'High'
+        impact: 'High',
       },
       {
         suggestion: 'Implement query result caching',
-        impact: 'Medium'
+        impact: 'Medium',
       },
       {
         suggestion: 'Optimize slow queries identified in monitoring',
-        impact: responseTime > 1000 ? 'High' : 'Medium'
+        impact: responseTime > 1000 ? 'High' : 'Medium',
       },
       {
         suggestion: 'Consider read replicas for read-heavy workloads',
-        impact: 'Medium'
-      }
+        impact: 'Medium',
+      },
     ],
     infrastructure: [
       {
         suggestion: 'Implement CDN for static assets',
-        impact: 'Medium'
+        impact: 'Medium',
       },
       {
         suggestion: 'Enable gzip compression for API responses',
-        impact: 'Low'
+        impact: 'Low',
       },
       {
         suggestion: 'Configure connection pooling',
-        impact: 'Medium'
+        impact: 'Medium',
       },
       {
-        suggestion: memoryUsage > 512 ? 'Increase server memory allocation' : 'Monitor memory usage trends',
-        impact: memoryUsage > 512 ? 'High' : 'Low'
-      }
-    ]
+        suggestion:
+          memoryUsage > 512
+            ? 'Increase server memory allocation'
+            : 'Monitor memory usage trends',
+        impact: memoryUsage > 512 ? 'High' : 'Low',
+      },
+    ],
   };
 }
 

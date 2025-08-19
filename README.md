@@ -16,6 +16,7 @@ A modern, full-stack inventory management system that has evolved into a compreh
 ## 🏗️ Architecture Overview
 
 ### Frontend Architecture
+
 - **Framework**: React 18.2.0 with functional components and hooks
 - **Routing**: React Router DOM 6.15.0
 - **UI Library**: Material-UI 5.14.5 + Custom Radix UI components
@@ -25,6 +26,7 @@ A modern, full-stack inventory management system that has evolved into a compreh
 - **Forms**: Formik 2.4.3 + Yup 1.2.0 validation
 
 ### Backend Architecture
+
 - **Runtime**: Node.js with Express 4.18.2
 - **Database**: MySQL2 3.6.0 with custom query builders
 - **Authentication**: JWT (jsonwebtoken 9.0.1) + bcryptjs 2.4.3
@@ -36,12 +38,14 @@ A modern, full-stack inventory management system that has evolved into a compreh
 ## 🎯 Core Features
 
 ### 1. Inventory Management
+
 - Product catalog with advanced search and filtering
 - Stock level tracking and alerts
 - Multi-location inventory support
 - Barcode scanning integration ready
 
 ### 2. Agile Development Tools
+
 - Sprint planning and management
 - User story and epic tracking
 - Burndown/burnup charts
@@ -49,12 +53,14 @@ A modern, full-stack inventory management system that has evolved into a compreh
 - Team performance dashboards
 
 ### 3. Lending System
+
 - Product lending and borrowing workflows
 - Return process management
 - Overdue tracking with automated notifications
 - Analytics and reporting
 
 ### 4. Analytics & Reporting
+
 - Real-time dashboards
 - Predictive analytics
 - Performance metrics
@@ -62,6 +68,7 @@ A modern, full-stack inventory management system that has evolved into a compreh
 - Team performance tracking
 
 ### 5. Administrative Panel
+
 - User management
 - Email template management
 - Notification system
@@ -103,12 +110,14 @@ inventory-management-system/
 ## 🧪 Testing Strategy
 
 ### Test Coverage Breakdown
+
 - **Unit Tests**: 59 test files covering components, utilities, and services
 - **Integration Tests**: Database and API integration tests
 - **E2E Tests**: 5 Cypress test suites for critical user flows
 - **Component Tests**: React Testing Library for UI components
 
 ### Testing Tools
+
 - **Jest**: Unit and integration testing framework
 - **React Testing Library**: Component testing
 - **Cypress**: End-to-end testing
@@ -116,6 +125,7 @@ inventory-management-system/
 - **Coverage**: Istanbul/NYC for coverage reporting
 
 ### Coverage Thresholds
+
 - Global: 70% (branches, functions, lines, statements)
 - Components: 75%
 - Routes: 80%
@@ -203,9 +213,11 @@ inventory-management-system/
 ### Immediate Actions (Week 1-2)
 
 1. **Fix Syntax Errors**
+
    ```bash
    npm run lint:fix
    ```
+
    - Fix parsing errors in EmailTemplateManagement.jsx
    - Resolve React Hook violations
    - Fix TypeScript type issues
@@ -264,11 +276,13 @@ inventory-management-system/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 16+ and npm 8+
 - MySQL 8.0+
 - Git
 
 ### Quick Start
+
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -291,6 +305,7 @@ npm run dev
 ### Available Scripts
 
 #### Development
+
 ```bash
 npm run dev          # Start both frontend and backend
 npm run client       # Start React frontend only
@@ -298,6 +313,7 @@ npm run server       # Start Node.js backend only
 ```
 
 #### Testing
+
 ```bash
 npm run test                    # Run all tests
 npm run test:coverage          # Run tests with coverage
@@ -307,6 +323,7 @@ npm run test:e2e              # Run Cypress E2E tests
 ```
 
 #### Quality & Deployment
+
 ```bash
 npm run lint                   # Run ESLint
 npm run lint:fix              # Fix linting issues
@@ -316,6 +333,7 @@ npm run ci:full               # Full CI pipeline
 ```
 
 #### Database
+
 ```bash
 npm run migrate               # Run migrations
 npm run migrate:rollback      # Rollback last migration
@@ -325,6 +343,7 @@ npm run migrate:status        # Check migration status
 ## 🔧 Configuration
 
 ### Environment Variables
+
 ```env
 # Database
 DB_HOST=localhost
@@ -352,12 +371,14 @@ FRONTEND_URL=http://localhost:3000
 ## 📈 Performance Metrics
 
 ### Current Performance
+
 - **Bundle Size**: ~2.5MB (needs optimization)
 - **First Contentful Paint**: ~2.1s
 - **Time to Interactive**: ~3.2s
 - **Database Query Time**: ~150ms average
 
 ### Performance Targets
+
 - Bundle Size: <1MB
 - First Contentful Paint: <1.5s
 - Time to Interactive: <2s
@@ -366,6 +387,7 @@ FRONTEND_URL=http://localhost:3000
 ## 🤝 Contributing
 
 ### Development Workflow
+
 1. Create feature branch from `develop`
 2. Implement changes with tests
 3. Run quality checks: `npm run ci:full`
@@ -373,6 +395,7 @@ FRONTEND_URL=http://localhost:3000
 5. Code review and merge
 
 ### Code Standards
+
 - Use TypeScript for new files
 - Follow ESLint configuration
 - Maintain 80%+ test coverage
@@ -382,18 +405,21 @@ FRONTEND_URL=http://localhost:3000
 ## 📋 Roadmap
 
 ### Q1 2025
+
 - [ ] Fix all critical syntax errors
 - [ ] Implement security hardening
 - [ ] Achieve 80% test coverage
 - [ ] Performance optimization
 
 ### Q2 2025
+
 - [ ] Complete TypeScript migration
 - [ ] Implement PWA features
 - [ ] Add comprehensive monitoring
 - [ ] Mobile app development
 
 ### Q3 2025
+
 - [ ] Microservices architecture
 - [ ] Advanced analytics features
 - [ ] Multi-tenant support
@@ -402,17 +428,20 @@ FRONTEND_URL=http://localhost:3000
 ## 📞 Support & Maintenance
 
 ### Monitoring
+
 - Application logs: `server/logs/`
 - Error tracking: Winston logger
 - Performance metrics: Built-in performance monitor
 
 ### Troubleshooting
+
 - Check logs for errors
 - Verify database connectivity
 - Ensure environment variables are set
 - Run health check: `GET /api/v1/health`
 
 ### Backup & Recovery
+
 - Database backups: Implement automated daily backups
 - Code backups: Git repository with multiple remotes
 - Configuration backups: Environment variable documentation

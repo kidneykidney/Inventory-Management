@@ -20,7 +20,7 @@ const mockOverdueData = [
     days_overdue: 10,
     escalation_level: 'Medium',
     reminders_sent: 3,
-    last_reminder_sent: '2024-01-20'
+    last_reminder_sent: '2024-01-20',
   },
   {
     transaction_id: 'trans-2',
@@ -35,8 +35,8 @@ const mockOverdueData = [
     days_overdue: 35,
     escalation_level: 'Critical',
     reminders_sent: 8,
-    last_reminder_sent: '2024-01-22'
-  }
+    last_reminder_sent: '2024-01-22',
+  },
 ];
 
 describe('OverdueTrackingDashboard', () => {
@@ -60,8 +60,8 @@ describe('OverdueTrackingDashboard', () => {
   it('renders overdue tracking dashboard with data', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
         meta: {
           count: 2,
@@ -69,10 +69,10 @@ describe('OverdueTrackingDashboard', () => {
             low: 0,
             medium: 1,
             high: 0,
-            critical: 1
-          }
-        }
-      })
+            critical: 1,
+          },
+        },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -94,7 +94,9 @@ describe('OverdueTrackingDashboard', () => {
     render(<OverdueTrackingDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Error loading overdue items/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Error loading overdue items/)
+      ).toBeInTheDocument();
     });
 
     expect(screen.getByText('Retry')).toBeInTheDocument();
@@ -103,11 +105,11 @@ describe('OverdueTrackingDashboard', () => {
   it('filters overdue items by search term', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -121,7 +123,9 @@ describe('OverdueTrackingDashboard', () => {
     expect(screen.getByText('Dell Monitor')).toBeInTheDocument();
 
     // Search for "MacBook"
-    const searchInput = screen.getByPlaceholderText(/Search by product, borrower name, or email/);
+    const searchInput = screen.getByPlaceholderText(
+      /Search by product, borrower name, or email/
+    );
     fireEvent.change(searchInput, { target: { value: 'MacBook' } });
 
     // Only MacBook should be visible
@@ -132,11 +136,11 @@ describe('OverdueTrackingDashboard', () => {
   it('filters overdue items by escalation level', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -152,7 +156,7 @@ describe('OverdueTrackingDashboard', () => {
     // Filter by Critical level
     const escalationSelect = screen.getByDisplayValue('All Levels');
     fireEvent.click(escalationSelect);
-    
+
     const criticalOption = screen.getByText('Critical');
     fireEvent.click(criticalOption);
 
@@ -165,23 +169,23 @@ describe('OverdueTrackingDashboard', () => {
     fetch
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ 
-          success: true, 
+        json: async () => ({
+          success: true,
           data: mockOverdueData,
-          meta: { count: 2 }
-        })
+          meta: { count: 2 },
+        }),
       })
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ success: true })
+        json: async () => ({ success: true }),
       })
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ 
-          success: true, 
+        json: async () => ({
+          success: true,
           data: mockOverdueData,
-          meta: { count: 2 }
-        })
+          meta: { count: 2 },
+        }),
       });
 
     render(<OverdueTrackingDashboard />);
@@ -194,25 +198,28 @@ describe('OverdueTrackingDashboard', () => {
     fireEvent.click(sendReminderButtons[0]);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith('/api/v1/email-notifications/send-reminder', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-token'
-        },
-        body: JSON.stringify({ transactionId: 'trans-1' })
-      });
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/v1/email-notifications/send-reminder',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer mock-token',
+          },
+          body: JSON.stringify({ transactionId: 'trans-1' }),
+        }
+      );
     });
   });
 
   it('handles escalation for critical items', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     // Mock window.open
@@ -237,11 +244,11 @@ describe('OverdueTrackingDashboard', () => {
   it('refreshes data when refresh button is clicked', async () => {
     fetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -261,11 +268,11 @@ describe('OverdueTrackingDashboard', () => {
   it('displays escalation level badges correctly', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -282,11 +289,11 @@ describe('OverdueTrackingDashboard', () => {
   it('displays escalation workflow guide', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -306,11 +313,11 @@ describe('OverdueTrackingDashboard', () => {
   it('displays empty state when no overdue items', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: [],
-        meta: { count: 0 }
-      })
+        meta: { count: 0 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -325,11 +332,11 @@ describe('OverdueTrackingDashboard', () => {
   it('formats dates correctly', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);
@@ -346,11 +353,11 @@ describe('OverdueTrackingDashboard', () => {
   it('displays reminder information correctly', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         data: mockOverdueData,
-        meta: { count: 2 }
-      })
+        meta: { count: 2 },
+      }),
     });
 
     render(<OverdueTrackingDashboard />);

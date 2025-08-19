@@ -6,16 +6,21 @@ import BorrowingDashboard from '../BorrowingDashboard';
 // Mock the toast hook
 jest.mock('../../hooks/use-toast', () => ({
   useToast: () => ({
-    toast: jest.fn()
-  })
+    toast: jest.fn(),
+  }),
 }));
 
 // Mock the ReturnProcessDialog component
 jest.mock('../../components/lending/ReturnProcessDialog', () => {
-  return function MockReturnProcessDialog({ isOpen, onClose, transaction, onReturnSuccess }) {
+  return function MockReturnProcessDialog({
+    isOpen,
+    onClose,
+    transaction,
+    onReturnSuccess,
+  }) {
     if (!isOpen) return null;
     return (
-      <div data-testid="return-dialog">
+      <div data-testid='return-dialog'>
         <div>Return Dialog for {transaction?.productName}</div>
         <button onClick={onReturnSuccess}>Mock Return Success</button>
         <button onClick={onClose}>Close</button>
@@ -34,8 +39,8 @@ const mockActiveTransactions = [
     productBrand: 'Apple',
     lendDate: '2024-01-01T00:00:00Z',
     dueDate: '2024-01-31T00:00:00Z',
-    status: 'active'
-  }
+    status: 'active',
+  },
 ];
 
 const mockOverdueTransactions = [
@@ -45,8 +50,8 @@ const mockOverdueTransactions = [
     productBrand: 'Apple',
     lendDate: '2023-12-01T00:00:00Z',
     dueDate: '2023-12-31T00:00:00Z',
-    status: 'overdue'
-  }
+    status: 'overdue',
+  },
 ];
 
 const mockHistory = [
@@ -57,25 +62,27 @@ const mockHistory = [
     lendDate: '2023-11-01T00:00:00Z',
     dueDate: '2023-11-30T00:00:00Z',
     returnDate: '2023-11-28T00:00:00Z',
-    status: 'returned'
-  }
+    status: 'returned',
+  },
 ];
 
 describe('BorrowingDashboard', () => {
   beforeEach(() => {
     fetch.mockClear();
     localStorage.setItem('token', 'mock-token');
-    
+
     // Mock API responses
     fetch
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockActiveTransactions })
+        json: () =>
+          Promise.resolve({ success: true, data: mockActiveTransactions }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockOverdueTransactions })
+        json: () =>
+          Promise.resolve({ success: true, data: mockOverdueTransactions }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockHistory })
+        json: () => Promise.resolve({ success: true, data: mockHistory }),
       });
   });
 
@@ -86,7 +93,9 @@ describe('BorrowingDashboard', () => {
   it('renders dashboard with summary cards', async () => {
     render(<BorrowingDashboard />);
 
-    expect(screen.getByText('Loading your borrowing information...')).toBeInTheDocument();
+    expect(
+      screen.getByText('Loading your borrowing information...')
+    ).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText('My Borrowing Dashboard')).toBeInTheDocument();
@@ -166,7 +175,9 @@ describe('BorrowingDashboard', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('return-dialog')).toBeInTheDocument();
-      expect(screen.getByText('Return Dialog for MacBook Pro')).toBeInTheDocument();
+      expect(
+        screen.getByText('Return Dialog for MacBook Pro')
+      ).toBeInTheDocument();
     });
   });
 
@@ -174,22 +185,29 @@ describe('BorrowingDashboard', () => {
     // Mock additional API calls for refresh
     fetch
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockActiveTransactions })
+        json: () =>
+          Promise.resolve({ success: true, data: mockActiveTransactions }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockOverdueTransactions })
+        json: () =>
+          Promise.resolve({ success: true, data: mockOverdueTransactions }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockHistory })
+        json: () => Promise.resolve({ success: true, data: mockHistory }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] }) // Empty active after return
+        json: () => Promise.resolve({ success: true, data: [] }), // Empty active after return
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: mockOverdueTransactions })
+        json: () =>
+          Promise.resolve({ success: true, data: mockOverdueTransactions }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [...mockHistory, mockActiveTransactions[0]] })
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: [...mockHistory, mockActiveTransactions[0]],
+          }),
       });
 
     render(<BorrowingDashboard />);
@@ -218,13 +236,13 @@ describe('BorrowingDashboard', () => {
     // Mock empty active transactions
     fetch
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       });
 
     render(<BorrowingDashboard />);
@@ -239,13 +257,13 @@ describe('BorrowingDashboard', () => {
     // Mock empty overdue transactions
     fetch
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       });
 
     render(<BorrowingDashboard />);
@@ -257,7 +275,9 @@ describe('BorrowingDashboard', () => {
 
     await waitFor(() => {
       expect(screen.getByText('No Overdue Items')).toBeInTheDocument();
-      expect(screen.getByText('Great job! You don\'t have any overdue items.')).toBeInTheDocument();
+      expect(
+        screen.getByText("Great job! You don't have any overdue items.")
+      ).toBeInTheDocument();
     });
   });
 
@@ -265,13 +285,13 @@ describe('BorrowingDashboard', () => {
     // Mock empty history
     fetch
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       })
       .mockResolvedValueOnce({
-        json: () => Promise.resolve({ success: true, data: [] })
+        json: () => Promise.resolve({ success: true, data: [] }),
       });
 
     render(<BorrowingDashboard />);
@@ -283,7 +303,9 @@ describe('BorrowingDashboard', () => {
 
     await waitFor(() => {
       expect(screen.getByText('No History')).toBeInTheDocument();
-      expect(screen.getByText('Your borrowing history will appear here.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Your borrowing history will appear here.')
+      ).toBeInTheDocument();
     });
   });
 });

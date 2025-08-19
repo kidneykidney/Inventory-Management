@@ -3,7 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Textarea } from '../ui/textarea';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
@@ -17,14 +23,16 @@ const EmailTesting = () => {
     borrowerName: 'John Doe',
     productName: 'MacBook Pro 16"',
     lendDate: new Date().toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split('T')[0],
     returnDate: new Date().toISOString().split('T')[0],
     condition: 'excellent',
     lendingId: 'LT-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
     daysUntilDue: 3,
     daysOverdue: 2,
     approverName: 'Admin User',
-    productSpecs: 'M1 Pro, 16GB RAM, 512GB SSD'
+    productSpecs: 'M1 Pro, 16GB RAM, 512GB SSD',
   });
   const [testEmail, setTestEmail] = useState('');
   const [previewContent, setPreviewContent] = useState(null);
@@ -43,9 +51,9 @@ const EmailTesting = () => {
       const token = localStorage.getItem('inventory_auth_token');
       const response = await fetch('/api/v1/admin/email-templates', {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       if (response.ok) {
@@ -58,7 +66,7 @@ const EmailTesting = () => {
       toast({
         title: 'Error',
         description: 'Failed to load email templates',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -70,7 +78,7 @@ const EmailTesting = () => {
       toast({
         title: 'Error',
         description: 'Please select a template first',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -81,13 +89,13 @@ const EmailTesting = () => {
       const response = await fetch('/api/v1/admin/email-templates/preview', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           templateId: selectedTemplate,
-          data: testData
-        })
+          data: testData,
+        }),
       });
 
       if (response.ok) {
@@ -101,7 +109,7 @@ const EmailTesting = () => {
       toast({
         title: 'Error',
         description: 'Failed to generate email preview',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setGenerating(false);
@@ -113,7 +121,7 @@ const EmailTesting = () => {
       toast({
         title: 'Error',
         description: 'Please select a template and enter a test email address',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -124,20 +132,20 @@ const EmailTesting = () => {
       const response = await fetch('/api/v1/admin/email-templates/test', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           templateId: selectedTemplate,
           testEmail: testEmail,
-          data: testData
-        })
+          data: testData,
+        }),
       });
 
       if (response.ok) {
         toast({
           title: 'Success',
-          description: 'Test email sent successfully'
+          description: 'Test email sent successfully',
         });
       } else {
         throw new Error('Failed to send test email');
@@ -146,7 +154,7 @@ const EmailTesting = () => {
       toast({
         title: 'Error',
         description: 'Failed to send test email',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setSending(false);
@@ -156,17 +164,17 @@ const EmailTesting = () => {
   const handleTestDataChange = (field, value) => {
     setTestData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
-  const getTemplateLabel = (template) => {
+  const getTemplateLabel = template => {
     const typeLabels = {
       lending_confirmation: 'Lending Confirmation',
       return_reminder: 'Return Reminder',
       overdue_notice: 'Overdue Notice',
       return_confirmation: 'Return Confirmation',
-      lending_request_approval: 'Request Approval'
+      lending_request_approval: 'Request Approval',
     };
     return `${template.name} (${typeLabels[template.type] || template.type})`;
   };
@@ -174,9 +182,9 @@ const EmailTesting = () => {
   if (loading) {
     return (
       <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <CardContent className='p-6'>
+          <div className='flex items-center justify-center'>
+            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600'></div>
           </div>
         </CardContent>
       </Card>
@@ -184,35 +192,42 @@ const EmailTesting = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <TestTube className="w-5 h-5" />
+          <CardTitle className='flex items-center space-x-2'>
+            <TestTube className='w-5 h-5' />
             <span>Email Template Testing</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className='space-y-6'>
           <Alert>
-            <Mail className="w-4 h-4" />
+            <Mail className='w-4 h-4' />
             <AlertDescription>
-              Use this tool to test email templates with sample data. You can preview how emails will look 
-              and send test emails to verify delivery and formatting.
+              Use this tool to test email templates with sample data. You can
+              preview how emails will look and send test emails to verify
+              delivery and formatting.
             </AlertDescription>
           </Alert>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             {/* Template Selection */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="template">Select Template</Label>
-                <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+            <div className='space-y-4'>
+              <div className='space-y-2'>
+                <Label htmlFor='template'>Select Template</Label>
+                <Select
+                  value={selectedTemplate}
+                  onValueChange={setSelectedTemplate}
+                >
                   <SelectTrigger>
-                    <SelectValue placeholder="Choose a template to test" />
+                    <SelectValue placeholder='Choose a template to test' />
                   </SelectTrigger>
                   <SelectContent>
                     {templates.map(template => (
-                      <SelectItem key={template.id} value={template.id.toString()}>
+                      <SelectItem
+                        key={template.id}
+                        value={template.id.toString()}
+                      >
                         {getTemplateLabel(template)}
                       </SelectItem>
                     ))}
@@ -220,151 +235,200 @@ const EmailTesting = () => {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="testEmail">Test Email Address</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='testEmail'>Test Email Address</Label>
                 <Input
-                  id="testEmail"
-                  type="email"
+                  id='testEmail'
+                  type='email'
                   value={testEmail}
-                  onChange={(e) => setTestEmail(e.target.value)}
-                  placeholder="Enter email address to receive test"
+                  onChange={e => setTestEmail(e.target.value)}
+                  placeholder='Enter email address to receive test'
                 />
               </div>
 
-              <div className="flex space-x-2">
+              <div className='flex space-x-2'>
                 <Button
-                  variant="outline"
+                  variant='outline'
                   onClick={handleGeneratePreview}
                   disabled={generating || !selectedTemplate}
-                  className="flex-1"
+                  className='flex-1'
                 >
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye className='w-4 h-4 mr-2' />
                   {generating ? 'Generating...' : 'Preview'}
                 </Button>
                 <Button
                   onClick={handleSendTestEmail}
                   disabled={sending || !selectedTemplate || !testEmail}
-                  className="flex-1"
+                  className='flex-1'
                 >
-                  <Send className="w-4 h-4 mr-2" />
+                  <Send className='w-4 h-4 mr-2' />
                   {sending ? 'Sending...' : 'Send Test'}
                 </Button>
               </div>
             </div>
 
             {/* Test Data */}
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <Label>Test Data</Label>
-              <div className="grid grid-cols-1 gap-3">
-                <div className="grid grid-cols-2 gap-2">
+              <div className='grid grid-cols-1 gap-3'>
+                <div className='grid grid-cols-2 gap-2'>
                   <div>
-                    <Label htmlFor="borrowerName" className="text-xs">Borrower Name</Label>
+                    <Label htmlFor='borrowerName' className='text-xs'>
+                      Borrower Name
+                    </Label>
                     <Input
-                      id="borrowerName"
+                      id='borrowerName'
                       value={testData.borrowerName}
-                      onChange={(e) => handleTestDataChange('borrowerName', e.target.value)}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange('borrowerName', e.target.value)
+                      }
+                      className='text-sm'
                     />
                   </div>
                   <div>
-                    <Label htmlFor="productName" className="text-xs">Product Name</Label>
+                    <Label htmlFor='productName' className='text-xs'>
+                      Product Name
+                    </Label>
                     <Input
-                      id="productName"
+                      id='productName'
                       value={testData.productName}
-                      onChange={(e) => handleTestDataChange('productName', e.target.value)}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange('productName', e.target.value)
+                      }
+                      className='text-sm'
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className='grid grid-cols-2 gap-2'>
                   <div>
-                    <Label htmlFor="lendDate" className="text-xs">Lend Date</Label>
+                    <Label htmlFor='lendDate' className='text-xs'>
+                      Lend Date
+                    </Label>
                     <Input
-                      id="lendDate"
-                      type="date"
+                      id='lendDate'
+                      type='date'
                       value={testData.lendDate}
-                      onChange={(e) => handleTestDataChange('lendDate', e.target.value)}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange('lendDate', e.target.value)
+                      }
+                      className='text-sm'
                     />
                   </div>
                   <div>
-                    <Label htmlFor="dueDate" className="text-xs">Due Date</Label>
+                    <Label htmlFor='dueDate' className='text-xs'>
+                      Due Date
+                    </Label>
                     <Input
-                      id="dueDate"
-                      type="date"
+                      id='dueDate'
+                      type='date'
                       value={testData.dueDate}
-                      onChange={(e) => handleTestDataChange('dueDate', e.target.value)}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange('dueDate', e.target.value)
+                      }
+                      className='text-sm'
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
+                <div className='grid grid-cols-3 gap-2'>
                   <div>
-                    <Label htmlFor="daysUntilDue" className="text-xs">Days Until Due</Label>
+                    <Label htmlFor='daysUntilDue' className='text-xs'>
+                      Days Until Due
+                    </Label>
                     <Input
-                      id="daysUntilDue"
-                      type="number"
+                      id='daysUntilDue'
+                      type='number'
                       value={testData.daysUntilDue}
-                      onChange={(e) => handleTestDataChange('daysUntilDue', parseInt(e.target.value))}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange(
+                          'daysUntilDue',
+                          parseInt(e.target.value)
+                        )
+                      }
+                      className='text-sm'
                     />
                   </div>
                   <div>
-                    <Label htmlFor="daysOverdue" className="text-xs">Days Overdue</Label>
+                    <Label htmlFor='daysOverdue' className='text-xs'>
+                      Days Overdue
+                    </Label>
                     <Input
-                      id="daysOverdue"
-                      type="number"
+                      id='daysOverdue'
+                      type='number'
                       value={testData.daysOverdue}
-                      onChange={(e) => handleTestDataChange('daysOverdue', parseInt(e.target.value))}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange(
+                          'daysOverdue',
+                          parseInt(e.target.value)
+                        )
+                      }
+                      className='text-sm'
                     />
                   </div>
                   <div>
-                    <Label htmlFor="condition" className="text-xs">Condition</Label>
-                    <Select value={testData.condition} onValueChange={(value) => handleTestDataChange('condition', value)}>
-                      <SelectTrigger className="text-sm">
+                    <Label htmlFor='condition' className='text-xs'>
+                      Condition
+                    </Label>
+                    <Select
+                      value={testData.condition}
+                      onValueChange={value =>
+                        handleTestDataChange('condition', value)
+                      }
+                    >
+                      <SelectTrigger className='text-sm'>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="excellent">Excellent</SelectItem>
-                        <SelectItem value="good">Good</SelectItem>
-                        <SelectItem value="fair">Fair</SelectItem>
-                        <SelectItem value="damaged">Damaged</SelectItem>
+                        <SelectItem value='excellent'>Excellent</SelectItem>
+                        <SelectItem value='good'>Good</SelectItem>
+                        <SelectItem value='fair'>Fair</SelectItem>
+                        <SelectItem value='damaged'>Damaged</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="productSpecs" className="text-xs">Product Specifications</Label>
+                  <Label htmlFor='productSpecs' className='text-xs'>
+                    Product Specifications
+                  </Label>
                   <Textarea
-                    id="productSpecs"
+                    id='productSpecs'
                     value={testData.productSpecs}
-                    onChange={(e) => handleTestDataChange('productSpecs', e.target.value)}
+                    onChange={e =>
+                      handleTestDataChange('productSpecs', e.target.value)
+                    }
                     rows={2}
-                    className="text-sm"
+                    className='text-sm'
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className='grid grid-cols-2 gap-2'>
                   <div>
-                    <Label htmlFor="lendingId" className="text-xs">Lending ID</Label>
+                    <Label htmlFor='lendingId' className='text-xs'>
+                      Lending ID
+                    </Label>
                     <Input
-                      id="lendingId"
+                      id='lendingId'
                       value={testData.lendingId}
-                      onChange={(e) => handleTestDataChange('lendingId', e.target.value)}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange('lendingId', e.target.value)
+                      }
+                      className='text-sm'
                     />
                   </div>
                   <div>
-                    <Label htmlFor="approverName" className="text-xs">Approver Name</Label>
+                    <Label htmlFor='approverName' className='text-xs'>
+                      Approver Name
+                    </Label>
                     <Input
-                      id="approverName"
+                      id='approverName'
                       value={testData.approverName}
-                      onChange={(e) => handleTestDataChange('approverName', e.target.value)}
-                      className="text-sm"
+                      onChange={e =>
+                        handleTestDataChange('approverName', e.target.value)
+                      }
+                      className='text-sm'
                     />
                   </div>
                 </div>
@@ -376,26 +440,28 @@ const EmailTesting = () => {
 
       {/* Preview Dialog */}
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className='max-w-4xl max-h-[80vh] overflow-y-auto'>
           <DialogHeader>
             <DialogTitle>Email Preview</DialogTitle>
           </DialogHeader>
           {previewContent && (
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <div>
                 <Label>Subject:</Label>
-                <p className="font-mono bg-gray-50 p-2 rounded">{previewContent.subject}</p>
+                <p className='font-mono bg-gray-50 p-2 rounded'>
+                  {previewContent.subject}
+                </p>
               </div>
               <div>
                 <Label>HTML Content:</Label>
-                <div 
-                  className="border rounded p-4 bg-white max-h-96 overflow-y-auto"
+                <div
+                  className='border rounded p-4 bg-white max-h-96 overflow-y-auto'
                   dangerouslySetInnerHTML={{ __html: previewContent.html }}
                 />
               </div>
               <div>
                 <Label>Text Content:</Label>
-                <pre className="bg-gray-50 p-4 rounded text-sm whitespace-pre-wrap max-h-48 overflow-y-auto">
+                <pre className='bg-gray-50 p-4 rounded text-sm whitespace-pre-wrap max-h-48 overflow-y-auto'>
                   {previewContent.text}
                 </pre>
               </div>

@@ -2,7 +2,7 @@ module.exports = {
   // Test environment setup
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
-  
+
   // Module resolution
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -10,7 +10,7 @@ module.exports = {
     '^@test-utils$': '<rootDir>/src/test-utils',
     '^@server-test-utils$': '<rootDir>/server/test-utils',
   },
-  
+
   // File patterns
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}',
@@ -18,21 +18,24 @@ module.exports = {
     '<rootDir>/server/**/__tests__/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/server/**/*.{test,spec}.{js,jsx,ts,tsx}',
   ],
-  
+
   // Transform configuration
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', {
-      presets: [
-        ['@babel/preset-env', { targets: { node: 'current' } }],
-        ['@babel/preset-react', { runtime: 'automatic' }],
-        '@babel/preset-typescript'
-      ]
-    }],
+    '^.+\\.(js|jsx|ts|tsx)$': [
+      'babel-jest',
+      {
+        presets: [
+          ['@babel/preset-env', { targets: { node: 'current' } }],
+          ['@babel/preset-react', { runtime: 'automatic' }],
+          '@babel/preset-typescript',
+        ],
+      },
+    ],
   },
-  
+
   // Module file extensions
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'],
-  
+
   // Coverage configuration
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
@@ -46,10 +49,10 @@ module.exports = {
     '!**/__tests__/**',
     '!**/test-utils/**',
   ],
-  
+
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html', 'json'],
-  
+
   // Coverage thresholds
   coverageThreshold: {
     global: {
@@ -77,35 +80,35 @@ module.exports = {
       statements: 75,
     },
   },
-  
+
   // Test timeout
   testTimeout: 10000,
-  
+
   // Clear mocks between tests
   clearMocks: true,
   restoreMocks: true,
-  
+
   // Ignore patterns
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/build/',
     '<rootDir>/coverage/',
   ],
-  
+
   // Module directories
   moduleDirectories: ['node_modules', '<rootDir>/src', '<rootDir>/server'],
-  
+
   // Handle static assets and modules
   transformIgnorePatterns: [
-    'node_modules/(?!(axios|@testing-library|lucide-react)/)'
+    'node_modules/(?!(axios|@testing-library|lucide-react)/)',
   ],
-  
+
   // Verbose output
   verbose: true,
-  
+
   // Global setup
   setupFiles: ['<rootDir>/jest.setup.js'],
-  
+
   // Projects configuration for multi-environment testing
   projects: [
     {
@@ -118,10 +121,11 @@ module.exports = {
         '^@/(.*)$': '<rootDir>/src/$1',
         '^@test-utils$': '<rootDir>/src/test-utils',
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/src/test-utils/fileMock.js',
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+          '<rootDir>/src/test-utils/fileMock.js',
       },
       transformIgnorePatterns: [
-        'node_modules/(?!(axios|@testing-library|lucide-react|recharts)/)'
+        'node_modules/(?!(axios|@testing-library|lucide-react|recharts)/)',
       ],
     },
     {

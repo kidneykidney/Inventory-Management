@@ -11,7 +11,7 @@ jest.mock('../../config/database');
 describe('NotificationService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Mock database execute method
     db.execute = jest.fn();
   });
@@ -23,19 +23,19 @@ describe('NotificationService', () => {
         productName: 'MacBook Pro',
         lendDate: new Date('2024-01-15'),
         dueDate: new Date('2024-02-15'),
-        productSpecs: 'M1 Pro, 16GB RAM'
+        productSpecs: 'M1 Pro, 16GB RAM',
       };
 
       const mockTemplate = {
         subject: 'Lending Confirmation - MacBook Pro',
         html: '<p>Confirmation email</p>',
-        text: 'Confirmation email'
+        text: 'Confirmation email',
       };
 
       emailTemplateService.generateTemplate.mockReturnValue(mockTemplate);
       emailService.sendEmail.mockResolvedValue({
         success: true,
-        messageId: 'test-message-id'
+        messageId: 'test-message-id',
       });
       db.execute.mockResolvedValue([]);
 
@@ -53,7 +53,7 @@ describe('NotificationService', () => {
           lendDate: mockTransaction.lendDate,
           dueDate: mockTransaction.dueDate,
           productSpecs: 'M1 Pro, 16GB RAM',
-          lendingId: 'LT-001'
+          lendingId: 'LT-001',
         }
       );
 
@@ -61,7 +61,7 @@ describe('NotificationService', () => {
         to: 'user@example.com',
         subject: 'Lending Confirmation - MacBook Pro',
         html: '<p>Confirmation email</p>',
-        text: 'Confirmation email'
+        text: 'Confirmation email',
       });
 
       expect(db.execute).toHaveBeenCalledWith(
@@ -72,7 +72,7 @@ describe('NotificationService', () => {
           'Lending Confirmation - MacBook Pro',
           'sent',
           'LT-001',
-          null
+          null,
         ]
       );
 
@@ -84,19 +84,19 @@ describe('NotificationService', () => {
         id: 'LT-001',
         productName: 'MacBook Pro',
         lendDate: new Date('2024-01-15'),
-        dueDate: new Date('2024-02-15')
+        dueDate: new Date('2024-02-15'),
       };
 
       const mockTemplate = {
         subject: 'Lending Confirmation - MacBook Pro',
         html: '<p>Confirmation email</p>',
-        text: 'Confirmation email'
+        text: 'Confirmation email',
       };
 
       emailTemplateService.generateTemplate.mockReturnValue(mockTemplate);
       emailService.sendEmail.mockResolvedValue({
         success: false,
-        error: 'SMTP connection failed'
+        error: 'SMTP connection failed',
       });
       db.execute.mockResolvedValue([]);
 
@@ -114,7 +114,7 @@ describe('NotificationService', () => {
           'Lending Confirmation - MacBook Pro',
           'failed',
           'LT-001',
-          'SMTP connection failed'
+          'SMTP connection failed',
         ]
       );
 
@@ -127,19 +127,19 @@ describe('NotificationService', () => {
       const mockTransaction = {
         id: 'LT-002',
         productName: 'iPad Pro',
-        dueDate: new Date('2024-02-20')
+        dueDate: new Date('2024-02-20'),
       };
 
       const mockTemplate = {
         subject: 'Return Reminder - iPad Pro',
         html: '<p>Reminder email</p>',
-        text: 'Reminder email'
+        text: 'Reminder email',
       };
 
       emailTemplateService.generateTemplate.mockReturnValue(mockTemplate);
       emailService.sendEmail.mockResolvedValue({
         success: true,
-        messageId: 'test-message-id'
+        messageId: 'test-message-id',
       });
       db.execute.mockResolvedValue([]);
 
@@ -155,7 +155,7 @@ describe('NotificationService', () => {
           borrowerName: 'Jane Smith',
           productName: 'iPad Pro',
           dueDate: mockTransaction.dueDate,
-          lendingId: 'LT-002'
+          lendingId: 'LT-002',
         })
       );
 
@@ -169,13 +169,13 @@ describe('NotificationService', () => {
       const mockTransaction = {
         id: 'LT-002',
         productName: 'iPad Pro',
-        dueDate: futureDate
+        dueDate: futureDate,
       };
 
       const mockTemplate = {
         subject: 'Return Reminder - iPad Pro',
         html: '<p>Reminder email</p>',
-        text: 'Reminder email'
+        text: 'Reminder email',
       };
 
       emailTemplateService.generateTemplate.mockReturnValue(mockTemplate);
@@ -188,7 +188,8 @@ describe('NotificationService', () => {
         'Jane Smith'
       );
 
-      const templateCall = emailTemplateService.generateTemplate.mock.calls[0][1];
+      const templateCall =
+        emailTemplateService.generateTemplate.mock.calls[0][1];
       expect(templateCall.daysUntilDue).toBeCloseTo(5, 0);
     });
   });
@@ -201,19 +202,19 @@ describe('NotificationService', () => {
       const mockTransaction = {
         id: 'LT-003',
         productName: 'Dell Monitor',
-        dueDate: pastDate
+        dueDate: pastDate,
       };
 
       const mockTemplate = {
         subject: 'OVERDUE NOTICE - Dell Monitor',
         html: '<p>Overdue notice</p>',
-        text: 'Overdue notice'
+        text: 'Overdue notice',
       };
 
       emailTemplateService.generateTemplate.mockReturnValue(mockTemplate);
       emailService.sendEmail.mockResolvedValue({
         success: true,
-        messageId: 'test-message-id'
+        messageId: 'test-message-id',
       });
       db.execute.mockResolvedValue([]);
 
@@ -229,11 +230,12 @@ describe('NotificationService', () => {
           borrowerName: 'Bob Johnson',
           productName: 'Dell Monitor',
           dueDate: pastDate,
-          lendingId: 'LT-003'
+          lendingId: 'LT-003',
         })
       );
 
-      const templateCall = emailTemplateService.generateTemplate.mock.calls[0][1];
+      const templateCall =
+        emailTemplateService.generateTemplate.mock.calls[0][1];
       expect(templateCall.daysOverdue).toBeCloseTo(3, 0);
 
       expect(result.success).toBe(true);
@@ -246,19 +248,19 @@ describe('NotificationService', () => {
         id: 'LT-004',
         productName: 'Wireless Mouse',
         returnDate: new Date('2024-02-10'),
-        returnCondition: 'excellent'
+        returnCondition: 'excellent',
       };
 
       const mockTemplate = {
         subject: 'Return Confirmation - Wireless Mouse',
         html: '<p>Return confirmation</p>',
-        text: 'Return confirmation'
+        text: 'Return confirmation',
       };
 
       emailTemplateService.generateTemplate.mockReturnValue(mockTemplate);
       emailService.sendEmail.mockResolvedValue({
         success: true,
-        messageId: 'test-message-id'
+        messageId: 'test-message-id',
       });
       db.execute.mockResolvedValue([]);
 
@@ -275,7 +277,7 @@ describe('NotificationService', () => {
           productName: 'Wireless Mouse',
           returnDate: mockTransaction.returnDate,
           condition: 'excellent',
-          lendingId: 'LT-004'
+          lendingId: 'LT-004',
         }
       );
 
@@ -292,8 +294,8 @@ describe('NotificationService', () => {
           recipient_email: 'user@example.com',
           subject: 'Lending Confirmation',
           status: 'sent',
-          sent_date: new Date()
-        }
+          sent_date: new Date(),
+        },
       ];
 
       db.execute.mockResolvedValue([mockHistory]);
@@ -317,8 +319,8 @@ describe('NotificationService', () => {
           type: 'return_reminder',
           recipient_email: 'user@example.com',
           status: 'failed',
-          error_message: 'SMTP connection failed'
-        }
+          error_message: 'SMTP connection failed',
+        },
       ];
 
       db.execute.mockResolvedValue([mockFailedNotifications]);
@@ -326,7 +328,7 @@ describe('NotificationService', () => {
       const result = await notificationService.getFailedNotifications(50);
 
       expect(db.execute).toHaveBeenCalledWith(
-        expect.stringContaining('WHERE status = \'failed\''),
+        expect.stringContaining("WHERE status = 'failed'"),
         [50]
       );
 
@@ -340,7 +342,7 @@ describe('NotificationService', () => {
         id: 1,
         recipient_email: 'user@example.com',
         subject: 'Test Subject',
-        content: 'Test content'
+        content: 'Test content',
       };
 
       db.execute
@@ -349,7 +351,7 @@ describe('NotificationService', () => {
 
       emailService.sendEmail.mockResolvedValue({
         success: true,
-        messageId: 'retry-message-id'
+        messageId: 'retry-message-id',
       });
 
       const result = await notificationService.retryFailedNotification(1);
@@ -359,7 +361,7 @@ describe('NotificationService', () => {
         to: 'user@example.com',
         subject: 'Test Subject',
         html: 'Test content',
-        text: 'Test content'
+        text: 'Test content',
       });
 
       expect(result.success).toBe(true);
@@ -368,8 +370,9 @@ describe('NotificationService', () => {
     it('should handle notification not found', async () => {
       db.execute.mockResolvedValue([[]]);
 
-      await expect(notificationService.retryFailedNotification(999))
-        .rejects.toThrow('Notification not found');
+      await expect(
+        notificationService.retryFailedNotification(999)
+      ).rejects.toThrow('Notification not found');
     });
   });
 });

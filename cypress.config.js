@@ -16,14 +16,14 @@ module.exports = defineConfig({
     responseTimeout: 10000,
     retries: {
       runMode: 2,
-      openMode: 0
+      openMode: 0,
     },
     env: {
       apiUrl: 'http://localhost:5000/api/v1',
       testUser: {
         email: 'test@example.com',
-        password: 'testpassword123'
-      }
+        password: 'testpassword123',
+      },
     },
     setupNodeEvents(on, config) {
       // Task for database seeding
@@ -39,7 +39,7 @@ module.exports = defineConfig({
         log(message) {
           console.log(message);
           return null;
-        }
+        },
       });
 
       // Performance testing
@@ -61,6 +61,6 @@ module.exports = defineConfig({
       bundler: 'webpack',
     },
     specPattern: 'src/**/*.cy.{js,jsx,ts,tsx}',
-    supportFile: 'cypress/support/component.js'
-  }
+    supportFile: 'cypress/support/component.js',
+  },
 });

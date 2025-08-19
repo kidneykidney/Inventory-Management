@@ -5,14 +5,14 @@ import ProductCard from '../ProductCard';
 
 // Mock Lucide React icons
 jest.mock('lucide-react', () => ({
-  Calendar: () => <div data-testid="calendar-icon" />,
-  MapPin: () => <div data-testid="mappin-icon" />,
-  Tag: () => <div data-testid="tag-icon" />,
-  CheckCircle: () => <div data-testid="checkcircle-icon" />,
-  XCircle: () => <div data-testid="xcircle-icon" />,
-  AlertCircle: () => <div data-testid="alertcircle-icon" />,
-  Eye: () => <div data-testid="eye-icon" />,
-  Edit: () => <div data-testid="edit-icon" />
+  Calendar: () => <div data-testid='calendar-icon' />,
+  MapPin: () => <div data-testid='mappin-icon' />,
+  Tag: () => <div data-testid='tag-icon' />,
+  CheckCircle: () => <div data-testid='checkcircle-icon' />,
+  XCircle: () => <div data-testid='xcircle-icon' />,
+  AlertCircle: () => <div data-testid='alertcircle-icon' />,
+  Eye: () => <div data-testid='eye-icon' />,
+  Edit: () => <div data-testid='edit-icon' />,
 }));
 
 const mockProduct = {
@@ -33,8 +33,8 @@ const mockProduct = {
   specifications: {
     cpu: 'M2 Pro',
     ram: '16GB',
-    storage: '512GB SSD'
-  }
+    storage: '512GB SSD',
+  },
 };
 
 describe('ProductCard', () => {
@@ -44,7 +44,7 @@ describe('ProductCard', () => {
     onEdit: jest.fn(),
     onBorrow: jest.fn(),
     showActions: true,
-    isAdmin: false
+    isAdmin: false,
   };
 
   beforeEach(() => {
@@ -56,7 +56,9 @@ describe('ProductCard', () => {
 
     expect(screen.getByText('MacBook Pro 16"')).toBeInTheDocument();
     expect(screen.getByText('Apple • MacBook Pro')).toBeInTheDocument();
-    expect(screen.getByText('High-performance laptop for development work')).toBeInTheDocument();
+    expect(
+      screen.getByText('High-performance laptop for development work')
+    ).toBeInTheDocument();
     expect(screen.getByText('Office A - Desk 12')).toBeInTheDocument();
     expect(screen.getByText('SN: MBP123456')).toBeInTheDocument();
     expect(screen.getByText('30 days')).toBeInTheDocument();
@@ -108,7 +110,9 @@ describe('ProductCard', () => {
 
   it('shows "requires approval" indicator when needed', () => {
     const productRequiringApproval = { ...mockProduct, requiresApproval: true };
-    render(<ProductCard {...defaultProps} product={productRequiringApproval} />);
+    render(
+      <ProductCard {...defaultProps} product={productRequiringApproval} />
+    );
 
     expect(screen.getByText('Requires approval')).toBeInTheDocument();
     expect(screen.getByTestId('alertcircle-icon')).toBeInTheDocument();
@@ -181,7 +185,7 @@ describe('ProductCard', () => {
       conditionStatus: 'good',
       isAvailable: true,
       maxLendingPeriod: 30,
-      requiresApproval: false
+      requiresApproval: false,
     };
 
     render(<ProductCard {...defaultProps} product={minimalProduct} />);
@@ -193,7 +197,7 @@ describe('ProductCard', () => {
   it('truncates long tag lists correctly', () => {
     const productWithManyTags = {
       ...mockProduct,
-      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5']
+      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
     };
 
     render(<ProductCard {...defaultProps} product={productWithManyTags} />);
@@ -208,6 +212,11 @@ describe('ProductCard', () => {
     const { container } = render(<ProductCard {...defaultProps} />);
 
     const card = container.querySelector('.group');
-    expect(card).toHaveClass('group', 'transition-all', 'duration-200', 'hover:shadow-xl');
+    expect(card).toHaveClass(
+      'group',
+      'transition-all',
+      'duration-200',
+      'hover:shadow-xl'
+    );
   });
 });

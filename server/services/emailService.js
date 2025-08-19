@@ -15,18 +15,21 @@ class EmailService {
       secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
+        pass: process.env.EMAIL_PASSWORD,
+      },
     };
 
     // For development/testing, use ethereal email
-    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    if (
+      process.env.NODE_ENV === 'development' ||
+      process.env.NODE_ENV === 'test'
+    ) {
       this.createTestAccount();
       return;
     }
 
     this.transporter = nodemailer.createTransporter(emailConfig);
-    
+
     // Verify connection configuration
     this.transporter.verify((error, success) => {
       if (error) {
@@ -40,15 +43,15 @@ class EmailService {
   async createTestAccount() {
     try {
       const testAccount = await nodemailer.createTestAccount();
-      
+
       this.transporter = nodemailer.createTransporter({
         host: 'smtp.ethereal.email',
         port: 587,
         secure: false,
         auth: {
           user: testAccount.user,
-          pass: testAccount.pass
-        }
+          pass: testAccount.pass,
+        },
       });
 
       logger.info('Test email account created:', testAccount.user);
@@ -68,44 +71,47 @@ class EmailService {
         to: emailData.to,
         subject: emailData.subject,
         html: emailData.html,
-        text: emailData.text
+        text: emailData.text,
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      
+
       logger.info('Email sent successfully:', {
         messageId: info.messageId,
         to: emailData.to,
-        subject: emailData.subject
+        subject: emailData.subject,
       });
 
       // For development, log the preview URL
-      if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+      if (
+        process.env.NODE_ENV === 'development' ||
+        process.env.NODE_ENV === 'test'
+      ) {
         logger.info('Preview URL:', nodemailer.getTestMessageUrl(info));
       }
 
       return {
         success: true,
         messageId: info.messageId,
-        previewUrl: nodemailer.getTestMessageUrl(info)
+        previewUrl: nodemailer.getTestMessageUrl(info),
       };
     } catch (error) {
       logger.error('Failed to send email:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
 
   async sendBulkEmails(emailsData) {
     const results = [];
-    
+
     for (const emailData of emailsData) {
       const result = await this.sendEmail(emailData);
       results.push({
         to: emailData.to,
-        ...result
+        ...result,
       });
     }
 

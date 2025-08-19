@@ -3,20 +3,33 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { 
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '../ui/table';
-import { 
-  Download, FileText, BarChart3, TrendingUp, Calendar,
-  Users, Target, Clock, Award, AlertTriangle
+import {
+  Download,
+  FileText,
+  BarChart3,
+  TrendingUp,
+  Calendar,
+  Users,
+  Target,
+  Clock,
+  Award,
+  AlertTriangle,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
-const ExportableReports = ({ 
-  sprintData = [], 
-  teamData = {}, 
+const ExportableReports = ({
+  sprintData = [],
+  teamData = {},
   retrospectiveData = [],
-  performanceMetrics = {} 
+  performanceMetrics = {},
 }) => {
   const [selectedReport, setSelectedReport] = useState('sprint-summary');
   const [dateRange, setDateRange] = useState('last6sprints');
@@ -31,10 +44,15 @@ const ExportableReports = ({
       plannedPoints: sprint.plannedPoints || 0,
       completedPoints: sprint.completedPoints || 0,
       velocity: sprint.velocity || 0,
-      completionRate: sprint.stories?.length ? 
-        Math.round((sprint.stories.filter(s => s.status === 'done').length / sprint.stories.length) * 100) : 0,
+      completionRate: sprint.stories?.length
+        ? Math.round(
+            (sprint.stories.filter(s => s.status === 'done').length /
+              sprint.stories.length) *
+              100
+          )
+        : 0,
       bugCount: sprint.bugCount || 0,
-      testCoverage: sprint.testCoverage || 0
+      testCoverage: sprint.testCoverage || 0,
     }));
   };
 
@@ -47,7 +65,7 @@ const ExportableReports = ({
       qualityRating: retro.qualityRating || 0,
       communicationRating: retro.communicationRating || 0,
       actionItemsCount: retro.actionItems?.length || 0,
-      improvementAreas: retro.whatCouldImprove?.length || 0
+      improvementAreas: retro.whatCouldImprove?.length || 0,
     }));
   };
 
@@ -57,7 +75,7 @@ const ExportableReports = ({
       sprint: `Sprint ${sprint.number}`,
       velocity: sprint.velocity || 0,
       trend: sprint.velocityTrend || 'stable',
-      predictedNext: sprint.predictedVelocity || 0
+      predictedNext: sprint.predictedVelocity || 0,
     }));
   };
 
@@ -67,13 +85,13 @@ const ExportableReports = ({
 
   const exportToCSV = (data, filename) => {
     if (!data || data.length === 0) return;
-    
+
     const headers = Object.keys(data[0]);
     const csvContent = [
       headers.join(','),
-      ...data.map(row => headers.map(header => `"${row[header]}"`).join(','))
+      ...data.map(row => headers.map(header => `"${row[header]}"`).join(',')),
     ].join('\n');
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -85,41 +103,53 @@ const ExportableReports = ({
 
   const SprintSummaryReport = () => {
     const data = generateSprintSummaryData();
-    const totalPlanned = data.reduce((sum, sprint) => sum + sprint.plannedPoints, 0);
-    const totalCompleted = data.reduce((sum, sprint) => sum + sprint.completedPoints, 0);
-    const avgVelocity = Math.round(data.reduce((sum, sprint) => sum + sprint.velocity, 0) / data.length);
-    const avgCompletionRate = Math.round(data.reduce((sum, sprint) => sum + sprint.completionRate, 0) / data.length);
+    const totalPlanned = data.reduce(
+      (sum, sprint) => sum + sprint.plannedPoints,
+      0
+    );
+    const totalCompleted = data.reduce(
+      (sum, sprint) => sum + sprint.completedPoints,
+      0
+    );
+    const avgVelocity = Math.round(
+      data.reduce((sum, sprint) => sum + sprint.velocity, 0) / data.length
+    );
+    const avgCompletionRate = Math.round(
+      data.reduce((sum, sprint) => sum + sprint.completionRate, 0) / data.length
+    );
 
     return (
-      <div className="space-y-6">
+      <div className='space-y-6'>
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 no-print">
+        <div className='grid grid-cols-1 md:grid-cols-4 gap-4 no-print'>
           <Card>
-            <CardContent className="p-4 text-center">
-              <Target className="h-8 w-8 mx-auto mb-2 text-blue-500" />
-              <div className="text-2xl font-bold">{totalPlanned}</div>
-              <div className="text-sm text-gray-600">Total Planned Points</div>
+            <CardContent className='p-4 text-center'>
+              <Target className='h-8 w-8 mx-auto mb-2 text-blue-500' />
+              <div className='text-2xl font-bold'>{totalPlanned}</div>
+              <div className='text-sm text-gray-600'>Total Planned Points</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 text-center">
-              <Award className="h-8 w-8 mx-auto mb-2 text-green-500" />
-              <div className="text-2xl font-bold">{totalCompleted}</div>
-              <div className="text-sm text-gray-600">Total Completed Points</div>
+            <CardContent className='p-4 text-center'>
+              <Award className='h-8 w-8 mx-auto mb-2 text-green-500' />
+              <div className='text-2xl font-bold'>{totalCompleted}</div>
+              <div className='text-sm text-gray-600'>
+                Total Completed Points
+              </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 text-center">
-              <TrendingUp className="h-8 w-8 mx-auto mb-2 text-purple-500" />
-              <div className="text-2xl font-bold">{avgVelocity}</div>
-              <div className="text-sm text-gray-600">Average Velocity</div>
+            <CardContent className='p-4 text-center'>
+              <TrendingUp className='h-8 w-8 mx-auto mb-2 text-purple-500' />
+              <div className='text-2xl font-bold'>{avgVelocity}</div>
+              <div className='text-sm text-gray-600'>Average Velocity</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 text-center">
-              <BarChart3 className="h-8 w-8 mx-auto mb-2 text-orange-500" />
-              <div className="text-2xl font-bold">{avgCompletionRate}%</div>
-              <div className="text-sm text-gray-600">Avg Completion Rate</div>
+            <CardContent className='p-4 text-center'>
+              <BarChart3 className='h-8 w-8 mx-auto mb-2 text-orange-500' />
+              <div className='text-2xl font-bold'>{avgCompletionRate}%</div>
+              <div className='text-sm text-gray-600'>Avg Completion Rate</div>
             </CardContent>
           </Card>
         </div>
@@ -146,22 +176,40 @@ const ExportableReports = ({
               <TableBody>
                 {data.map((sprint, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">Sprint {sprint.sprintNumber}</TableCell>
-                    <TableCell>{sprint.startDate} - {sprint.endDate}</TableCell>
+                    <TableCell className='font-medium'>
+                      Sprint {sprint.sprintNumber}
+                    </TableCell>
+                    <TableCell>
+                      {sprint.startDate} - {sprint.endDate}
+                    </TableCell>
                     <TableCell>{sprint.plannedPoints}</TableCell>
                     <TableCell>{sprint.completedPoints}</TableCell>
                     <TableCell>
-                      <Badge variant={sprint.velocity >= avgVelocity ? "default" : "secondary"}>
+                      <Badge
+                        variant={
+                          sprint.velocity >= avgVelocity
+                            ? 'default'
+                            : 'secondary'
+                        }
+                      >
                         {sprint.velocity}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={sprint.completionRate >= 80 ? "default" : "destructive"}>
+                      <Badge
+                        variant={
+                          sprint.completionRate >= 80
+                            ? 'default'
+                            : 'destructive'
+                        }
+                      >
                         {sprint.completionRate}%
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {sprint.bugCount > 5 && <AlertTriangle className="h-4 w-4 inline mr-1 text-red-500" />}
+                      {sprint.bugCount > 5 && (
+                        <AlertTriangle className='h-4 w-4 inline mr-1 text-red-500' />
+                      )}
                       {sprint.bugCount}
                     </TableCell>
                     <TableCell>{sprint.testCoverage}%</TableCell>
@@ -173,13 +221,13 @@ const ExportableReports = ({
         </Card>
 
         {/* Export Actions */}
-        <div className="flex space-x-2 no-print">
+        <div className='flex space-x-2 no-print'>
           <Button onClick={() => exportToCSV(data, 'sprint-summary-report')}>
-            <Download className="h-4 w-4 mr-2" />
+            <Download className='h-4 w-4 mr-2' />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={exportToPDF}>
-            <FileText className="h-4 w-4 mr-2" />
+          <Button variant='outline' onClick={exportToPDF}>
+            <FileText className='h-4 w-4 mr-2' />
             Export PDF
           </Button>
         </div>
@@ -189,32 +237,41 @@ const ExportableReports = ({
 
   const TeamPerformanceReport = () => {
     const data = generateTeamPerformanceData();
-    const avgMorale = Math.round(data.reduce((sum, item) => sum + item.teamMorale, 0) / data.length * 10) / 10;
-    const totalActionItems = data.reduce((sum, item) => sum + item.actionItemsCount, 0);
+    const avgMorale =
+      Math.round(
+        (data.reduce((sum, item) => sum + item.teamMorale, 0) / data.length) *
+          10
+      ) / 10;
+    const totalActionItems = data.reduce(
+      (sum, item) => sum + item.actionItemsCount,
+      0
+    );
 
     return (
-      <div className="space-y-6">
+      <div className='space-y-6'>
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 no-print">
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 no-print'>
           <Card>
-            <CardContent className="p-4 text-center">
-              <Users className="h-8 w-8 mx-auto mb-2 text-blue-500" />
-              <div className="text-2xl font-bold">{avgMorale}</div>
-              <div className="text-sm text-gray-600">Average Team Morale</div>
+            <CardContent className='p-4 text-center'>
+              <Users className='h-8 w-8 mx-auto mb-2 text-blue-500' />
+              <div className='text-2xl font-bold'>{avgMorale}</div>
+              <div className='text-sm text-gray-600'>Average Team Morale</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 text-center">
-              <Target className="h-8 w-8 mx-auto mb-2 text-green-500" />
-              <div className="text-2xl font-bold">{totalActionItems}</div>
-              <div className="text-sm text-gray-600">Total Action Items</div>
+            <CardContent className='p-4 text-center'>
+              <Target className='h-8 w-8 mx-auto mb-2 text-green-500' />
+              <div className='text-2xl font-bold'>{totalActionItems}</div>
+              <div className='text-sm text-gray-600'>Total Action Items</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 text-center">
-              <TrendingUp className="h-8 w-8 mx-auto mb-2 text-purple-500" />
-              <div className="text-2xl font-bold">{data.length}</div>
-              <div className="text-sm text-gray-600">Retrospectives Completed</div>
+            <CardContent className='p-4 text-center'>
+              <TrendingUp className='h-8 w-8 mx-auto mb-2 text-purple-500' />
+              <div className='text-2xl font-bold'>{data.length}</div>
+              <div className='text-sm text-gray-600'>
+                Retrospectives Completed
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -240,24 +297,48 @@ const ExportableReports = ({
               <TableBody>
                 {data.map((item, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">Sprint {item.sprintNumber}</TableCell>
+                    <TableCell className='font-medium'>
+                      Sprint {item.sprintNumber}
+                    </TableCell>
                     <TableCell>
-                      <Badge variant={item.teamMorale >= 7 ? "default" : item.teamMorale >= 5 ? "secondary" : "destructive"}>
+                      <Badge
+                        variant={
+                          item.teamMorale >= 7
+                            ? 'default'
+                            : item.teamMorale >= 5
+                              ? 'secondary'
+                              : 'destructive'
+                        }
+                      >
                         {item.teamMorale}/10
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={item.velocityRating >= 7 ? "default" : "secondary"}>
+                      <Badge
+                        variant={
+                          item.velocityRating >= 7 ? 'default' : 'secondary'
+                        }
+                      >
                         {item.velocityRating}/10
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={item.qualityRating >= 7 ? "default" : "secondary"}>
+                      <Badge
+                        variant={
+                          item.qualityRating >= 7 ? 'default' : 'secondary'
+                        }
+                      >
                         {item.qualityRating}/10
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={item.communicationRating >= 7 ? "default" : "secondary"}>
+                      <Badge
+                        variant={
+                          item.communicationRating >= 7
+                            ? 'default'
+                            : 'secondary'
+                        }
+                      >
                         {item.communicationRating}/10
                       </Badge>
                     </TableCell>
@@ -271,13 +352,13 @@ const ExportableReports = ({
         </Card>
 
         {/* Export Actions */}
-        <div className="flex space-x-2 no-print">
+        <div className='flex space-x-2 no-print'>
           <Button onClick={() => exportToCSV(data, 'team-performance-report')}>
-            <Download className="h-4 w-4 mr-2" />
+            <Download className='h-4 w-4 mr-2' />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={exportToPDF}>
-            <FileText className="h-4 w-4 mr-2" />
+          <Button variant='outline' onClick={exportToPDF}>
+            <FileText className='h-4 w-4 mr-2' />
             Export PDF
           </Button>
         </div>
@@ -292,30 +373,33 @@ const ExportableReports = ({
     const velocityChange = currentVelocity - previousVelocity;
 
     return (
-      <div className="space-y-6">
+      <div className='space-y-6'>
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 no-print">
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 no-print'>
           <Card>
-            <CardContent className="p-4 text-center">
-              <TrendingUp className="h-8 w-8 mx-auto mb-2 text-blue-500" />
-              <div className="text-2xl font-bold">{currentVelocity}</div>
-              <div className="text-sm text-gray-600">Current Velocity</div>
+            <CardContent className='p-4 text-center'>
+              <TrendingUp className='h-8 w-8 mx-auto mb-2 text-blue-500' />
+              <div className='text-2xl font-bold'>{currentVelocity}</div>
+              <div className='text-sm text-gray-600'>Current Velocity</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 text-center">
-              <BarChart3 className="h-8 w-8 mx-auto mb-2 text-green-500" />
-              <div className="text-2xl font-bold">
-                {velocityChange > 0 ? '+' : ''}{velocityChange}
+            <CardContent className='p-4 text-center'>
+              <BarChart3 className='h-8 w-8 mx-auto mb-2 text-green-500' />
+              <div className='text-2xl font-bold'>
+                {velocityChange > 0 ? '+' : ''}
+                {velocityChange}
               </div>
-              <div className="text-sm text-gray-600">Velocity Change</div>
+              <div className='text-sm text-gray-600'>Velocity Change</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4 text-center">
-              <Target className="h-8 w-8 mx-auto mb-2 text-purple-500" />
-              <div className="text-2xl font-bold">{data[data.length - 1]?.predictedNext || 0}</div>
-              <div className="text-sm text-gray-600">Predicted Next Sprint</div>
+            <CardContent className='p-4 text-center'>
+              <Target className='h-8 w-8 mx-auto mb-2 text-purple-500' />
+              <div className='text-2xl font-bold'>
+                {data[data.length - 1]?.predictedNext || 0}
+              </div>
+              <div className='text-sm text-gray-600'>Predicted Next Sprint</div>
             </CardContent>
           </Card>
         </div>
@@ -338,15 +422,20 @@ const ExportableReports = ({
               <TableBody>
                 {data.map((item, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">{item.sprint}</TableCell>
+                    <TableCell className='font-medium'>{item.sprint}</TableCell>
                     <TableCell>
-                      <Badge variant="default">{item.velocity}</Badge>
+                      <Badge variant='default'>{item.velocity}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={
-                        item.trend === 'increasing' ? 'default' : 
-                        item.trend === 'decreasing' ? 'destructive' : 'secondary'
-                      }>
+                      <Badge
+                        variant={
+                          item.trend === 'increasing'
+                            ? 'default'
+                            : item.trend === 'decreasing'
+                              ? 'destructive'
+                              : 'secondary'
+                        }
+                      >
                         {item.trend}
                       </Badge>
                     </TableCell>
@@ -359,13 +448,13 @@ const ExportableReports = ({
         </Card>
 
         {/* Export Actions */}
-        <div className="flex space-x-2 no-print">
+        <div className='flex space-x-2 no-print'>
           <Button onClick={() => exportToCSV(data, 'velocity-trend-report')}>
-            <Download className="h-4 w-4 mr-2" />
+            <Download className='h-4 w-4 mr-2' />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={exportToPDF}>
-            <FileText className="h-4 w-4 mr-2" />
+          <Button variant='outline' onClick={exportToPDF}>
+            <FileText className='h-4 w-4 mr-2' />
             Export PDF
           </Button>
         </div>
@@ -374,31 +463,37 @@ const ExportableReports = ({
   };
 
   return (
-    <div ref={printRef} className="space-y-6">
+    <div ref={printRef} className='space-y-6'>
       {/* Print Header */}
-      <div className="print-only">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold">Team Performance Report</h1>
-          <p className="text-gray-600">Generated on {format(new Date(), 'MMMM dd, yyyy')}</p>
+      <div className='print-only'>
+        <div className='text-center mb-8'>
+          <h1 className='text-2xl font-bold'>Team Performance Report</h1>
+          <p className='text-gray-600'>
+            Generated on {format(new Date(), 'MMMM dd, yyyy')}
+          </p>
         </div>
       </div>
 
-      <Tabs value={selectedReport} onValueChange={setSelectedReport} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 no-print">
-          <TabsTrigger value="sprint-summary">Sprint Summary</TabsTrigger>
-          <TabsTrigger value="team-performance">Team Performance</TabsTrigger>
-          <TabsTrigger value="velocity-trend">Velocity Trend</TabsTrigger>
+      <Tabs
+        value={selectedReport}
+        onValueChange={setSelectedReport}
+        className='w-full'
+      >
+        <TabsList className='grid w-full grid-cols-3 no-print'>
+          <TabsTrigger value='sprint-summary'>Sprint Summary</TabsTrigger>
+          <TabsTrigger value='team-performance'>Team Performance</TabsTrigger>
+          <TabsTrigger value='velocity-trend'>Velocity Trend</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="sprint-summary">
+        <TabsContent value='sprint-summary'>
           <SprintSummaryReport />
         </TabsContent>
 
-        <TabsContent value="team-performance">
+        <TabsContent value='team-performance'>
           <TeamPerformanceReport />
         </TabsContent>
 
-        <TabsContent value="velocity-trend">
+        <TabsContent value='velocity-trend'>
           <VelocityTrendReport />
         </TabsContent>
       </Tabs>

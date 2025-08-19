@@ -21,12 +21,12 @@ import {
 } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { 
-  TrendingUp, 
-  TrendingDown, 
+import {
+  TrendingUp,
+  TrendingDown,
   Minus,
   BarChart3,
-  Activity
+  Activity,
 } from 'lucide-react';
 
 // Register Chart.js components
@@ -75,29 +75,33 @@ const VelocityChart = ({ data, currentSprint }) => {
   const velocityTrend = data.map(sprint => sprint.velocity || 0);
 
   // Calculate average velocity
-  const averageVelocity = velocityTrend.length > 0 
-    ? Math.round(velocityTrend.reduce((sum, v) => sum + v, 0) / velocityTrend.length)
-    : 0;
+  const averageVelocity =
+    velocityTrend.length > 0
+      ? Math.round(
+          velocityTrend.reduce((sum, v) => sum + v, 0) / velocityTrend.length
+        )
+      : 0;
 
   // Calculate velocity trend
   const getVelocityTrend = () => {
     if (velocityTrend.length < 2) return null;
-    
+
     const recent = velocityTrend.slice(-3); // Last 3 sprints
     const older = velocityTrend.slice(-6, -3); // Previous 3 sprints
-    
+
     if (older.length === 0) return null;
-    
+
     const recentAvg = recent.reduce((sum, v) => sum + v, 0) / recent.length;
     const olderAvg = older.reduce((sum, v) => sum + v, 0) / older.length;
-    
+
     const trendPercentage = ((recentAvg - olderAvg) / olderAvg) * 100;
-    
+
     return {
       percentage: Math.abs(trendPercentage).toFixed(1),
-      direction: trendPercentage > 5 ? 'up' : trendPercentage < -5 ? 'down' : 'stable',
+      direction:
+        trendPercentage > 5 ? 'up' : trendPercentage < -5 ? 'down' : 'stable',
       recentAvg: Math.round(recentAvg),
-      olderAvg: Math.round(olderAvg)
+      olderAvg: Math.round(olderAvg),
     };
   };
 
@@ -110,7 +114,10 @@ const VelocityChart = ({ data, currentSprint }) => {
         label: 'Planned Points',
         data: plannedPoints,
         borderColor: 'rgb(99, 102, 241)',
-        backgroundColor: chartType === 'bar' ? 'rgba(99, 102, 241, 0.8)' : 'rgba(99, 102, 241, 0.1)',
+        backgroundColor:
+          chartType === 'bar'
+            ? 'rgba(99, 102, 241, 0.8)'
+            : 'rgba(99, 102, 241, 0.1)',
         borderWidth: chartType === 'line' ? 2 : 0,
         fill: chartType === 'line',
         tension: 0.4,
@@ -119,21 +126,28 @@ const VelocityChart = ({ data, currentSprint }) => {
         label: 'Completed Points',
         data: completedPoints,
         borderColor: 'rgb(34, 197, 94)',
-        backgroundColor: chartType === 'bar' ? 'rgba(34, 197, 94, 0.8)' : 'rgba(34, 197, 94, 0.1)',
+        backgroundColor:
+          chartType === 'bar'
+            ? 'rgba(34, 197, 94, 0.8)'
+            : 'rgba(34, 197, 94, 0.1)',
         borderWidth: chartType === 'line' ? 3 : 0,
         fill: chartType === 'line',
         tension: 0.4,
       },
-      ...(chartType === 'line' ? [{
-        label: 'Average Velocity',
-        data: new Array(labels.length).fill(averageVelocity),
-        borderColor: 'rgb(239, 68, 68)',
-        backgroundColor: 'transparent',
-        borderWidth: 2,
-        borderDash: [5, 5],
-        pointRadius: 0,
-        fill: false,
-      }] : [])
+      ...(chartType === 'line'
+        ? [
+            {
+              label: 'Average Velocity',
+              data: new Array(labels.length).fill(averageVelocity),
+              borderColor: 'rgb(239, 68, 68)',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              fill: false,
+            },
+          ]
+        : []),
     ],
   };
 
@@ -204,27 +218,36 @@ const VelocityChart = ({ data, currentSprint }) => {
   const getTrendIcon = () => {
     if (!trend) return Minus;
     switch (trend.direction) {
-      case 'up': return TrendingUp;
-      case 'down': return TrendingDown;
-      default: return Minus;
+      case 'up':
+        return TrendingUp;
+      case 'down':
+        return TrendingDown;
+      default:
+        return Minus;
     }
   };
 
   const getTrendColor = () => {
     if (!trend) return 'text-gray-600';
     switch (trend.direction) {
-      case 'up': return 'text-green-600';
-      case 'down': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'up':
+        return 'text-green-600';
+      case 'down':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
   const getTrendBgColor = () => {
     if (!trend) return 'bg-gray-50';
     switch (trend.direction) {
-      case 'up': return 'bg-green-50';
-      case 'down': return 'bg-red-50';
-      default: return 'bg-gray-50';
+      case 'up':
+        return 'bg-green-50';
+      case 'down':
+        return 'bg-red-50';
+      default:
+        return 'bg-gray-50';
     }
   };
 
@@ -263,14 +286,20 @@ const VelocityChart = ({ data, currentSprint }) => {
                 <BarChart3 className='h-4 w-4' />
               </Button>
             </div>
-            
+
             {/* Trend Indicator */}
             {trend && (
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${getTrendBgColor()}`}>
+              <div
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg ${getTrendBgColor()}`}
+              >
                 <TrendIcon className={`h-4 w-4 ${getTrendColor()}`} />
                 <div className='text-sm'>
                   <div className={`font-medium ${getTrendColor()}`}>
-                    {trend.direction === 'up' ? '+' : trend.direction === 'down' ? '-' : ''}
+                    {trend.direction === 'up'
+                      ? '+'
+                      : trend.direction === 'down'
+                        ? '-'
+                        : ''}
                     {trend.percentage}%
                   </div>
                   <div className='text-xs text-muted-foreground'>
@@ -308,7 +337,9 @@ const VelocityChart = ({ data, currentSprint }) => {
           </div>
           <div className='text-center'>
             <div className='text-2xl font-bold text-orange-600'>
-              {data.length > 0 ? completedPoints[completedPoints.length - 1] || 0 : 0}
+              {data.length > 0
+                ? completedPoints[completedPoints.length - 1] || 0
+                : 0}
             </div>
             <div className='text-sm text-muted-foreground'>Last Sprint</div>
           </div>
@@ -325,12 +356,14 @@ const VelocityChart = ({ data, currentSprint }) => {
           <div className='mt-4 pt-4 border-t'>
             <div className='flex items-center justify-between'>
               <div>
-                <div className='font-medium'>Current Sprint {currentSprint.number}</div>
+                <div className='font-medium'>
+                  Current Sprint {currentSprint.number}
+                </div>
                 <div className='text-sm text-muted-foreground'>
                   {currentSprint.goal}
                 </div>
               </div>
-              <Badge 
+              <Badge
                 className={
                   currentSprint.status === 'active'
                     ? 'bg-green-100 text-green-800'

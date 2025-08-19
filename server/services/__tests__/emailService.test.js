@@ -10,16 +10,18 @@ describe('EmailService', () => {
   beforeEach(() => {
     mockTransporter = {
       sendMail: jest.fn(),
-      verify: jest.fn()
+      verify: jest.fn(),
     };
-    
+
     nodemailer.createTransporter = jest.fn().mockReturnValue(mockTransporter);
     nodemailer.createTestAccount = jest.fn().mockResolvedValue({
       user: 'test@ethereal.email',
-      pass: 'testpass'
+      pass: 'testpass',
     });
-    nodemailer.getTestMessageUrl = jest.fn().mockReturnValue('https://ethereal.email/message/test');
-    
+    nodemailer.getTestMessageUrl = jest
+      .fn()
+      .mockReturnValue('https://ethereal.email/message/test');
+
     // Set the transporter manually for testing
     emailService.transporter = mockTransporter;
   });
@@ -32,7 +34,7 @@ describe('EmailService', () => {
     it('should send email successfully', async () => {
       const mockInfo = {
         messageId: 'test-message-id',
-        response: '250 OK'
+        response: '250 OK',
       };
       mockTransporter.sendMail.mockResolvedValue(mockInfo);
 
@@ -40,7 +42,7 @@ describe('EmailService', () => {
         to: 'test@example.com',
         subject: 'Test Subject',
         html: '<p>Test HTML</p>',
-        text: 'Test text'
+        text: 'Test text',
       };
 
       const result = await emailService.sendEmail(emailData);
@@ -52,7 +54,7 @@ describe('EmailService', () => {
         to: 'test@example.com',
         subject: 'Test Subject',
         html: '<p>Test HTML</p>',
-        text: 'Test text'
+        text: 'Test text',
       });
     });
 
@@ -64,7 +66,7 @@ describe('EmailService', () => {
         to: 'test@example.com',
         subject: 'Test Subject',
         html: '<p>Test HTML</p>',
-        text: 'Test text'
+        text: 'Test text',
       };
 
       const result = await emailService.sendEmail(emailData);
@@ -81,7 +83,7 @@ describe('EmailService', () => {
         to: 'test@example.com',
         subject: 'Test Subject',
         html: '<p>Test HTML</p>',
-        text: 'Test text'
+        text: 'Test text',
       };
 
       const result = await emailService.sendEmail(emailData);
@@ -95,7 +97,7 @@ describe('EmailService', () => {
     it('should send multiple emails successfully', async () => {
       const mockInfo = {
         messageId: 'test-message-id',
-        response: '250 OK'
+        response: '250 OK',
       };
       mockTransporter.sendMail.mockResolvedValue(mockInfo);
 
@@ -104,14 +106,14 @@ describe('EmailService', () => {
           to: 'test1@example.com',
           subject: 'Test Subject 1',
           html: '<p>Test HTML 1</p>',
-          text: 'Test text 1'
+          text: 'Test text 1',
         },
         {
           to: 'test2@example.com',
           subject: 'Test Subject 2',
           html: '<p>Test HTML 2</p>',
-          text: 'Test text 2'
-        }
+          text: 'Test text 2',
+        },
       ];
 
       const results = await emailService.sendBulkEmails(emailsData);
@@ -132,14 +134,14 @@ describe('EmailService', () => {
           to: 'test1@example.com',
           subject: 'Test Subject 1',
           html: '<p>Test HTML 1</p>',
-          text: 'Test text 1'
+          text: 'Test text 1',
         },
         {
           to: 'test2@example.com',
           subject: 'Test Subject 2',
           html: '<p>Test HTML 2</p>',
-          text: 'Test text 2'
-        }
+          text: 'Test text 2',
+        },
       ];
 
       const results = await emailService.sendBulkEmails(emailsData);
@@ -166,8 +168,8 @@ describe('EmailService', () => {
         secure: false,
         auth: {
           user: 'test@ethereal.email',
-          pass: 'testpass'
-        }
+          pass: 'testpass',
+        },
       });
 
       process.env.NODE_ENV = originalEnv;

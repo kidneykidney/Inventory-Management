@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { LendingTransaction, LendingProduct } = require('../models/lendingModels');
+const {
+  LendingTransaction,
+  LendingProduct,
+} = require('../models/lendingModels');
 const { authenticateToken } = require('../middleware/auth');
 const notificationService = require('../services/notificationService');
 const db = require('../config/database');
@@ -18,7 +21,7 @@ router.post('/', authenticateToken, async (req, res) => {
       lendDate,
       conditionLent,
       notes,
-      approvedBy
+      approvedBy,
     } = req.body;
 
     // Use authenticated user as borrower if not specified
@@ -28,7 +31,7 @@ router.post('/', authenticateToken, async (req, res) => {
     if (!productId) {
       return res.status(400).json({
         success: false,
-        message: 'Product ID is required'
+        message: 'Product ID is required',
       });
     }
 
@@ -37,7 +40,7 @@ router.post('/', authenticateToken, async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Product not found',
       });
     }
 
@@ -46,7 +49,7 @@ router.post('/', authenticateToken, async (req, res) => {
     if (!isAvailable) {
       return res.status(400).json({
         success: false,
-        message: 'Product is not available for lending'
+        message: 'Product is not available for lending',
       });
     }
 
@@ -57,7 +60,7 @@ router.post('/', authenticateToken, async (req, res) => {
       lendDate: lendDate || new Date(),
       conditionLent: conditionLent || 'good',
       notes: notes || '',
-      approvedBy: approvedBy || req.user.id
+      approvedBy: approvedBy || req.user.id,
     });
 
     const savedTransaction = await transaction.save();
@@ -67,15 +70,15 @@ router.post('/', authenticateToken, async (req, res) => {
       // Get user details for email
       const userQuery = `SELECT name, email FROM users WHERE id = ?`;
       const [users] = await db.execute(userQuery, [finalBorrowerId]);
-      
+
       if (users.length > 0) {
         const user = users[0];
         const transactionWithProduct = {
           ...savedTransaction,
           productName: product.name,
-          productSpecs: product.specifications
+          productSpecs: product.specifications,
         };
-        
+
         await notificationService.sendLendingConfirmation(
           transactionWithProduct,
           user.email,
@@ -91,20 +94,20 @@ router.post('/', authenticateToken, async (req, res) => {
       transactionId: savedTransaction.id,
       productId,
       borrowerId: finalBorrowerId,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.status(201).json({
       success: true,
       message: 'Lending transaction created successfully',
-      data: savedTransaction
+      data: savedTransaction,
     });
   } catch (error) {
     logger.error('Error creating lending transaction:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to create lending transaction',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -115,26 +118,26 @@ router.post('/', authenticateToken, async (req, res) => {
  */
 router.get('/history', authenticateToken, async (req, res) => {
   try {
-    const { 
-      userId, 
-      productId, 
-      startDate, 
-      endDate, 
+    const {
+      userId,
+      productId,
+      startDate,
+      endDate,
       includeReturned = 'true',
-      limit = 50, 
-      offset = 0 
+      limit = 50,
+      offset = 0,
     } = req.query;
 
     const filters = {
       limit: parseInt(limit),
-      offset: parseInt(offset)
+      offset: parseInt(offset),
     };
 
     // Only admins can view other users' history
     if (userId && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required to view other users\' history'
+        message: "Admin access required to view other users' history",
       });
     }
 
@@ -154,7 +157,7 @@ router.get('/history', authenticateToken, async (req, res) => {
     if (startDate || endDate) {
       filters.dateRange = {
         start: startDate ? new Date(startDate) : null,
-        end: endDate ? new Date(endDate) : null
+        end: endDate ? new Date(endDate) : null,
       };
     }
 
@@ -163,7 +166,7 @@ router.get('/history', authenticateToken, async (req, res) => {
     logger.info('Lending history retrieved', {
       count: history.length,
       filters,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
@@ -175,15 +178,15 @@ router.get('/history', authenticateToken, async (req, res) => {
         productId,
         startDate,
         endDate,
-        includeReturned
-      }
+        includeReturned,
+      },
     });
   } catch (error) {
     logger.error('Error retrieving lending history:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve lending history',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -198,7 +201,7 @@ router.get('/analytics/trends', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
@@ -206,25 +209,25 @@ router.get('/analytics/trends', authenticateToken, async (req, res) => {
 
     const analytics = await LendingTransaction.getAnalytics({
       period,
-      groupBy
+      groupBy,
     });
 
     logger.info('Lending analytics retrieved', {
       period,
       groupBy,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      data: analytics
+      data: analytics,
     });
   } catch (error) {
     logger.error('Error retrieving lending analytics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve lending analytics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -239,28 +242,29 @@ router.get('/overdue/list', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
-    const overdueTransactions = await LendingTransaction.getOverdueTransactions();
+    const overdueTransactions =
+      await LendingTransaction.getOverdueTransactions();
 
     logger.info('Overdue transactions retrieved', {
       count: overdueTransactions.length,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
       data: overdueTransactions,
-      total: overdueTransactions.length
+      total: overdueTransactions.length,
     });
   } catch (error) {
     logger.error('Error retrieving overdue transactions:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve overdue transactions',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -274,19 +278,19 @@ router.get('/statistics/overview', authenticateToken, async (req, res) => {
     const statistics = await LendingTransaction.getStatistics();
 
     logger.info('Lending statistics retrieved', {
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      data: statistics
+      data: statistics,
     });
   } catch (error) {
     logger.error('Error retrieving lending statistics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve lending statistics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -300,7 +304,7 @@ router.get('/my-transactions/list', authenticateToken, async (req, res) => {
     const { status, limit, offset } = req.query;
 
     const filters = {
-      borrowerId: req.user.id
+      borrowerId: req.user.id,
     };
 
     if (status) filters.status = status;
@@ -311,20 +315,20 @@ router.get('/my-transactions/list', authenticateToken, async (req, res) => {
 
     logger.info('User transactions retrieved', {
       count: transactions.length,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
       data: transactions,
-      total: transactions.length
+      total: transactions.length,
     });
   } catch (error) {
     logger.error('Error retrieving user transactions:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve your transactions',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -343,7 +347,7 @@ router.get('/', authenticateToken, async (req, res) => {
       dueSoon,
       limit,
       offset,
-      myTransactions
+      myTransactions,
     } = req.query;
 
     const filters = {};
@@ -367,20 +371,20 @@ router.get('/', authenticateToken, async (req, res) => {
     logger.info('Lending transactions retrieved', {
       count: transactions.length,
       filters,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
       data: transactions,
-      total: transactions.length
+      total: transactions.length,
     });
   } catch (error) {
     logger.error('Error retrieving lending transactions:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve lending transactions',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -397,7 +401,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
     if (!transaction) {
       return res.status(404).json({
         success: false,
-        message: 'Lending transaction not found'
+        message: 'Lending transaction not found',
       });
     }
 
@@ -405,25 +409,25 @@ router.get('/:id', authenticateToken, async (req, res) => {
     if (transaction.borrowerId !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
     logger.info('Lending transaction retrieved', {
       transactionId: id,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      data: transaction
+      data: transaction,
     });
   } catch (error) {
     logger.error('Error retrieving lending transaction:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve lending transaction',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -441,7 +445,7 @@ router.put('/:id/return', authenticateToken, async (req, res) => {
     if (!transaction) {
       return res.status(404).json({
         success: false,
-        message: 'Lending transaction not found'
+        message: 'Lending transaction not found',
       });
     }
 
@@ -449,21 +453,21 @@ router.put('/:id/return', authenticateToken, async (req, res) => {
     if (transaction.borrowerId !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
     if (transaction.status === 'returned') {
       return res.status(400).json({
         success: false,
-        message: 'Item has already been returned'
+        message: 'Item has already been returned',
       });
     }
 
     const returnData = {
       conditionReturned: conditionReturned || 'good',
       notes: notes || '',
-      returnDate: returnDate || new Date()
+      returnDate: returnDate || new Date(),
     };
 
     const updatedTransaction = await transaction.processReturn(returnData);
@@ -473,7 +477,7 @@ router.put('/:id/return', authenticateToken, async (req, res) => {
       // Get user details for email
       const userQuery = `SELECT name, email FROM users WHERE id = ?`;
       const [users] = await db.execute(userQuery, [transaction.borrowerId]);
-      
+
       if (users.length > 0) {
         const user = users[0];
         // Get product name
@@ -481,9 +485,9 @@ router.put('/:id/return', authenticateToken, async (req, res) => {
         const transactionWithProduct = {
           ...updatedTransaction,
           productName: product ? product.name : 'Unknown Product',
-          returnCondition: returnData.conditionReturned
+          returnCondition: returnData.conditionReturned,
         };
-        
+
         await notificationService.sendReturnConfirmation(
           transactionWithProduct,
           user.email,
@@ -498,25 +502,23 @@ router.put('/:id/return', authenticateToken, async (req, res) => {
     logger.info('Item returned successfully', {
       transactionId: id,
       productId: transaction.productId,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
       message: 'Item returned successfully',
-      data: updatedTransaction
+      data: updatedTransaction,
     });
   } catch (error) {
     logger.error('Error processing return:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to process return',
-      error: error.message
+      error: error.message,
     });
   }
 });
-
-
 
 /**
  * PUT /api/lending-transactions/update-overdue
@@ -528,7 +530,7 @@ router.put('/update-overdue', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
@@ -536,25 +538,23 @@ router.put('/update-overdue', authenticateToken, async (req, res) => {
 
     logger.info('Overdue statuses updated', {
       updatedCount,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
       message: `Updated ${updatedCount} transactions to overdue status`,
-      data: { updatedCount }
+      data: { updatedCount },
     });
   } catch (error) {
     logger.error('Error updating overdue statuses:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update overdue statuses',
-      error: error.message
+      error: error.message,
     });
   }
 });
-
-
 
 /**
  * POST /api/lending-transactions/check-availability
@@ -567,7 +567,7 @@ router.post('/check-availability', authenticateToken, async (req, res) => {
     if (!productId) {
       return res.status(400).json({
         success: false,
-        message: 'Product ID is required'
+        message: 'Product ID is required',
       });
     }
 
@@ -577,7 +577,7 @@ router.post('/check-availability', authenticateToken, async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Product not found',
       });
     }
 
@@ -588,20 +588,18 @@ router.post('/check-availability', authenticateToken, async (req, res) => {
         productName: product.name,
         isAvailable,
         maxLendingPeriod: product.maxLendingPeriod,
-        requiresApproval: product.requiresApproval
-      }
+        requiresApproval: product.requiresApproval,
+      },
     });
   } catch (error) {
     logger.error('Error checking availability:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to check availability',
-      error: error.message
+      error: error.message,
     });
   }
 });
-
-
 
 /**
  * POST /api/lending-transactions/reserve
@@ -614,7 +612,7 @@ router.post('/reserve', authenticateToken, async (req, res) => {
     if (!productId) {
       return res.status(400).json({
         success: false,
-        message: 'Product ID is required'
+        message: 'Product ID is required',
       });
     }
 
@@ -623,7 +621,7 @@ router.post('/reserve', authenticateToken, async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Product not found',
       });
     }
 
@@ -632,7 +630,7 @@ router.post('/reserve', authenticateToken, async (req, res) => {
     if (!isAvailable) {
       return res.status(400).json({
         success: false,
-        message: 'Product is not available for reservation'
+        message: 'Product is not available for reservation',
       });
     }
 
@@ -641,26 +639,26 @@ router.post('/reserve', authenticateToken, async (req, res) => {
       productId,
       borrowerId: req.user.id,
       notes: reservationNotes || '',
-      reservedBy: req.user.id
+      reservedBy: req.user.id,
     });
 
     logger.info('Product reserved successfully', {
       reservationId: reservation.id,
       productId,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.status(201).json({
       success: true,
       message: 'Product reserved successfully',
-      data: reservation
+      data: reservation,
     });
   } catch (error) {
     logger.error('Error creating reservation:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to create reservation',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -677,7 +675,7 @@ router.delete('/reserve/:id', authenticateToken, async (req, res) => {
     if (!reservation) {
       return res.status(404).json({
         success: false,
-        message: 'Reservation not found'
+        message: 'Reservation not found',
       });
     }
 
@@ -685,14 +683,14 @@ router.delete('/reserve/:id', authenticateToken, async (req, res) => {
     if (reservation.borrowerId !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
     if (reservation.status !== 'reserved') {
       return res.status(400).json({
         success: false,
-        message: 'Only reserved items can be cancelled'
+        message: 'Only reserved items can be cancelled',
       });
     }
 
@@ -701,19 +699,19 @@ router.delete('/reserve/:id', authenticateToken, async (req, res) => {
     logger.info('Reservation cancelled successfully', {
       reservationId: id,
       productId: reservation.productId,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      message: 'Reservation cancelled successfully'
+      message: 'Reservation cancelled successfully',
     });
   } catch (error) {
     logger.error('Error cancelling reservation:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to cancel reservation',
-      error: error.message
+      error: error.message,
     });
   }
 });

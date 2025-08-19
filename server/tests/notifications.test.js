@@ -13,7 +13,7 @@ describe('Notification API', () => {
       const notificationData = {
         sprintId: 'sprint-5',
         type: 'start',
-        recipients: ['user1@example.com', 'user2@example.com']
+        recipients: ['user1@example.com', 'user2@example.com'],
       };
 
       const response = await request(app)
@@ -29,7 +29,7 @@ describe('Notification API', () => {
     test('should validate required fields', async () => {
       const invalidData = {
         type: 'start',
-        recipients: ['user1@example.com']
+        recipients: ['user1@example.com'],
         // Missing sprintId
       };
 
@@ -46,7 +46,7 @@ describe('Notification API', () => {
       const invalidData = {
         sprintId: 'sprint-5',
         type: 'invalid-type',
-        recipients: ['user1@example.com']
+        recipients: ['user1@example.com'],
       };
 
       const response = await request(app)
@@ -62,7 +62,7 @@ describe('Notification API', () => {
       const invalidData = {
         sprintId: 'sprint-5',
         type: 'start',
-        recipients: 'not-an-array'
+        recipients: 'not-an-array',
       };
 
       const response = await request(app)
@@ -80,7 +80,7 @@ describe('Notification API', () => {
       const notificationData = {
         storyId: 'story-123',
         type: 'assigned',
-        recipients: ['developer@example.com']
+        recipients: ['developer@example.com'],
       };
 
       const response = await request(app)
@@ -97,7 +97,7 @@ describe('Notification API', () => {
       const invalidData = {
         storyId: 'story-123',
         type: 'invalid-story-type',
-        recipients: ['developer@example.com']
+        recipients: ['developer@example.com'],
       };
 
       const response = await request(app)
@@ -133,7 +133,7 @@ describe('Notification API', () => {
         .send({
           sprintId: 'sprint-5',
           type: 'start',
-          recipients: ['user1@example.com']
+          recipients: ['user1@example.com'],
         });
 
       // Get the notification ID (in a real test, you'd track this properly)
@@ -181,7 +181,7 @@ describe('Notification API', () => {
         rating: 5,
         priority: 'medium',
         sprintId: 'sprint-5',
-        anonymous: false
+        anonymous: false,
       };
 
       const response = await request(app)
@@ -197,7 +197,7 @@ describe('Notification API', () => {
     test('should validate required feedback fields', async () => {
       const invalidFeedback = {
         category: 'team_performance',
-        rating: 5
+        rating: 5,
         // Missing type, title, and description
       };
 
@@ -215,7 +215,7 @@ describe('Notification API', () => {
         type: 'general',
         title: 'General feedback',
         description: 'Some general feedback about the process.',
-        priority: 'low'
+        priority: 'low',
       };
 
       const response = await request(app)
@@ -232,14 +232,12 @@ describe('Notification API', () => {
       const sprintId = 'sprint-5';
 
       // First submit some feedback
-      await request(app)
-        .post('/api/notifications/feedback')
-        .send({
-          type: 'sprint_review',
-          title: 'Sprint feedback',
-          description: 'Feedback for the sprint',
-          sprintId: sprintId
-        });
+      await request(app).post('/api/notifications/feedback').send({
+        type: 'sprint_review',
+        title: 'Sprint feedback',
+        description: 'Feedback for the sprint',
+        sprintId: sprintId,
+      });
 
       const response = await request(app)
         .get(`/api/notifications/feedback/sprint/${sprintId}`)
@@ -272,7 +270,7 @@ describe('Notification API', () => {
       const notificationData = {
         sprintId: 'sprint-5',
         type: 'start',
-        recipients: ['test@example.com']
+        recipients: ['test@example.com'],
       };
 
       const response = await request(app)
@@ -291,7 +289,7 @@ describe('Notification API', () => {
       const notificationData = {
         sprintId: 'sprint-5',
         type: 'end',
-        recipients: ['user1@example.com']
+        recipients: ['user1@example.com'],
       };
 
       await request(app)

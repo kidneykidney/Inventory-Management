@@ -64,13 +64,15 @@ const Sidebar = () => {
       }}
     >
       <Box sx={{ overflow: 'auto', mt: 8, p: 2 }}>
-        <List sx={{ 
-          '& .MuiListItem-root': { 
-            mb: 1,
-            borderRadius: '12px',
-            overflow: 'hidden'
-          } 
-        }}>
+        <List
+          sx={{
+            '& .MuiListItem-root': {
+              mb: 1,
+              borderRadius: '12px',
+              overflow: 'hidden',
+            },
+          }}
+        >
           {menuItems.map(item => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton
@@ -86,44 +88,48 @@ const Sidebar = () => {
                     backgroundColor: 'rgba(255,255,255,0.1)',
                     color: 'white',
                     transform: 'translateX(4px)',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
                   },
                   '&.Mui-selected': {
                     backgroundColor: 'rgba(255,255,255,0.2)',
                     color: 'white',
                     '&:hover': {
                       backgroundColor: 'rgba(255,255,255,0.25)',
-                    }
-                  }
+                    },
+                  },
                 }}
               >
-                <ListItemIcon sx={{ 
-                  color: 'inherit',
-                  minWidth: 40,
-                  '& .MuiSvgIcon-root': {
-                    fontSize: '1.2rem'
-                  }
-                }}>
+                <ListItemIcon
+                  sx={{
+                    color: 'inherit',
+                    minWidth: 40,
+                    '& .MuiSvgIcon-root': {
+                      fontSize: '1.2rem',
+                    },
+                  }}
+                >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText 
-                  primary={item.text} 
-                  sx={{ 
+                <ListItemText
+                  primary={item.text}
+                  sx={{
                     '& .MuiTypography-root': {
                       fontWeight: location.pathname === item.path ? 600 : 500,
-                      fontSize: '0.95rem'
-                    }
+                      fontSize: '0.95rem',
+                    },
                   }}
                 />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-        <Divider sx={{ 
-          borderColor: 'rgba(255,255,255,0.2)', 
-          mt: 2,
-          mx: 1
-        }} />
+        <Divider
+          sx={{
+            borderColor: 'rgba(255,255,255,0.2)',
+            mt: 2,
+            mx: 1,
+          }}
+        />
       </Box>
     </Drawer>
   );

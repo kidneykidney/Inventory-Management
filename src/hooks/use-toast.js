@@ -19,7 +19,7 @@ function genId() {
 
 const toastTimeouts = new Map();
 
-const addToRemoveQueue = (toastId) => {
+const addToRemoveQueue = toastId => {
   if (toastTimeouts.has(toastId)) {
     return;
   }
@@ -46,7 +46,7 @@ export const reducer = (state, action) => {
     case 'UPDATE_TOAST':
       return {
         ...state,
-        toasts: state.toasts.map((t) =>
+        toasts: state.toasts.map(t =>
           t.id === action.toast.id ? { ...t, ...action.toast } : t
         ),
       };
@@ -57,14 +57,14 @@ export const reducer = (state, action) => {
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
-        state.toasts.forEach((toast) => {
+        state.toasts.forEach(toast => {
           addToRemoveQueue(toast.id);
         });
       }
 
       return {
         ...state,
-        toasts: state.toasts.map((t) =>
+        toasts: state.toasts.map(t =>
           t.id === toastId || toastId === undefined
             ? {
                 ...t,
@@ -83,7 +83,7 @@ export const reducer = (state, action) => {
       }
       return {
         ...state,
-        toasts: state.toasts.filter((t) => t.id !== action.toastId),
+        toasts: state.toasts.filter(t => t.id !== action.toastId),
       };
   }
 };
@@ -94,7 +94,7 @@ let memoryState = { toasts: [] };
 
 function dispatch(action) {
   memoryState = reducer(memoryState, action);
-  listeners.forEach((listener) => {
+  listeners.forEach(listener => {
     listener(memoryState);
   });
 }
@@ -102,7 +102,7 @@ function dispatch(action) {
 function toast({ ...props }) {
   const id = genId();
 
-  const update = (props) =>
+  const update = props =>
     dispatch({
       type: 'UPDATE_TOAST',
       toast: { ...props, id },
@@ -115,7 +115,7 @@ function toast({ ...props }) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
+      onOpenChange: open => {
         if (!open) dismiss();
       },
     },
@@ -144,7 +144,7 @@ function useToast() {
   return {
     ...state,
     toast,
-    dismiss: (toastId) => dispatch({ type: 'DISMISS_TOAST', toastId }),
+    dismiss: toastId => dispatch({ type: 'DISMISS_TOAST', toastId }),
   };
 }
 

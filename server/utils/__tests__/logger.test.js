@@ -53,17 +53,17 @@ describe('Server Logger', () => {
 
     it('should configure different transports for different environments', () => {
       const originalEnv = process.env.NODE_ENV;
-      
+
       // Test development environment
       process.env.NODE_ENV = 'development';
       require('../logger');
       expect(winston.transports.Console).toHaveBeenCalled();
-      
+
       // Test production environment
       process.env.NODE_ENV = 'production';
       require('../logger');
       expect(winston.transports.File).toHaveBeenCalled();
-      
+
       process.env.NODE_ENV = originalEnv;
     });
   });
@@ -179,14 +179,14 @@ describe('Server Logger', () => {
   describe('log levels', () => {
     it('should respect log level configuration', () => {
       const originalLevel = process.env.LOG_LEVEL;
-      
+
       process.env.LOG_LEVEL = 'error';
       const restrictedLogger = require('../logger');
-      
+
       // Debug messages should not be logged at error level
       restrictedLogger.debug('Debug message');
       // This test would need actual winston behavior to verify
-      
+
       process.env.LOG_LEVEL = originalLevel;
     });
   });
@@ -194,14 +194,14 @@ describe('Server Logger', () => {
   describe('performance', () => {
     it('should handle high-frequency logging', () => {
       const startTime = Date.now();
-      
+
       for (let i = 0; i < 1000; i++) {
         logger.info(`Log message ${i}`, { iteration: i });
       }
-      
+
       const endTime = Date.now();
       const duration = endTime - startTime;
-      
+
       // Should complete within reasonable time (adjust threshold as needed)
       expect(duration).toBeLessThan(1000); // 1 second
       expect(mockLogger.info).toHaveBeenCalledTimes(1000);
@@ -220,15 +220,16 @@ describe('Server Logger', () => {
     });
 
     it('should handle special characters in messages', () => {
-      const message = 'Message with special chars: !@#$%^&*(){}[]|\\:";\'<>?,./';
-      
+      const message =
+        'Message with special chars: !@#$%^&*(){}[]|\\:";\'<>?,./';
+
       expect(() => logger.info(message)).not.toThrow();
       expect(mockLogger.info).toHaveBeenCalledWith(message, undefined);
     });
 
     it('should handle unicode characters', () => {
       const message = 'Unicode test: 你好世界 🌍 émojis';
-      
+
       expect(() => logger.info(message)).not.toThrow();
       expect(mockLogger.info).toHaveBeenCalledWith(message, undefined);
     });
@@ -238,15 +239,15 @@ describe('Server Logger', () => {
     it('should configure differently for test environment', () => {
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'test';
-      
+
       // Re-require the logger to get test configuration
       delete require.cache[require.resolve('../logger')];
       const testLogger = require('../logger');
-      
+
       // In test environment, logger might be configured to be silent
       // or have different transports
       expect(winston.createLogger).toHaveBeenCalled();
-      
+
       process.env.NODE_ENV = originalEnv;
     });
   });

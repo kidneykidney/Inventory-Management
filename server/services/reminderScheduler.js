@@ -16,20 +16,28 @@ class ReminderScheduler {
     }
 
     // Schedule reminder checks to run daily at 9:00 AM
-    const reminderJob = cron.schedule('0 9 * * *', async () => {
-      await this.processReminders();
-    }, {
-      scheduled: false,
-      timezone: process.env.TIMEZONE || 'UTC'
-    });
+    const reminderJob = cron.schedule(
+      '0 9 * * *',
+      async () => {
+        await this.processReminders();
+      },
+      {
+        scheduled: false,
+        timezone: process.env.TIMEZONE || 'UTC',
+      }
+    );
 
     // Schedule overdue checks to run daily at 10:00 AM
-    const overdueJob = cron.schedule('0 10 * * *', async () => {
-      await this.processOverdueNotices();
-    }, {
-      scheduled: false,
-      timezone: process.env.TIMEZONE || 'UTC'
-    });
+    const overdueJob = cron.schedule(
+      '0 10 * * *',
+      async () => {
+        await this.processOverdueNotices();
+      },
+      {
+        scheduled: false,
+        timezone: process.env.TIMEZONE || 'UTC',
+      }
+    );
 
     this.jobs.set('reminders', reminderJob);
     this.jobs.set('overdue', overdueJob);
@@ -86,9 +94,13 @@ class ReminderScheduler {
         )
       `;
 
-      const [transactions] = await db.execute(query, [threeDaysFromNow.toISOString().split('T')[0]]);
+      const [transactions] = await db.execute(query, [
+        threeDaysFromNow.toISOString().split('T')[0],
+      ]);
 
-      logger.info(`Found ${transactions.length} transactions requiring reminders`);
+      logger.info(
+        `Found ${transactions.length} transactions requiring reminders`
+      );
 
       for (const transaction of transactions) {
         try {
@@ -97,10 +109,13 @@ class ReminderScheduler {
             transaction.userEmail,
             transaction.userName
           );
-          
+
           logger.info(`Sent reminder for transaction ${transaction.id}`);
         } catch (error) {
-          logger.error(`Failed to send reminder for transaction ${transaction.id}:`, error);
+          logger.error(
+            `Failed to send reminder for transaction ${transaction.id}:`,
+            error
+          );
         }
       }
 
@@ -152,16 +167,21 @@ class ReminderScheduler {
             transaction.userEmail,
             transaction.userName
           );
-          
+
           // Update transaction status to overdue if not already
           if (transaction.status !== 'overdue') {
             const updateQuery = `UPDATE lending_transactions SET status = 'overdue' WHERE id = ?`;
             await db.execute(updateQuery, [transaction.id]);
           }
-          
-          logger.info(`Sent overdue notice for transaction ${transaction.id} (${transaction.daysOverdue} days overdue)`);
+
+          logger.info(
+            `Sent overdue notice for transaction ${transaction.id} (${transaction.daysOverdue} days overdue)`
+          );
         } catch (error) {
-          logger.error(`Failed to send overdue notice for transaction ${transaction.id}:`, error);
+          logger.error(
+            `Failed to send overdue notice for transaction ${transaction.id}:`,
+            error
+          );
         }
       }
 
@@ -173,7 +193,9 @@ class ReminderScheduler {
 
   async processImmediateReminder(transactionId) {
     try {
-      logger.info(`Processing immediate reminder for transaction ${transactionId}`);
+      logger.info(
+        `Processing immediate reminder for transaction ${transactionId}`
+      );
 
       const query = `
         SELECT 
@@ -216,7 +238,10 @@ class ReminderScheduler {
 
       logger.info(`Sent immediate reminder for transaction ${transactionId}`);
     } catch (error) {
-      logger.error(`Failed to process immediate reminder for transaction ${transactionId}:`, error);
+      logger.error(
+        `Failed to process immediate reminder for transaction ${transactionId}:`,
+        error
+      );
       throw error;
     }
   }
@@ -226,7 +251,7 @@ class ReminderScheduler {
       isRunning: this.isRunning,
       activeJobs: Array.from(this.jobs.keys()),
       nextReminderRun: this.jobs.get('reminders')?.nextDate()?.toISOString(),
-      nextOverdueRun: this.jobs.get('overdue')?.nextDate()?.toISOString()
+      nextOverdueRun: this.jobs.get('overdue')?.nextDate()?.toISOString(),
     };
   }
 }

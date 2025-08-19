@@ -21,7 +21,7 @@ jest.mock('../ProductDetailModal', () => {
   return function MockProductDetailModal({ product, isOpen, onClose }) {
     if (!isOpen) return null;
     return (
-      <div data-testid="product-detail-modal">
+      <div data-testid='product-detail-modal'>
         <h2>{product?.name}</h2>
         <button onClick={onClose}>Close</button>
       </div>
@@ -31,13 +31,13 @@ jest.mock('../ProductDetailModal', () => {
 
 // Mock Lucide React icons
 jest.mock('lucide-react', () => ({
-  Search: () => <div data-testid="search-icon" />,
-  Filter: () => <div data-testid="filter-icon" />,
-  Grid3X3: () => <div data-testid="grid-icon" />,
-  List: () => <div data-testid="list-icon" />,
-  SortAsc: () => <div data-testid="sort-asc-icon" />,
-  SortDesc: () => <div data-testid="sort-desc-icon" />,
-  Package: () => <div data-testid="package-icon" />
+  Search: () => <div data-testid='search-icon' />,
+  Filter: () => <div data-testid='filter-icon' />,
+  Grid3X3: () => <div data-testid='grid-icon' />,
+  List: () => <div data-testid='list-icon' />,
+  SortAsc: () => <div data-testid='sort-asc-icon' />,
+  SortDesc: () => <div data-testid='sort-desc-icon' />,
+  Package: () => <div data-testid='package-icon' />,
 }));
 
 const mockProducts = [
@@ -52,7 +52,7 @@ const mockProducts = [
     isAvailable: true,
     maxLendingPeriod: 30,
     tags: ['laptop', 'development'],
-    createdAt: '2023-01-15T00:00:00Z'
+    createdAt: '2023-01-15T00:00:00Z',
   },
   {
     id: 'product-2',
@@ -65,7 +65,7 @@ const mockProducts = [
     isAvailable: false,
     maxLendingPeriod: 14,
     tags: ['monitor', 'display'],
-    createdAt: '2023-02-01T00:00:00Z'
+    createdAt: '2023-02-01T00:00:00Z',
   },
   {
     id: 'product-3',
@@ -78,14 +78,14 @@ const mockProducts = [
     isAvailable: true,
     maxLendingPeriod: 7,
     tags: ['mouse', 'wireless'],
-    createdAt: '2023-01-20T00:00:00Z'
-  }
+    createdAt: '2023-01-20T00:00:00Z',
+  },
 ];
 
 const mockCategories = [
   { id: 1, name: 'Electronics' },
   { id: 2, name: 'Monitors' },
-  { id: 3, name: 'Accessories' }
+  { id: 3, name: 'Accessories' },
 ];
 
 describe('ProductCatalog', () => {
@@ -95,7 +95,7 @@ describe('ProductCatalog', () => {
     loading: false,
     onProductUpdate: jest.fn(),
     onProductBorrow: jest.fn(),
-    isAdmin: false
+    isAdmin: false,
   };
 
   beforeEach(() => {
@@ -127,13 +127,19 @@ describe('ProductCatalog', () => {
   it('filters products by search term', async () => {
     render(<ProductCatalog {...defaultProps} />);
 
-    const searchInput = screen.getByPlaceholderText('Search products, brands, models, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, models, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'MacBook' } });
 
     await waitFor(() => {
       expect(screen.getByTestId('product-card-product-1')).toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-2')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-3')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-2')
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-3')
+      ).not.toBeInTheDocument();
     });
 
     expect(screen.getByText('1 of 3 products')).toBeInTheDocument();
@@ -145,13 +151,15 @@ describe('ProductCatalog', () => {
     // Open category select and choose Electronics
     const categorySelect = screen.getByDisplayValue('All Categories');
     fireEvent.click(categorySelect);
-    
+
     const electronicsOption = screen.getByText('Electronics');
     fireEvent.click(electronicsOption);
 
     await waitFor(() => {
       expect(screen.getByTestId('product-card-product-1')).toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-2')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-2')
+      ).not.toBeInTheDocument();
       expect(screen.getByTestId('product-card-product-3')).toBeInTheDocument();
     });
 
@@ -164,13 +172,15 @@ describe('ProductCatalog', () => {
     // Filter for available only
     const availabilitySelect = screen.getByDisplayValue('All Items');
     fireEvent.click(availabilitySelect);
-    
+
     const availableOption = screen.getByText('Available Only');
     fireEvent.click(availableOption);
 
     await waitFor(() => {
       expect(screen.getByTestId('product-card-product-1')).toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-2')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-2')
+      ).not.toBeInTheDocument();
       expect(screen.getByTestId('product-card-product-3')).toBeInTheDocument();
     });
 
@@ -183,14 +193,18 @@ describe('ProductCatalog', () => {
     // Filter by excellent condition
     const conditionSelect = screen.getByDisplayValue('All Conditions');
     fireEvent.click(conditionSelect);
-    
+
     const excellentOption = screen.getByText('Excellent');
     fireEvent.click(excellentOption);
 
     await waitFor(() => {
       expect(screen.getByTestId('product-card-product-1')).toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-2')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-3')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-2')
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-3')
+      ).not.toBeInTheDocument();
     });
 
     expect(screen.getByText('1 of 3 products')).toBeInTheDocument();
@@ -202,16 +216,25 @@ describe('ProductCatalog', () => {
     // Change sort to brand
     const sortSelect = screen.getByDisplayValue('Name');
     fireEvent.click(sortSelect);
-    
+
     const brandOption = screen.getByText('Brand');
     fireEvent.click(brandOption);
 
     // Products should be sorted by brand: Apple, Dell, Logitech
     await waitFor(() => {
       const productCards = screen.getAllByTestId(/product-card-/);
-      expect(productCards[0]).toHaveAttribute('data-testid', 'product-card-product-1'); // Apple
-      expect(productCards[1]).toHaveAttribute('data-testid', 'product-card-product-2'); // Dell
-      expect(productCards[2]).toHaveAttribute('data-testid', 'product-card-product-3'); // Logitech
+      expect(productCards[0]).toHaveAttribute(
+        'data-testid',
+        'product-card-product-1'
+      ); // Apple
+      expect(productCards[1]).toHaveAttribute(
+        'data-testid',
+        'product-card-product-2'
+      ); // Dell
+      expect(productCards[2]).toHaveAttribute(
+        'data-testid',
+        'product-card-product-3'
+      ); // Logitech
     });
   });
 
@@ -231,7 +254,9 @@ describe('ProductCatalog', () => {
     render(<ProductCatalog {...defaultProps} />);
 
     // Apply some filters
-    const searchInput = screen.getByPlaceholderText('Search products, brands, models, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, models, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'MacBook' } });
 
     await waitFor(() => {
@@ -262,12 +287,18 @@ describe('ProductCatalog', () => {
   it('shows empty state when no products match filters', async () => {
     render(<ProductCatalog {...defaultProps} />);
 
-    const searchInput = screen.getByPlaceholderText('Search products, brands, models, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, models, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'nonexistent' } });
 
     await waitFor(() => {
       expect(screen.getByText('No products found')).toBeInTheDocument();
-      expect(screen.getByText("Try adjusting your search terms or filters to find what you're looking for.")).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "Try adjusting your search terms or filters to find what you're looking for."
+        )
+      ).toBeInTheDocument();
       expect(screen.getByTestId('package-icon')).toBeInTheDocument();
     });
   });
@@ -276,7 +307,9 @@ describe('ProductCatalog', () => {
     render(<ProductCatalog {...defaultProps} products={[]} />);
 
     expect(screen.getByText('No products found')).toBeInTheDocument();
-    expect(screen.getByText('No products have been added to the catalog yet.')).toBeInTheDocument();
+    expect(
+      screen.getByText('No products have been added to the catalog yet.')
+    ).toBeInTheDocument();
   });
 
   it('opens product detail modal when product is viewed', async () => {
@@ -307,7 +340,9 @@ describe('ProductCatalog', () => {
     fireEvent.click(closeButton);
 
     await waitFor(() => {
-      expect(screen.queryByTestId('product-detail-modal')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-detail-modal')
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -333,13 +368,19 @@ describe('ProductCatalog', () => {
     render(<ProductCatalog {...defaultProps} />);
 
     // Search by tag
-    const searchInput = screen.getByPlaceholderText('Search products, brands, models, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, models, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'wireless' } });
 
     await waitFor(() => {
       expect(screen.getByTestId('product-card-product-3')).toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-1')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-2')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-1')
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-2')
+      ).not.toBeInTheDocument();
     });
 
     // Search by brand
@@ -347,8 +388,12 @@ describe('ProductCatalog', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('product-card-product-2')).toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-1')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('product-card-product-3')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-1')
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('product-card-product-3')
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -356,7 +401,9 @@ describe('ProductCatalog', () => {
     render(<ProductCatalog {...defaultProps} />);
 
     // Apply search filter
-    const searchInput = screen.getByPlaceholderText('Search products, brands, models, or tags...');
+    const searchInput = screen.getByPlaceholderText(
+      'Search products, brands, models, or tags...'
+    );
     fireEvent.change(searchInput, { target: { value: 'laptop' } });
 
     // Apply category filter

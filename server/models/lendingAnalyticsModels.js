@@ -46,7 +46,7 @@ class LendingAnalytics {
       return {
         transactions: overviewStats[0],
         products: productStats[0],
-        utilization: utilizationStats[0]
+        utilization: utilizationStats[0],
       };
     } catch (error) {
       logger.error('Error getting overview statistics:', error);
@@ -62,7 +62,7 @@ class LendingAnalytics {
   static async getLendingTrends(options = {}) {
     try {
       const { period = '12months', groupBy = 'month' } = options;
-      
+
       let dateFormat, intervalClause;
       switch (groupBy) {
         case 'day':
@@ -110,14 +110,16 @@ class LendingAnalytics {
   static async getPopularProducts(options = {}) {
     try {
       const { limit = 10, period = '12months' } = options;
-      
+
       let dateFilter = '';
       if (period !== 'all') {
-        const months = period === '12months' ? 12 : period === '6months' ? 6 : 3;
+        const months =
+          period === '12months' ? 12 : period === '6months' ? 6 : 3;
         dateFilter = `WHERE lt.created_at >= DATE_SUB(CURDATE(), INTERVAL ${months} MONTH)`;
       }
 
-      const [popularProducts] = await monitoredQuery(`
+      const [popularProducts] = await monitoredQuery(
+        `
         SELECT 
           lp.id,
           lp.name as product_name,
@@ -135,7 +137,9 @@ class LendingAnalytics {
         GROUP BY lp.id, lp.name, lp.brand, lp.model, pc.name
         ORDER BY lending_count DESC
         LIMIT ?
-      `, [limit]);
+      `,
+        [limit]
+      );
 
       return popularProducts;
     } catch (error) {
@@ -186,7 +190,8 @@ class LendingAnalytics {
       const { limit = 10 } = options;
 
       // Top borrowers
-      const [topBorrowers] = await monitoredQuery(`
+      const [topBorrowers] = await monitoredQuery(
+        `
         SELECT 
           u.id,
           u.username,
@@ -202,7 +207,9 @@ class LendingAnalytics {
         GROUP BY u.id, u.username, u.email
         ORDER BY total_lendings DESC
         LIMIT ?
-      `, [limit]);
+      `,
+        [limit]
+      );
 
       // Borrowing patterns
       const [borrowingPatterns] = await monitoredQuery(`
@@ -232,7 +239,7 @@ class LendingAnalytics {
       return {
         topBorrowers,
         borrowingPatterns,
-        monthlyEngagement
+        monthlyEngagement,
       };
     } catch (error) {
       logger.error('Error getting user behavior analytics:', error);
@@ -288,7 +295,7 @@ class LendingAnalytics {
       return {
         overview: overdueStats[0] || {},
         byCategory: overdueByCategory,
-        byUser: overdueByUser
+        byUser: overdueByUser,
       };
     } catch (error) {
       logger.error('Error getting overdue analytics:', error);
@@ -362,7 +369,7 @@ class LendingAnalytics {
       return {
         trendingProducts,
         peakPeriods,
-        overdueRiskProducts
+        overdueRiskProducts,
       };
     } catch (error) {
       logger.error('Error getting predictive analytics:', error);
@@ -418,7 +425,7 @@ class LendingAnalytics {
       return {
         system: systemMetrics[0] || {},
         inventoryTurnover,
-        response: responseMetrics[0] || {}
+        response: responseMetrics[0] || {},
       };
     } catch (error) {
       logger.error('Error getting performance metrics:', error);
@@ -439,7 +446,7 @@ class LendingAnalytics {
         generatedAt: new Date(),
         overview: await this.getOverviewStatistics(),
         trends: await this.getLendingTrends(),
-        performance: await this.getPerformanceMetrics()
+        performance: await this.getPerformanceMetrics(),
       };
 
       if (includeDetails) {
@@ -459,5 +466,5 @@ class LendingAnalytics {
 }
 
 module.exports = {
-  LendingAnalytics
+  LendingAnalytics,
 };

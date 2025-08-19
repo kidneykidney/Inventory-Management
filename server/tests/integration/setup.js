@@ -1,15 +1,15 @@
-const { 
-  initTestDatabase, 
-  resetDatabase, 
-  seedTestData, 
-  cleanupTestDatabase 
+const {
+  initTestDatabase,
+  resetDatabase,
+  seedTestData,
+  cleanupTestDatabase,
 } = require('../../test-utils');
 
 // Global setup for integration tests
 beforeAll(async () => {
   // Initialize test database connection
   await initTestDatabase();
-  
+
   // Set test environment
   process.env.NODE_ENV = 'test';
   process.env.JWT_SECRET = 'test-jwt-secret';
@@ -19,7 +19,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   // Reset database to clean state before each test
   await resetDatabase();
-  
+
   // Seed with test data
   await seedTestData();
 }, 10000);

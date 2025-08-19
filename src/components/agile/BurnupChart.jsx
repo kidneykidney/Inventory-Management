@@ -19,12 +19,12 @@ import {
   CardTitle,
 } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { 
-  BarChart3, 
-  TrendingUp, 
+import {
+  BarChart3,
+  TrendingUp,
   Target,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react';
 
 // Register Chart.js components
@@ -52,7 +52,9 @@ const BurnupChart = ({ data, sprint }) => {
             <BarChart3 className='h-5 w-5' />
             Burnup Chart
           </CardTitle>
-          <CardDescription>Sprint scope and completion tracking</CardDescription>
+          <CardDescription>
+            Sprint scope and completion tracking
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className='flex items-center justify-center h-64 text-muted-foreground'>
@@ -71,7 +73,9 @@ const BurnupChart = ({ data, sprint }) => {
 
   const totalScopeData = data.burnupData.map(point => point.totalScope);
   const completedWorkData = data.burnupData.map(point => point.completedWork);
-  const projectedCompletionData = data.burnupData.map(point => point.projectedCompletion || null);
+  const projectedCompletionData = data.burnupData.map(
+    point => point.projectedCompletion || null
+  );
 
   const chartData = {
     labels,
@@ -183,12 +187,14 @@ const BurnupChart = ({ data, sprint }) => {
     const currentData = data.burnupData[data.burnupData.length - 1];
     if (!currentData) return null;
 
-    const completionRate = currentData.totalScope > 0 
-      ? (currentData.completedWork / currentData.totalScope) * 100 
-      : 0;
-    
+    const completionRate =
+      currentData.totalScope > 0
+        ? (currentData.completedWork / currentData.totalScope) * 100
+        : 0;
+
     const scopeChange = data.scopeChange || 0;
-    const isOnTrack = data.isOnTrack !== undefined ? data.isOnTrack : completionRate >= 70;
+    const isOnTrack =
+      data.isOnTrack !== undefined ? data.isOnTrack : completionRate >= 70;
 
     return {
       completionRate: Math.round(completionRate),
@@ -236,7 +242,9 @@ const BurnupChart = ({ data, sprint }) => {
             </CardDescription>
           </div>
           {sprintHealth && (
-            <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${getHealthBgColor()}`}>
+            <div
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg ${getHealthBgColor()}`}
+            >
               <HealthIcon className={`h-4 w-4 ${getHealthColor()}`} />
               <div className='text-sm'>
                 <div className={`font-medium ${getHealthColor()}`}>
@@ -288,25 +296,28 @@ const BurnupChart = ({ data, sprint }) => {
         {sprintHealth && sprintHealth.scopeChange !== 0 && (
           <div className='mt-4 pt-4 border-t'>
             <div className='flex items-center gap-2'>
-              <TrendingUp className={`h-4 w-4 ${sprintHealth.scopeChange > 0 ? 'text-red-600' : 'text-green-600'}`} />
+              <TrendingUp
+                className={`h-4 w-4 ${sprintHealth.scopeChange > 0 ? 'text-red-600' : 'text-green-600'}`}
+              />
               <span className='text-sm font-medium'>
-                Scope {sprintHealth.scopeChange > 0 ? 'Increased' : 'Decreased'}:
+                Scope {sprintHealth.scopeChange > 0 ? 'Increased' : 'Decreased'}
+                :
               </span>
-              <Badge 
+              <Badge
                 className={
-                  sprintHealth.scopeChange > 0 
-                    ? 'bg-red-100 text-red-800' 
+                  sprintHealth.scopeChange > 0
+                    ? 'bg-red-100 text-red-800'
                     : 'bg-green-100 text-green-800'
                 }
               >
-                {sprintHealth.scopeChange > 0 ? '+' : ''}{sprintHealth.scopeChange} points
+                {sprintHealth.scopeChange > 0 ? '+' : ''}
+                {sprintHealth.scopeChange} points
               </Badge>
             </div>
             <div className='text-xs text-muted-foreground mt-1'>
-              {sprintHealth.scopeChange > 0 
+              {sprintHealth.scopeChange > 0
                 ? 'New stories were added to the sprint'
-                : 'Stories were removed from the sprint'
-              }
+                : 'Stories were removed from the sprint'}
             </div>
           </div>
         )}
@@ -315,7 +326,9 @@ const BurnupChart = ({ data, sprint }) => {
         <div className='mt-4 pt-4 border-t'>
           <div className='flex justify-between items-center text-sm mb-2'>
             <span className='text-muted-foreground'>Sprint Progress</span>
-            <span className='font-medium'>{sprintHealth?.completionRate || 0}%</span>
+            <span className='font-medium'>
+              {sprintHealth?.completionRate || 0}%
+            </span>
           </div>
           <div className='w-full bg-gray-200 rounded-full h-3'>
             <div

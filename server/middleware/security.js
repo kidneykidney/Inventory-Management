@@ -16,7 +16,7 @@ const csrfProtection = (req, res, next) => {
   if (!token || !sessionToken || token !== sessionToken) {
     return res.status(403).json({
       success: false,
-      message: 'Invalid CSRF token'
+      message: 'Invalid CSRF token',
     });
   }
 
@@ -42,12 +42,12 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:3001',
-      process.env.FRONTEND_URL
+      process.env.FRONTEND_URL,
     ].filter(Boolean);
 
     // Allow requests with no origin (mobile apps, etc.)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -62,9 +62,9 @@ const corsOptions = {
     'Content-Type',
     'Accept',
     'Authorization',
-    'X-CSRF-Token'
+    'X-CSRF-Token',
   ],
-  exposedHeaders: ['X-CSRF-Token']
+  exposedHeaders: ['X-CSRF-Token'],
 };
 
 /**
@@ -74,10 +74,10 @@ const helmetConfig = {
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
@@ -88,8 +88,8 @@ const helmetConfig = {
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,
-    preload: true
-  }
+    preload: true,
+  },
 };
 
 /**
@@ -97,7 +97,7 @@ const helmetConfig = {
  */
 const securityLogger = (req, res, next) => {
   const startTime = Date.now();
-  
+
   res.on('finish', () => {
     const duration = Date.now() - startTime;
     const logData = {
@@ -107,7 +107,7 @@ const securityLogger = (req, res, next) => {
       userAgent: req.get('User-Agent'),
       statusCode: res.statusCode,
       duration,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     // Log suspicious activity
@@ -129,7 +129,7 @@ const ipBlocking = (req, res, next) => {
   if (blockedIPs.includes(clientIP)) {
     return res.status(403).json({
       success: false,
-      message: 'Access denied'
+      message: 'Access denied',
     });
   }
 
@@ -144,5 +144,5 @@ module.exports = {
   securityLogger,
   ipBlocking,
   enhancedCors: cors(corsOptions),
-  enhancedHelmet: helmet(helmetConfig)
+  enhancedHelmet: helmet(helmetConfig),
 };

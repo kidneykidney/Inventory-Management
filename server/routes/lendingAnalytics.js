@@ -14,26 +14,26 @@ router.get('/overview', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const overview = await LendingAnalytics.getOverviewStatistics();
 
     logger.info('Lending overview statistics retrieved', {
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      data: overview
+      data: overview,
     });
   } catch (error) {
     logger.error('Error retrieving lending overview:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve lending overview',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -48,7 +48,7 @@ router.get('/trends', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
@@ -56,13 +56,13 @@ router.get('/trends', authenticateToken, async (req, res) => {
 
     const trends = await LendingAnalytics.getLendingTrends({
       period,
-      groupBy
+      groupBy,
     });
 
     logger.info('Lending trends retrieved', {
       period,
       groupBy,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
@@ -71,15 +71,15 @@ router.get('/trends', authenticateToken, async (req, res) => {
       meta: {
         period,
         groupBy,
-        count: trends.length
-      }
+        count: trends.length,
+      },
     });
   } catch (error) {
     logger.error('Error retrieving lending trends:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve lending trends',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -94,7 +94,7 @@ router.get('/popular-products', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
@@ -102,13 +102,13 @@ router.get('/popular-products', authenticateToken, async (req, res) => {
 
     const popularProducts = await LendingAnalytics.getPopularProducts({
       limit: parseInt(limit),
-      period
+      period,
     });
 
     logger.info('Popular products analytics retrieved', {
       limit,
       period,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
@@ -117,15 +117,15 @@ router.get('/popular-products', authenticateToken, async (req, res) => {
       meta: {
         limit: parseInt(limit),
         period,
-        count: popularProducts.length
-      }
+        count: popularProducts.length,
+      },
     });
   } catch (error) {
     logger.error('Error retrieving popular products:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve popular products',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -140,29 +140,29 @@ router.get('/categories', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const categoryAnalytics = await LendingAnalytics.getCategoryAnalytics();
 
     logger.info('Category analytics retrieved', {
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
       data: categoryAnalytics,
       meta: {
-        count: categoryAnalytics.length
-      }
+        count: categoryAnalytics.length,
+      },
     });
   } catch (error) {
     logger.error('Error retrieving category analytics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve category analytics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -177,34 +177,34 @@ router.get('/user-behavior', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const { limit = 10 } = req.query;
 
     const userBehavior = await LendingAnalytics.getUserBehaviorAnalytics({
-      limit: parseInt(limit)
+      limit: parseInt(limit),
     });
 
     logger.info('User behavior analytics retrieved', {
       limit,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
       data: userBehavior,
       meta: {
-        limit: parseInt(limit)
-      }
+        limit: parseInt(limit),
+      },
     });
   } catch (error) {
     logger.error('Error retrieving user behavior analytics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve user behavior analytics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -219,26 +219,26 @@ router.get('/overdue', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const overdueAnalytics = await LendingAnalytics.getOverdueAnalytics();
 
     logger.info('Overdue analytics retrieved', {
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      data: overdueAnalytics
+      data: overdueAnalytics,
     });
   } catch (error) {
     logger.error('Error retrieving overdue analytics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve overdue analytics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -253,26 +253,26 @@ router.get('/predictive', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const predictiveAnalytics = await LendingAnalytics.getPredictiveAnalytics();
 
     logger.info('Predictive analytics retrieved', {
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      data: predictiveAnalytics
+      data: predictiveAnalytics,
     });
   } catch (error) {
     logger.error('Error retrieving predictive analytics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve predictive analytics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -287,26 +287,26 @@ router.get('/performance', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const performanceMetrics = await LendingAnalytics.getPerformanceMetrics();
 
     logger.info('Performance metrics retrieved', {
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
       success: true,
-      data: performanceMetrics
+      data: performanceMetrics,
     });
   } catch (error) {
     logger.error('Error retrieving performance metrics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve performance metrics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -321,32 +321,32 @@ router.get('/report', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const { includeDetails = 'true', format = 'json' } = req.query;
 
     const report = await LendingAnalytics.generateAnalyticsReport({
-      includeDetails: includeDetails === 'true'
+      includeDetails: includeDetails === 'true',
     });
 
     logger.info('Analytics report generated', {
       includeDetails: includeDetails === 'true',
       format,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     if (format === 'json') {
       res.json({
         success: true,
-        data: report
+        data: report,
       });
     } else {
       // Future: Add CSV/PDF export functionality
       res.status(400).json({
         success: false,
-        message: 'Only JSON format is currently supported'
+        message: 'Only JSON format is currently supported',
       });
     }
   } catch (error) {
@@ -354,7 +354,7 @@ router.get('/report', authenticateToken, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to generate analytics report',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -369,7 +369,7 @@ router.get('/usage-statistics', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
@@ -423,7 +423,7 @@ router.get('/usage-statistics', authenticateToken, async (req, res) => {
       categoryId,
       userId,
       resultCount: results.length,
-      requestUserId: req.user.id
+      requestUserId: req.user.id,
     });
 
     res.json({
@@ -434,17 +434,17 @@ router.get('/usage-statistics', authenticateToken, async (req, res) => {
           startDate,
           endDate,
           categoryId,
-          userId
+          userId,
         },
-        count: results.length
-      }
+        count: results.length,
+      },
     });
   } catch (error) {
     logger.error('Error retrieving usage statistics:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve usage statistics',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -459,12 +459,12 @@ router.get('/overdue-tracking', authenticateToken, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin access required',
       });
     }
 
     const { pool } = require('../config/database');
-    
+
     // Get detailed overdue tracking information
     const [overdueTracking] = await pool.execute(`
       SELECT 
@@ -500,7 +500,7 @@ router.get('/overdue-tracking', authenticateToken, async (req, res) => {
 
     logger.info('Overdue tracking retrieved', {
       count: overdueTracking.length,
-      userId: req.user.id
+      userId: req.user.id,
     });
 
     res.json({
@@ -509,19 +509,25 @@ router.get('/overdue-tracking', authenticateToken, async (req, res) => {
       meta: {
         count: overdueTracking.length,
         escalationLevels: {
-          low: overdueTracking.filter(item => item.escalation_level === 'Low').length,
-          medium: overdueTracking.filter(item => item.escalation_level === 'Medium').length,
-          high: overdueTracking.filter(item => item.escalation_level === 'High').length,
-          critical: overdueTracking.filter(item => item.escalation_level === 'Critical').length
-        }
-      }
+          low: overdueTracking.filter(item => item.escalation_level === 'Low')
+            .length,
+          medium: overdueTracking.filter(
+            item => item.escalation_level === 'Medium'
+          ).length,
+          high: overdueTracking.filter(item => item.escalation_level === 'High')
+            .length,
+          critical: overdueTracking.filter(
+            item => item.escalation_level === 'Critical'
+          ).length,
+        },
+      },
     });
   } catch (error) {
     logger.error('Error retrieving overdue tracking:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to retrieve overdue tracking',
-      error: error.message
+      error: error.message,
     });
   }
 });

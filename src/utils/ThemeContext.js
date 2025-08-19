@@ -23,7 +23,7 @@ export const ThemeProviderWrapper = ({ children }) => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
     localStorage.setItem('darkMode', newDarkMode);
-    
+
     // Toggle dark class on document element for Tailwind CSS
     if (newDarkMode) {
       document.documentElement.classList.add('dark');
@@ -58,7 +58,7 @@ export const ThemeProviderWrapper = ({ children }) => {
     const savedMode = localStorage.getItem('darkMode');
     const isDarkMode = savedMode === 'true';
     setDarkMode(isDarkMode);
-    
+
     // Apply dark class to document element for Tailwind CSS
     if (isDarkMode) {
       document.documentElement.classList.add('dark');

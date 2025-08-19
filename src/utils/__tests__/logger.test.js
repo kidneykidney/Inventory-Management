@@ -180,8 +180,10 @@ describe('logger', () => {
       logInfo('Timestamp test');
 
       const logCall = console.info.mock.calls[0][0];
-      const timestampMatch = logCall.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
-      
+      const timestampMatch = logCall.match(
+        /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+      );
+
       expect(timestampMatch).not.toBeNull();
     });
   });
