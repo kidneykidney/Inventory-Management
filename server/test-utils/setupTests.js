@@ -39,6 +39,28 @@ jest.mock('../utils/logger', () => ({
   debug: jest.fn(),
 }));
 
+// Mock email services
+jest.mock('../services/emailService', () => ({
+  sendEmail: jest.fn().mockResolvedValue(true),
+  sendFeedbackNotification: jest.fn().mockResolvedValue(true),
+}));
+
+jest.mock('../services/notificationService', () => ({
+  submitFeedback: jest.fn().mockResolvedValue(true),
+  sendNotification: jest.fn().mockResolvedValue(true),
+}));
+
+// Mock nodemailer for EmailService
+jest.mock('nodemailer', () => ({
+  createTransporter: jest.fn(() => ({
+    sendMail: jest.fn().mockResolvedValue({ messageId: 'test-message-id' }),
+  })),
+  createTestAccount: jest.fn().mockResolvedValue({
+    user: 'test@example.com',
+    pass: 'test-password',
+  }),
+}));
+
 // Global test helpers
 global.createMockRequest = (overrides = {}) => ({
   body: {},

@@ -224,7 +224,7 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
           </div>
 
           <div className='space-y-2'>
-            <Label>Overall Rating</Label>
+            <Label htmlFor='rating'>Overall Rating</Label>
             <div className='flex items-center space-x-3'>
               <StarRating
                 rating={formData.rating}

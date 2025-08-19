@@ -84,3 +84,46 @@ const sessionStorageMock = {
   clear: jest.fn(),
 };
 global.sessionStorage = sessionStorageMock;
+
+// Mock methods needed by Radix UI components
+if (typeof Element.prototype.hasPointerCapture === 'undefined') {
+  Element.prototype.hasPointerCapture = jest.fn(() => false);
+}
+
+if (typeof Element.prototype.setPointerCapture === 'undefined') {
+  Element.prototype.setPointerCapture = jest.fn();
+}
+
+if (typeof Element.prototype.releasePointerCapture === 'undefined') {
+  Element.prototype.releasePointerCapture = jest.fn();
+}
+
+if (typeof Element.prototype.scrollIntoView === 'undefined') {
+  Element.prototype.scrollIntoView = jest.fn();
+}
+
+// Mock DOMRect for getBoundingClientRect
+global.DOMRect = jest.fn(() => ({
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  toJSON: jest.fn(),
+}));
+
+// Mock getBoundingClientRect
+Element.prototype.getBoundingClientRect = jest.fn(() => ({
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  toJSON: jest.fn(),
+}));
