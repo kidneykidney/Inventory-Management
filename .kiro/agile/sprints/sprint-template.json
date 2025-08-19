@@ -1,0 +1,24 @@
+{
+  "id": "sprint-000",
+  "number": 0,
+  "startDate": null,
+  "endDate": null,
+  "goal": "Sprint goal description",
+  "status": "planning",
+  "stories": [],
+  "velocity": {
+    "planned": 0,
+    "completed": 0
+  },
+  "burndown": [],
+  "retrospective": {
+    "whatWentWell": [],
+    "whatCouldImprove": [],
+    "actionItems": []
+  },
+  "review": {
+    "completed": [],
+    "incomplete": [],
+    "stakeholderFeedback": []
+  }
+}

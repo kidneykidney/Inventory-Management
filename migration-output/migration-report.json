@@ -1,0 +1,15 @@
+{
+  "migrationDate": "2025-08-15T08:45:50.740Z",
+  "totalItemsMigrated": 5,
+  "itemsByCategory": {
+    "Electronics": 2,
+    "Furniture": 2,
+    "Office Supplies": 1
+  },
+  "itemsByCondition": {
+    "excellent": 3,
+    "fair": 2
+  },
+  "averageLendingPeriod": 51,
+  "itemsRequiringApproval": 2
+}

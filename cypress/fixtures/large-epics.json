@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": "epic-perf-1",
+      "title": "Performance Test Epic 1",
+      "description": "Large dataset epic for performance testing with comprehensive description",
+      "businessValue": "Tests system performance with large datasets",
+      "status": "planned",
+      "priority": "medium",
+      "stories": [],
+      "estimatedStoryPoints": 0
+    },
+    {
+      "id": "epic-perf-2",
+      "title": "Performance Test Epic 2",
+      "description": "Another large dataset epic for performance testing scenarios",
+      "businessValue": "Validates rendering performance with multiple epics",
+      "status": "in-progress",
+      "priority": "high",
+      "stories": [],
+      "estimatedStoryPoints": 0
+    }
+  ]
+}

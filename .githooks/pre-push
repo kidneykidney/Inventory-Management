@@ -1,0 +1,42 @@
+#!/bin/sh
+# Pre-push hook for additional quality checks
+
+echo "🚀 Running pre-push checks..."
+
+# Get the current branch name
+current_branch=$(git branch --show-current)
+
+# Check branch naming convention
+branch_regex='^(feature|bugfix|hotfix|release)\/[a-z0-9-]+$'
+if ! echo "$current_branch" | grep -qE "$branch_regex" && [ "$current_branch" != "main" ] && [ "$current_branch" != "develop" ]; then
+    echo "❌ Invalid branch name: $current_branch"
+    echo ""
+    echo "Branch names must follow the convention:"
+    echo "  feature/description-here"
+    echo "  bugfix/description-here"
+    echo "  hotfix/description-here"
+    echo "  release/version-number"
+    echo ""
+    echo "Examples:"
+    echo "  feature/user-authentication"
+    echo "  bugfix/fix-login-error"
+    echo "  hotfix/security-patch"
+    exit 1
+fi
+
+# Run comprehensive tests before push
+echo "🧪 Running comprehensive test suite..."
+if ! npm run test:all --silent; then
+    echo "❌ Test suite failed. Please fix failing tests before pushing."
+    exit 1
+fi
+
+# Check for merge conflicts markers
+echo "🔍 Checking for merge conflict markers..."
+if git grep -n "<<<<<<< HEAD\|=======" -- '*.js' '*.jsx' '*.ts' '*.tsx' '*.css' '*.md' 2>/dev/null; then
+    echo "❌ Merge conflict markers found. Please resolve conflicts before pushing."
+    exit 1
+fi
+
+echo "✅ All pre-push checks passed!"
+exit 0

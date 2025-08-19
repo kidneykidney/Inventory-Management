@@ -1,0 +1,33 @@
+#!/bin/sh
+# Pre-commit hook for Agile development workflow
+
+echo "🔍 Running pre-commit checks..."
+
+# Check if we're on a feature branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [[ $BRANCH =~ ^feature/sprint-[0-9]+-story-[0-9]+$ ]]; then
+    echo "✅ Feature branch naming convention followed: $BRANCH"
+else
+    if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "develop" ]; then
+        echo "⚠️  Branch name doesn't follow convention: feature/sprint-X-story-Y"
+        echo "Current branch: $BRANCH"
+    fi
+fi
+
+# Run linting (when configured)
+if command -v npm &> /dev/null; then
+    echo "🧹 Running linting..."
+    # npm run lint
+    echo "ℹ️  Linting not yet configured"
+fi
+
+# Run unit tests
+echo "🧪 Running unit tests..."
+npm run test:unit
+if [ $? -ne 0 ]; then
+    echo "❌ Unit tests failed. Commit aborted."
+    exit 1
+fi
+
+echo "✅ Pre-commit checks passed!"
+exit 0

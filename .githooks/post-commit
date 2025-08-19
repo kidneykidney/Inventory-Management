@@ -1,0 +1,13 @@
+#!/bin/sh
+# Post-commit hook to automatically update story status
+
+echo "📝 Updating story status based on commit..."
+
+# Run story status update script
+if command -v node >/dev/null 2>&1; then
+    node scripts/update-story-status.js
+else
+    echo "⚠️  Node.js not found, skipping story status update"
+fi
+
+exit 0

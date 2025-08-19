@@ -1,0 +1,45 @@
+{
+  "project": {
+    "name": "Electronics and Office Components Lending System",
+    "version": "1.0.0",
+    "startDate": "2025-01-01",
+    "methodology": "Scrum"
+  },
+  "sprints": {
+    "duration": 14,
+    "unit": "days",
+    "capacity": {
+      "storyPoints": 40,
+      "hours": 80
+    }
+  },
+  "team": {
+    "size": 2,
+    "roles": ["Developer", "Product Owner"],
+    "workingDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+  },
+  "definitions": {
+    "ready": [
+      "Acceptance criteria defined",
+      "Story points estimated",
+      "Dependencies identified",
+      "Technical approach agreed upon"
+    ],
+    "done": [
+      "Code written and reviewed",
+      "Unit tests passing (>80% coverage)",
+      "Integration tests passing",
+      "Acceptance criteria verified",
+      "Documentation updated"
+    ]
+  },
+  "storyPointScale": [1, 2, 3, 5, 8, 13, 21],
+  "priorities": ["High", "Medium", "Low"],
+  "categories": [
+    "Feature",
+    "Bug",
+    "Technical Debt",
+    "Spike",
+    "Chore"
+  ]
+}

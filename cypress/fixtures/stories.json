@@ -1,0 +1,90 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": "story-1",
+      "title": "User Registration",
+      "description": "As a new user, I want to register an account, so that I can access the system",
+      "acceptanceCriteria": [
+        "WHEN user provides valid email and password THEN account is created",
+        "WHEN user provides invalid email THEN validation error is shown",
+        "WHEN user provides weak password THEN password strength requirements are displayed"
+      ],
+      "storyPoints": 5,
+      "priority": "high",
+      "status": "backlog",
+      "epicId": "epic-1",
+      "assignee": null,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "story-2",
+      "title": "User Login",
+      "description": "As a registered user, I want to login to my account, so that I can access my data",
+      "acceptanceCriteria": [
+        "WHEN user provides correct credentials THEN they are logged in",
+        "WHEN user provides incorrect credentials THEN error message is shown",
+        "WHEN user account is locked THEN appropriate message is displayed"
+      ],
+      "storyPoints": 3,
+      "priority": "high",
+      "status": "in-progress",
+      "epicId": "epic-1",
+      "assignee": "john.doe@example.com",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-15T00:00:00Z"
+    },
+    {
+      "id": "story-3",
+      "title": "Product Creation",
+      "description": "As an admin, I want to create new products, so that I can manage inventory",
+      "acceptanceCriteria": [
+        "WHEN admin provides valid product data THEN product is created",
+        "WHEN admin provides invalid data THEN validation errors are shown",
+        "WHEN product is created THEN it appears in product catalog"
+      ],
+      "storyPoints": 8,
+      "priority": "medium",
+      "status": "backlog",
+      "epicId": "epic-2",
+      "assignee": null,
+      "createdAt": "2024-01-02T00:00:00Z",
+      "updatedAt": "2024-01-02T00:00:00Z"
+    },
+    {
+      "id": "story-4",
+      "title": "Password Reset",
+      "description": "As a user, I want to reset my password, so that I can regain access to my account",
+      "acceptanceCriteria": [
+        "WHEN user requests password reset THEN email is sent with reset link",
+        "WHEN user clicks reset link THEN password reset form is displayed",
+        "WHEN user sets new password THEN account is updated and user can login"
+      ],
+      "storyPoints": 5,
+      "priority": "medium",
+      "status": "backlog",
+      "epicId": "epic-1",
+      "assignee": null,
+      "createdAt": "2024-01-03T00:00:00Z",
+      "updatedAt": "2024-01-03T00:00:00Z"
+    },
+    {
+      "id": "story-5",
+      "title": "Product Search",
+      "description": "As a user, I want to search for products, so that I can find items to borrow",
+      "acceptanceCriteria": [
+        "WHEN user enters search term THEN relevant products are displayed",
+        "WHEN user applies filters THEN results are filtered accordingly",
+        "WHEN no results found THEN helpful message is shown"
+      ],
+      "storyPoints": 8,
+      "priority": "high",
+      "status": "todo",
+      "epicId": "epic-2",
+      "assignee": "jane.smith@example.com",
+      "createdAt": "2024-01-04T00:00:00Z",
+      "updatedAt": "2024-01-04T00:00:00Z"
+    }
+  ]
+}

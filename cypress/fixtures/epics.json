@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": "epic-1",
+      "title": "User Authentication System",
+      "description": "Complete user authentication with login, registration, and password reset functionality",
+      "businessValue": "Enables secure user access to the system and protects sensitive data",
+      "status": "planned",
+      "priority": "high",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "stories": [
+        {
+          "id": "story-1",
+          "title": "User Registration",
+          "description": "As a new user, I want to register an account, so that I can access the system",
+          "storyPoints": 5,
+          "status": "backlog",
+          "priority": "high"
+        },
+        {
+          "id": "story-2",
+          "title": "User Login",
+          "description": "As a registered user, I want to login to my account, so that I can access my data",
+          "storyPoints": 3,
+          "status": "in-progress",
+          "priority": "high"
+        }
+      ],
+      "estimatedStoryPoints": 8
+    },
+    {
+      "id": "epic-2",
+      "title": "Product Management",
+      "description": "Comprehensive product catalog and management system for electronics and office components",
+      "businessValue": "Allows efficient product management and organization for lending operations",
+      "status": "in-progress",
+      "priority": "medium",
+      "createdAt": "2024-01-02T00:00:00Z",
+      "updatedAt": "2024-01-02T00:00:00Z",
+      "stories": [
+        {
+          "id": "story-3",
+          "title": "Product Creation",
+          "description": "As an admin, I want to create new products, so that I can manage inventory",
+          "storyPoints": 8,
+          "status": "backlog",
+          "priority": "medium"
+        }
+      ],
+      "estimatedStoryPoints": 8
+    }
+  ]
+}

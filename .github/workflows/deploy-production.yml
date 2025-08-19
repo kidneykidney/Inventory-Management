@@ -1,0 +1,114 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  deploy-production:
+    name: Deploy to Production Environment
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run full test suite
+      run: |
+        npm run test:unit
+        npm run lint
+        npm run format:check
+        
+    - name: Build application
+      run: npm run build
+      env:
+        REACT_APP_API_URL: ${{ secrets.PRODUCTION_API_URL }}
+        REACT_APP_ENV: production
+        
+    - name: Create database backup
+      run: |
+        mysqldump -h${{ secrets.PRODUCTION_DB_HOST }} \
+                  -u${{ secrets.PRODUCTION_DB_USER }} \
+                  -p${{ secrets.PRODUCTION_DB_PASSWORD }} \
+                  ${{ secrets.PRODUCTION_DB_NAME }} > backup_$(date +%Y%m%d_%H%M%S).sql
+                  
+    - name: Upload backup to S3
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+        
+    - name: Upload backup
+      run: |
+        aws s3 cp backup_*.sql s3://${{ secrets.BACKUP_BUCKET }}/database-backups/
+        
+    - name: Run database migrations
+      run: cd server && npm run migrate
+      env:
+        DB_HOST: ${{ secrets.PRODUCTION_DB_HOST }}
+        DB_PORT: ${{ secrets.PRODUCTION_DB_PORT }}
+        DB_USER: ${{ secrets.PRODUCTION_DB_USER }}
+        DB_PASSWORD: ${{ secrets.PRODUCTION_DB_PASSWORD }}
+        DB_NAME: ${{ secrets.PRODUCTION_DB_NAME }}
+        
+    - name: Deploy to production server
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.PRODUCTION_HOST }}
+        username: ${{ secrets.PRODUCTION_USER }}
+        key: ${{ secrets.PRODUCTION_SSH_KEY }}
+        port: ${{ secrets.PRODUCTION_PORT }}
+        script: |
+          cd /var/www/inventory-production
+          git pull origin main
+          npm ci
+          npm run build
+          pm2 restart inventory-production
+          
+    - name: Health check
+      run: |
+        sleep 60
+        curl -f ${{ secrets.PRODUCTION_API_URL }}/api/health || exit 1
+        
+    - name: Run smoke tests
+      run: |
+        curl -f ${{ secrets.PRODUCTION_API_URL }}/api/v1/health
+        curl -f ${{ secrets.PRODUCTION_API_URL }}/api/v1/inventory
+        
+    - name: Rollback on failure
+      if: failure()
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.PRODUCTION_HOST }}
+        username: ${{ secrets.PRODUCTION_USER }}
+        key: ${{ secrets.PRODUCTION_SSH_KEY }}
+        port: ${{ secrets.PRODUCTION_PORT }}
+        script: |
+          cd /var/www/inventory-production
+          git reset --hard HEAD~1
+          npm ci
+          npm run build
+          pm2 restart inventory-production
+          
+    - name: Notify deployment status
+      uses: 8398a7/action-slack@v3
+      if: always()
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow

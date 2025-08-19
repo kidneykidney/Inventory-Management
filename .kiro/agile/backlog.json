@@ -1,0 +1,61 @@
+{
+  "epics": [
+    {
+      "id": "epic-001",
+      "title": "Foundation & Core Setup",
+      "description": "Establish core system infrastructure, authentication, and database design",
+      "businessValue": "Enables all other features to be built on solid foundation",
+      "status": "planned",
+      "targetSprint": 1,
+      "storyIds": []
+    },
+    {
+      "id": "epic-002",
+      "title": "Electronics & Office Components Management",
+      "description": "Product catalog with detailed specifications and categorization",
+      "businessValue": "Core inventory management for lending system",
+      "status": "planned",
+      "targetSprint": 3,
+      "storyIds": []
+    },
+    {
+      "id": "epic-003",
+      "title": "Lending & Borrowing System",
+      "description": "Complete lending workflow with automated return tracking",
+      "businessValue": "Primary business functionality for equipment lending",
+      "status": "planned",
+      "targetSprint": 5,
+      "storyIds": []
+    },
+    {
+      "id": "epic-004",
+      "title": "Advanced Search & Filtering",
+      "description": "Powerful search capabilities across all product specifications",
+      "businessValue": "Improves user experience and equipment discoverability",
+      "status": "planned",
+      "targetSprint": 7,
+      "storyIds": []
+    },
+    {
+      "id": "epic-005",
+      "title": "Email Notification System",
+      "description": "Automated reminders and notifications for lending activities",
+      "businessValue": "Ensures timely returns and reduces equipment loss",
+      "status": "planned",
+      "targetSprint": 9,
+      "storyIds": []
+    },
+    {
+      "id": "epic-006",
+      "title": "Analytics & Production Readiness",
+      "description": "Comprehensive reporting and system optimization",
+      "businessValue": "Provides insights and ensures system scalability",
+      "status": "planned",
+      "targetSprint": 11,
+      "storyIds": []
+    }
+  ],
+  "stories": [],
+  "currentSprint": 0,
+  "nextStoryId": 1
+}

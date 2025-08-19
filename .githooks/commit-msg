@@ -1,0 +1,32 @@
+#!/bin/sh
+# Commit message hook to enforce conventional commits and story linking
+
+commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,50}'
+story_regex='(STORY-[0-9]+|#[0-9]+)'
+
+# Read the commit message
+commit_message=$(cat "$1")
+
+echo "🔍 Validating commit message format..."
+
+# Check conventional commit format
+if ! echo "$commit_message" | grep -qE "$commit_regex"; then
+    echo "❌ Invalid commit message format!"
+    echo ""
+    echo "Commit message must follow conventional commits format:"
+    echo "  <type>[optional scope]: <description>"
+    echo ""
+    echo "Types: feat, fix, docs, style, refactor, test, chore"
+    echo "Example: feat(auth): add user login functionality"
+    echo "Example: fix: resolve navigation bug"
+    exit 1
+fi
+
+# Check for story reference (optional but recommended)
+if ! echo "$commit_message" | grep -qE "$story_regex"; then
+    echo "⚠️  Warning: No story reference found in commit message"
+    echo "   Consider adding STORY-XXX or #XXX to link to user story"
+fi
+
+echo "✅ Commit message format is valid!"
+exit 0

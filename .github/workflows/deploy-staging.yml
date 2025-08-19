@@ -1,0 +1,68 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging Environment
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build application
+      run: npm run build
+      env:
+        REACT_APP_API_URL: ${{ secrets.STAGING_API_URL }}
+        REACT_APP_ENV: staging
+        
+    - name: Run database migrations
+      run: cd server && npm run migrate
+      env:
+        DB_HOST: ${{ secrets.STAGING_DB_HOST }}
+        DB_PORT: ${{ secrets.STAGING_DB_PORT }}
+        DB_USER: ${{ secrets.STAGING_DB_USER }}
+        DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+        DB_NAME: ${{ secrets.STAGING_DB_NAME }}
+        
+    - name: Deploy to staging server
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USER }}
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        port: ${{ secrets.STAGING_PORT }}
+        script: |
+          cd /var/www/inventory-staging
+          git pull origin develop
+          npm ci
+          npm run build
+          pm2 restart inventory-staging
+          
+    - name: Health check
+      run: |
+        sleep 30
+        curl -f ${{ secrets.STAGING_API_URL }}/api/health || exit 1
+        
+    - name: Notify deployment status
+      uses: 8398a7/action-slack@v3
+      if: always()
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow

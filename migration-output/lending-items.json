@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "sku": "SKU001",
+    "name": "Laptop",
+    "category": "Electronics",
+    "subcategory": "General Electronics",
+    "brand": "Generic",
+    "model": "Laptop",
+    "serialNumber": "SKU001-550739",
+    "specifications": {
+      "type": "Electronic Device",
+      "powerRequirement": "Standard AC",
+      "acquisitionDate": "2024-08-21"
+    },
+    "quantity": 25,
+    "available": 25,
+    "location": "Warehouse A",
+    "condition": "excellent",
+    "tags": [
+      "electronics",
+      "tech",
+      "portable",
+      "computing"
+    ],
+    "isAvailable": true,
+    "lendingPolicy": {
+      "maxLendingPeriod": 30,
+      "requiresApproval": true
+    },
+    "migratedFrom": "inventory_system",
+    "migrationDate": "2025-08-15T08:45:50.740Z",
+    "originalStatus": "In Stock"
+  },
+  {
+    "id": 2,
+    "sku": "SKU002",
+    "name": "Office Chair",
+    "category": "Furniture",
+    "subcategory": "Office Furniture",
+    "brand": "Generic",
+    "model": "Chair",
+    "serialNumber": "SKU002-550740",
+    "specifications": {
+      "material": "Mixed Materials",
+      "dimensions": "Standard Size",
+      "acquisitionDate": "2025-03-26"
+    },
+    "quantity": 15,
+    "available": 15,
+    "location": "Warehouse B",
+    "condition": "excellent",
+    "tags": [
+      "furniture",
+      "office",
+      "seating",
+      "ergonomic"
+    ],
+    "isAvailable": true,
+    "lendingPolicy": {
+      "maxLendingPeriod": 90,
+      "requiresApproval": false
+    },
+    "migratedFrom": "inventory_system",
+    "migrationDate": "2025-08-15T08:45:50.740Z",
+    "originalStatus": "In Stock"
+  },
+  {
+    "id": 3,
+    "sku": "SKU003",
+    "name": "Printer Ink",
+    "category": "Office Supplies",
+    "subcategory": "General Supplies",
+    "brand": "Generic",
+    "model": "Ink",
+    "serialNumber": "SKU003-550740",
+    "specifications": {
+      "type": "Office Equipment",
+      "usage": "General Office Use",
+      "acquisitionDate": "2025-01-30"
+    },
+    "quantity": 5,
+    "available": 5,
+    "location": "Warehouse A",
+    "condition": "fair",
+    "tags": [
+      "supplies",
+      "office",
+      "printing",
+      "document"
+    ],
+    "isAvailable": true,
+    "lendingPolicy": {
+      "maxLendingPeriod": 14,
+      "requiresApproval": false
+    },
+    "migratedFrom": "inventory_system",
+    "migrationDate": "2025-08-15T08:45:50.740Z",
+    "originalStatus": "Low Stock"
+  },
+  {
+    "id": 4,
+    "sku": "SKU004",
+    "name": "Smartphone",
+    "category": "Electronics",
+    "subcategory": "General Electronics",
+    "brand": "Generic",
+    "model": "Smartphone",
+    "serialNumber": "SKU004-550740",
+    "specifications": {
+      "type": "Electronic Device",
+      "powerRequirement": "Standard AC",
+      "acquisitionDate": "2025-04-30"
+    },
+    "quantity": 30,
+    "available": 30,
+    "location": "Warehouse C",
+    "condition": "excellent",
+    "tags": [
+      "electronics",
+      "tech",
+      "communication",
+      "mobile"
+    ],
+    "isAvailable": true,
+    "lendingPolicy": {
+      "maxLendingPeriod": 30,
+      "requiresApproval": true
+    },
+    "migratedFrom": "inventory_system",
+    "migrationDate": "2025-08-15T08:45:50.740Z",
+    "originalStatus": "In Stock"
+  },
+  {
+    "id": 5,
+    "sku": "SKU005",
+    "name": "Desk",
+    "category": "Furniture",
+    "subcategory": "Office Furniture",
+    "brand": "Generic",
+    "model": "Desk",
+    "serialNumber": "SKU005-550740",
+    "specifications": {
+      "material": "Mixed Materials",
+      "dimensions": "Standard Size",
+      "acquisitionDate": "2025-03-09"
+    },
+    "quantity": 0,
+    "available": 0,
+    "location": "Warehouse B",
+    "condition": "fair",
+    "tags": [
+      "furniture",
+      "office",
+      "workspace",
+      "furniture"
+    ],
+    "isAvailable": false,
+    "lendingPolicy": {
+      "maxLendingPeriod": 90,
+      "requiresApproval": false
+    },
+    "migratedFrom": "inventory_system",
+    "migrationDate": "2025-08-15T08:45:50.740Z",
+    "originalStatus": "Out of Stock"
+  }
+]

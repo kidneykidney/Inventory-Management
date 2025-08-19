@@ -1,0 +1,23 @@
+{
+  "main": {
+    "protection": true,
+    "requiredReviews": 2,
+    "dismissStaleReviews": true,
+    "requireCodeOwnerReviews": false,
+    "requiredStatusChecks": [
+      "ci/tests",
+      "ci/lint",
+      "ci/build"
+    ]
+  },
+  "develop": {
+    "protection": true,
+    "requiredReviews": 1,
+    "dismissStaleReviews": true,
+    "requireCodeOwnerReviews": false,
+    "requiredStatusChecks": [
+      "ci/tests",
+      "ci/lint"
+    ]
+  }
+}

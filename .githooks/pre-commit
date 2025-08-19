@@ -1,0 +1,45 @@
+#!/bin/sh
+# Pre-commit hook for automated code quality checks
+
+echo "🔍 Running pre-commit checks..."
+
+# Check if we're in a Git repository
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "❌ Not in a Git repository"
+    exit 1
+fi
+
+# Run linting for frontend
+echo "📝 Running ESLint..."
+if ! npm run lint --silent; then
+    echo "❌ ESLint failed. Please fix linting errors before committing."
+    exit 1
+fi
+
+# Run formatting check
+echo "🎨 Checking code formatting..."
+if ! npm run format:check --silent; then
+    echo "❌ Code formatting issues found. Run 'npm run format' to fix."
+    exit 1
+fi
+
+# Run frontend tests
+echo "🧪 Running frontend tests..."
+if ! npm test -- --run --passWithNoTests --watchAll=false; then
+    echo "❌ Frontend tests failed. Please fix failing tests before committing."
+    exit 1
+fi
+
+# Run backend tests if server directory exists
+if [ -d "server" ]; then
+    echo "🧪 Running backend tests..."
+    cd server
+    if ! npm test --silent; then
+        echo "❌ Backend tests failed. Please fix failing tests before committing."
+        exit 1
+    fi
+    cd ..
+fi
+
+echo "✅ All pre-commit checks passed!"
+exit 0

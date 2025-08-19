@@ -1,0 +1,1970 @@
+{
+  "timestamp": "2025-08-15T08:03:21.706Z",
+  "summary": {
+    "totalDuration": 9.79,
+    "totalRequests": 250,
+    "totalSuccessful": 250,
+    "totalErrors": 0,
+    "overallSuccessRate": 100,
+    "overallThroughput": 25.54
+  },
+  "scenarios": [
+    {
+      "name": "API Health Check",
+      "url": "http://localhost:5000/api/health",
+      "metrics": {
+        "avgResponseTime": 4,
+        "minResponseTime": 0,
+        "maxResponseTime": 26,
+        "p95ResponseTime": 8,
+        "p99ResponseTime": 8,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 100.91
+      },
+      "requestCount": 100,
+      "errorCount": 0
+    },
+    {
+      "name": "Get Epics",
+      "url": "http://localhost:5000/api/v1/agile/epics",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 4,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 52.52
+      },
+      "requestCount": 50,
+      "errorCount": 0
+    },
+    {
+      "name": "Get User Stories",
+      "url": "http://localhost:5000/api/v1/agile/stories",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 52.41
+      },
+      "requestCount": 50,
+      "errorCount": 0
+    },
+    {
+      "name": "Get Sprints",
+      "url": "http://localhost:5000/api/v1/sprints",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 0,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 31.78
+      },
+      "requestCount": 30,
+      "errorCount": 0
+    },
+    {
+      "name": "Performance Metrics",
+      "url": "http://localhost:5000/api/v1/performance/summary",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 3,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 3,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 21.3
+      },
+      "requestCount": 20,
+      "errorCount": 0
+    }
+  ],
+  "issues": [],
+  "recommendations": [
+    {
+      "category": "Maintenance",
+      "priority": "low",
+      "title": "Continue Performance Monitoring",
+      "description": "Current performance is within acceptable limits",
+      "actions": [
+        "Maintain regular load testing schedule",
+        "Monitor performance trends over time",
+        "Plan for capacity increases as usage grows",
+        "Consider performance testing in CI/CD pipeline"
+      ]
+    }
+  ],
+  "rawResults": [
+    {
+      "scenario": "API Health Check",
+      "url": "http://localhost:5000/api/health",
+      "method": "GET",
+      "concurrent": 10,
+      "totalRequests": 100,
+      "startTime": 1755244991915,
+      "responses": [
+        {
+          "statusCode": 403,
+          "responseTime": 26,
+          "size": 2,
+          "timestamp": 1755244991915,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 8,
+          "size": 2,
+          "timestamp": 1755244991933,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 8,
+          "size": 2,
+          "timestamp": 1755244991933,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 8,
+          "size": 2,
+          "timestamp": 1755244991934,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 8,
+          "size": 2,
+          "timestamp": 1755244991934,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 8,
+          "size": 2,
+          "timestamp": 1755244991934,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 7,
+          "size": 2,
+          "timestamp": 1755244991935,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 7,
+          "size": 2,
+          "timestamp": 1755244991935,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 8,
+          "size": 2,
+          "timestamp": 1755244991935,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 7,
+          "size": 2,
+          "timestamp": 1755244991936,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992045,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992045,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992045,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992045,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992045,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992046,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992046,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992046,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992046,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992046,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992149,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992149,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992149,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992150,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992150,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992150,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992150,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992150,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992150,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244992150,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992255,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992256,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992256,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992256,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992256,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992257,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992257,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992257,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992257,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992257,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992365,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992365,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992366,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992366,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992366,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992366,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992366,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992367,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992367,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992367,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992473,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992474,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992474,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992474,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992474,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992475,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992475,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992475,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992475,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992475,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992580,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992581,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992581,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992581,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992581,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992582,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992582,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992582,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992582,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992583,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 6,
+          "size": 2,
+          "timestamp": 1755244992688,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992689,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992689,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992690,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 5,
+          "size": 2,
+          "timestamp": 1755244992690,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 6,
+          "size": 2,
+          "timestamp": 1755244992690,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 6,
+          "size": 2,
+          "timestamp": 1755244992691,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 6,
+          "size": 2,
+          "timestamp": 1755244992691,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 6,
+          "size": 2,
+          "timestamp": 1755244992691,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 6,
+          "size": 2,
+          "timestamp": 1755244992691,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992798,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992798,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992799,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992799,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992799,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992799,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992799,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244992799,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992800,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244992800,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244992904,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 0,
+          "size": 2,
+          "timestamp": 1755244992905,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 0,
+          "size": 2,
+          "timestamp": 1755244992905,
+          "success": false
+        }
+      ],
+      "errors": [],
+      "metrics": {
+        "avgResponseTime": 4,
+        "minResponseTime": 0,
+        "maxResponseTime": 26,
+        "p95ResponseTime": 8,
+        "p99ResponseTime": 8,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 100.91
+      },
+      "endTime": 1755244992906
+    },
+    {
+      "scenario": "Get Epics",
+      "url": "http://localhost:5000/api/v1/agile/epics",
+      "method": "GET",
+      "concurrent": 5,
+      "totalRequests": 50,
+      "startTime": 1755244993908,
+      "responses": [
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244993908,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244993909,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244993909,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244993909,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244993909,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994013,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994014,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994014,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994015,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994015,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994120,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994121,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994121,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994121,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994121,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994226,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994227,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994227,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994227,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994227,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994330,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994330,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994331,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994331,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994331,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244994435,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994436,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244994436,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244994436,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244994436,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994542,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244994543,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994543,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994543,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994543,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994647,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994648,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994648,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994648,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994648,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994752,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994753,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994753,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994753,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994753,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994857,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244994858,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994858,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994858,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244994858,
+          "success": false
+        }
+      ],
+      "errors": [],
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 4,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 52.52
+      },
+      "endTime": 1755244994860
+    },
+    {
+      "scenario": "Get User Stories",
+      "url": "http://localhost:5000/api/v1/agile/stories",
+      "method": "GET",
+      "concurrent": 5,
+      "totalRequests": 50,
+      "startTime": 1755244995862,
+      "responses": [
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995862,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995862,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995863,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995863,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995863,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995967,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244995968,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995968,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995968,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244995968,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996074,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996074,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996074,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996075,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996075,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996179,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996179,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244996180,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244996180,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996180,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996284,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996284,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996285,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996285,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996285,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244996389,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996390,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996390,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996390,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996390,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996496,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996497,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996497,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996497,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996497,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996601,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996602,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996602,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996602,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996602,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996707,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996707,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996708,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996708,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996708,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996812,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996813,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996813,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244996813,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244996813,
+          "success": false
+        }
+      ],
+      "errors": [],
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 52.41
+      },
+      "endTime": 1755244996816
+    },
+    {
+      "scenario": "Get Sprints",
+      "url": "http://localhost:5000/api/v1/sprints",
+      "method": "GET",
+      "concurrent": 3,
+      "totalRequests": 30,
+      "startTime": 1755244997819,
+      "responses": [
+        {
+          "statusCode": 403,
+          "responseTime": 4,
+          "size": 2,
+          "timestamp": 1755244997819,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244997820,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244997821,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244997925,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244997925,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244997925,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244998028,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244998028,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244998028,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998132,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244998132,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998133,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998237,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998237,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998237,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244998342,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998343,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998343,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998448,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998448,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998448,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755244998552,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998553,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998553,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244998657,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 0,
+          "size": 2,
+          "timestamp": 1755244998658,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 0,
+          "size": 2,
+          "timestamp": 1755244998658,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244998761,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244998761,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244998761,
+          "success": false
+        }
+      ],
+      "errors": [],
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 0,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 31.78
+      },
+      "endTime": 1755244998763
+    },
+    {
+      "scenario": "Performance Metrics",
+      "url": "http://localhost:5000/api/v1/performance/summary",
+      "method": "GET",
+      "concurrent": 2,
+      "totalRequests": 20,
+      "startTime": 1755244999766,
+      "responses": [
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244999766,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244999767,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244999869,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244999869,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755244999973,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755244999974,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755245000076,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000077,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000182,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000182,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000284,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755245000285,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000389,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755245000390,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 1,
+          "size": 2,
+          "timestamp": 1755245000493,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000493,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755245000597,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000598,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 3,
+          "size": 2,
+          "timestamp": 1755245000701,
+          "success": false
+        },
+        {
+          "statusCode": 403,
+          "responseTime": 2,
+          "size": 2,
+          "timestamp": 1755245000702,
+          "success": false
+        }
+      ],
+      "errors": [],
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 3,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 3,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 21.3
+      },
+      "endTime": 1755245000705
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": "sprint-1",
+      "number": 1,
+      "startDate": "2024-01-01",
+      "endDate": "2024-01-14",
+      "goal": "Complete user authentication foundation and basic product management setup",
+      "status": "completed",
+      "capacity": 40,
+      "velocity": 35,
+      "stories": [
+        {
+          "id": "story-1",
+          "title": "User Registration",
+          "storyPoints": 5,
+          "status": "done"
+        },
+        {
+          "id": "story-2",
+          "title": "User Login",
+          "storyPoints": 3,
+          "status": "done"
+        }
+      ],
+      "burndownData": [
+        { "date": "2024-01-01", "remaining": 40, "ideal": 40 },
+        { "date": "2024-01-02", "remaining": 40, "ideal": 37 },
+        { "date": "2024-01-03", "remaining": 35, "ideal": 34 },
+        { "date": "2024-01-04", "remaining": 35, "ideal": 31 },
+        { "date": "2024-01-05", "remaining": 30, "ideal": 28 },
+        { "date": "2024-01-08", "remaining": 25, "ideal": 25 },
+        { "date": "2024-01-09", "remaining": 20, "ideal": 22 },
+        { "date": "2024-01-10", "remaining": 15, "ideal": 19 },
+        { "date": "2024-01-11", "remaining": 10, "ideal": 16 },
+        { "date": "2024-01-12", "remaining": 5, "ideal": 13 },
+        { "date": "2024-01-14", "remaining": 0, "ideal": 0 }
+      ],
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-14T00:00:00Z"
+    },
+    {
+      "id": "sprint-2",
+      "number": 2,
+      "startDate": "2024-01-15",
+      "endDate": "2024-01-28",
+      "goal": "Implement product management and search functionality",
+      "status": "active",
+      "capacity": 40,
+      "velocity": 0,
+      "stories": [
+        {
+          "id": "story-3",
+          "title": "Product Creation",
+          "storyPoints": 8,
+          "status": "in-progress"
+        },
+        {
+          "id": "story-5",
+          "title": "Product Search",
+          "storyPoints": 8,
+          "status": "todo"
+        }
+      ],
+      "burndownData": [
+        { "date": "2024-01-15", "remaining": 16, "ideal": 16 },
+        { "date": "2024-01-16", "remaining": 16, "ideal": 15 },
+        { "date": "2024-01-17", "remaining": 12, "ideal": 14 },
+        { "date": "2024-01-18", "remaining": 12, "ideal": 13 },
+        { "date": "2024-01-19", "remaining": 8, "ideal": 12 }
+      ],
+      "createdAt": "2024-01-15T00:00:00Z",
+      "updatedAt": "2024-01-19T00:00:00Z"
+    },
+    {
+      "id": "sprint-3",
+      "number": 3,
+      "startDate": "2024-01-29",
+      "endDate": "2024-02-11",
+      "goal": "Complete lending system and email notifications",
+      "status": "planning",
+      "capacity": 40,
+      "velocity": 0,
+      "stories": [],
+      "burndownData": [],
+      "createdAt": "2024-01-29T00:00:00Z",
+      "updatedAt": "2024-01-29T00:00:00Z"
+    }
+  ]
+}

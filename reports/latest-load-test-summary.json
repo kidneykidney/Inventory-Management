@@ -1,0 +1,95 @@
+{
+  "timestamp": "2025-08-15T08:03:21.706Z",
+  "summary": {
+    "totalDuration": 9.79,
+    "totalRequests": 250,
+    "totalSuccessful": 250,
+    "totalErrors": 0,
+    "overallSuccessRate": 100,
+    "overallThroughput": 25.54
+  },
+  "scenarios": [
+    {
+      "name": "API Health Check",
+      "url": "http://localhost:5000/api/health",
+      "metrics": {
+        "avgResponseTime": 4,
+        "minResponseTime": 0,
+        "maxResponseTime": 26,
+        "p95ResponseTime": 8,
+        "p99ResponseTime": 8,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 100.91
+      },
+      "requestCount": 100,
+      "errorCount": 0
+    },
+    {
+      "name": "Get Epics",
+      "url": "http://localhost:5000/api/v1/agile/epics",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 4,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 52.52
+      },
+      "requestCount": 50,
+      "errorCount": 0
+    },
+    {
+      "name": "Get User Stories",
+      "url": "http://localhost:5000/api/v1/agile/stories",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 52.41
+      },
+      "requestCount": 50,
+      "errorCount": 0
+    },
+    {
+      "name": "Get Sprints",
+      "url": "http://localhost:5000/api/v1/sprints",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 0,
+        "maxResponseTime": 4,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 4,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 31.78
+      },
+      "requestCount": 30,
+      "errorCount": 0
+    },
+    {
+      "name": "Performance Metrics",
+      "url": "http://localhost:5000/api/v1/performance/summary",
+      "metrics": {
+        "avgResponseTime": 2,
+        "minResponseTime": 1,
+        "maxResponseTime": 3,
+        "p95ResponseTime": 3,
+        "p99ResponseTime": 3,
+        "successRate": 0,
+        "errorRate": 0,
+        "throughput": 21.3
+      },
+      "requestCount": 20,
+      "errorCount": 0
+    }
+  ],
+  "issueCount": 0,
+  "criticalIssues": 0
+}
