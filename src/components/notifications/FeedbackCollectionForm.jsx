@@ -190,7 +190,7 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
                 value={formData.type}
                 onValueChange={value => handleInputChange('type', value)}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Feedback Type">
                   <SelectValue placeholder='Select feedback type' />
                 </SelectTrigger>
                 <SelectContent>
@@ -209,7 +209,7 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
                 value={formData.category}
                 onValueChange={value => handleInputChange('category', value)}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Category">
                   <SelectValue placeholder='Select category' />
                 </SelectTrigger>
                 <SelectContent>
@@ -266,7 +266,7 @@ const FeedbackCollectionForm = ({ sprintId, onFeedbackSubmitted }) => {
                 value={formData.priority}
                 onValueChange={value => handleInputChange('priority', value)}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Priority">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
