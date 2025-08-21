@@ -1,5 +1,10 @@
 # Inventory Management System - Comprehensive Documentation
 
+## 🚀 Quick Start for New Teams
+
+**New to this repository? Setting up a 3-person team?**
+👉 **[READ THE TEAM SETUP GUIDE](TEAM_SETUP_GUIDE.md)** for complete instructions on setting up Git branches and collaborative workflow.
+
 ## 📊 Project Overview
 
 A modern, full-stack inventory management system that has evolved into a comprehensive business management platform with agile development capabilities, lending system, analytics, and administrative features.
